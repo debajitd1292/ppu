@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPU Shift Dashboard</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f4e79">
+
+<style>
+body { font-family: Arial; margin:0; background:#eef1f5; }
+
+.header {
+    background:#1f4e79;
+    color:white;
+    text-align:center;
+    padding:15px 10px;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;        /* keeps it above everything */
+}
+
+.holiday-text {
+    font-size: 13px;   /* change as needed */
+}
+
+.logo { 
+    width:60px; 
+    height:60px; 
+    border-radius:50%;              /* perfect circle */ 
+    object-fit:cover;
+
+    box-shadow:0 2px 8px rgba(0,0,0,0.3);  /* keep premium effect */
+
+    background:transparent;         /* no white ring */
+    padding:0;                      /* remove extra spacing */
+
+    opacity:0;                      
+    transform:scale(0.8);           
+    transition:all 0.4s ease;       
+}
+
+.badge {
+    display:inline-block;
+    background:#c2185b;
+    padding:6px 14px;
+    border-radius:20px;
+    margin:8px 0;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.card {
+    background:white;
+    margin:10px;
+    padding:12px;
+    border-radius:12px;
+
+    margin-top:15px;   /* ensures spacing from sticky header */
+}
+
+input, select {
+    width:100%;
+    height:40px;
+    padding:6px 10px;
+    margin-top:6px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+}
+
+select:focus, input:focus {
+    outline:none;
+    border:2px solid gold;
+}
+
+.shift-title { font-weight:bold; margin-top:10px; }
+
+.chip {
+    display:inline-block;
+    padding:6px 10px;
+    border-radius:20px;
+    margin:4px;
+    color:white;
+    font-size:12px;
+}
+
+.selected { border:2px solid gold; }
+
+/* COLORS */
+.A { background:#8e24aa; }
+.B { background:#ff9800; }
+.C { background:#1e40ff; }
+.G { background:#e53935; }
+.OFF { background:#1b5e20; }
+
+.D { background:#43a047; }
+.N { background:#212121; }
+.L { background:#ffd600; color:black; }
+.T { background:#00acc1; color:black; }
+
+/* Badge dynamic colors */
+.badge.A { background:#8e24aa; }
+.badge.B { background:#ff9800; }
+.badge.C { background:#1e40ff; }
+.badge.G { background:#e53935; }
+.badge.OFF { background:#1b5e20; }
+
+.badge.D { background:#43a047; }
+.badge.N { background:#212121; }
+.badge.L { background:#ffd600; color:black; }
+.badge.T { background:#00acc1; color:black; }
+
+.footer {
+    text-align:center;
+    padding:15px;
+    font-size:12px;
+    color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <img src="https://raw.githubusercontent.com/debajitd1292/ppu/main/logo.png"
+     class="logo"
+     onload="this.style.opacity=1; this.style.transform='scale(1)'">
+    <h3>PPU Shift Schedule</h3>
+    <div id="todayDate"></div>
+
+    <!-- ✅ ADDED NOTE HERE -->
+    <div id="todayNote" style="margin-top:5px;font-weight:bold;"></div>
+
+    <div class="badge" id="todayShiftBadge">Loading...</div>
+    <div class="holiday-text">
+        Next GH: <span id="nextGH"></span> |
+        Next RH: <span id="nextRH"></span>
+    </div>
+</div>
+
+<div class="card">
+    <label>Select Date:</label>
+    <input type="date" id="datePicker" onchange="renderSelected()">
+
+    <label>Your Name:</label>
+    <select id="nameSelector" onchange="onNameChange()"></select>
+</div>
+
+<div class="card">
+    <h3>TODAY</h3>
+    <div id="today"></div>
+</div>
+
+<div class="card">
+    <h3 id="selectedTitle">SELECTED DATE</h3>
+    <div id="selected"></div>
+</div>
+
+<div class="footer">
+    © 2026 • Developed by DD
+</div>
+
+<script>
+
+const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv";
+const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv";
+const notesUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/notes.csv";
+
+let data = [];
+let holidays = [];
+let notes = [];
+let selectedName = "";
+
+const seniorityOrder = [
+"Saiprasad","Abhigyan","Arshad","Sandip","Shashank","Debajit",
+"Satadru","Santanu","Arka","Devendra","Kamal","Vijay","Palash",
+"Nihal","Sampreeti","Arun","Jitu","Pritam","Hriday"
+];
+
+const shiftLabels = {
+"A":"A Shift","B":"B Shift","C":"C Shift",
+"G":"General","OFF":"Rest/Off",
+"D":"Day Shift","N":"Night Shift",
+"L":"Leave","T":"Training/Tour"
+};
+
+function sortBySeniority(list){
+    return list.sort((a,b)=>{
+        let ia = seniorityOrder.indexOf(a.trim());
+        let ib = seniorityOrder.indexOf(b.trim());
+        if(ia === -1) ia = 999;
+        if(ib === -1) ib = 999;
+        return ia - ib;
+    });
+}
+
+Promise.all([
+fetch(shiftUrl).then(r=>r.text()),
+fetch(holidayUrl).then(r=>r.text()),
+fetch(notesUrl).then(r=>r.text())
+]).then(([shiftText,holidayText,notesText])=>{
+
+data = shiftText.split("\n").map(r=>r.replace(/\r/g,"").split(/[,;]/));
+
+holidays = holidayText.split("\n").slice(1).map(r=>{
+let [d,t,n]=r.replace(/\r/g,"").split(/[,;]/);
+return {date:d?.trim(),type:t?.trim(),name:n?.trim()};
+});
+
+notes = notesText.split("\n").slice(1).map(r=>{
+let [d,t,n,m]=r.replace(/\r/g,"").split(/[,;]/);
+return {date:d?.trim(),type:t?.trim(),name:n?.trim(),message:m?.trim()};
+});
+
+init();
+
+})
+
+.catch(err => {
+    console.error("Data load failed:", err);
+    document.getElementById("today").innerHTML = 
+    "<div style='color:red;font-weight:bold;'>Data load failed (Offline)</div>";
+});
+
+function formatDate(d){
+return ("0"+d.getDate()).slice(-2)+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+d.getFullYear();
+}
+
+function formatHolidayDate(dateStr){
+let [d,m,y]=dateStr.split("-");
+let day=parseInt(d);
+
+let suffix="th";
+if(day===1||day===21||day===31) suffix="st";
+else if(day===2||day===22) suffix="nd";
+else if(day===3||day===23) suffix="rd";
+
+const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+return day + suffix + " " + months[parseInt(m)-1];
+}
+
+/* ✅ NEW FUNCTION (ADDED) */
+function isSpecialDay(){
+
+let today = new Date();
+let day = today.getDay(); // 0=Sun, 6=Sat
+let date = today.getDate();
+
+/* Sunday */
+if(day === 0) return true;
+
+/* 2nd & 4th Saturday */
+if(day === 6){
+    let week = Math.ceil(date / 7);
+    if(week === 2 || week === 4) return true;
+}
+
+/* GH check */
+let todayStr = formatDate(today);
+
+let isGH = holidays.some(h => 
+    h.date === todayStr && h.type === "GH"
+);
+
+let isRH = holidays.some(h => 
+    h.date === todayStr && h.type === "RH"
+);
+
+if(isGH || isRH) return true;
+
+return false;
+}
+
+/* EXISTING */
+function getTodayNote(){
+let today = new Date();
+let key = ("0"+today.getDate()).slice(-2) + "-" +
+          ("0"+(today.getMonth()+1)).slice(-2);
+
+let todaysNotes = notes.filter(n => n.date === key);
+
+if(todaysNotes.length === 0) return "";
+
+return todaysNotes.map(n => {
+
+    if(n.type === "BIRTHDAY"){
+        return `Happy Birthday ${n.name} 🎂`;
+    }
+
+    if(n.type === "REPUBLIC DAY"){
+        return `${n.message} 🇮🇳`;
+    }
+
+    if(n.type === "INDEPENDENCE DAY"){
+        return `${n.message} 🇮🇳`;
+    }
+
+    if(n.type === "FOUNDATION DAY"){
+        return `${n.message} 🎉`;
+    }
+
+    if(n.type === "NEW YEAR"){
+        return `${n.message} 🎉`;
+    }
+
+    return n.message;
+
+}).join("<br>");
+}
+
+function init(){
+document.getElementById("today").innerHTML = "Loading...";
+
+let dateElem = document.getElementById("todayDate");
+dateElem.innerText = new Date().toDateString();
+
+/* ✅ APPLY GREEN COLOR */
+if(isSpecialDay()){
+    dateElem.style.color = "#ffd600";
+    dateElem.style.fontWeight = "bold";
+}
+
+populateNames();
+
+/* AUTO SAVE */
+let saved = localStorage.getItem("ppu_name");
+if(saved){
+selectedName = saved;
+document.getElementById("nameSelector").value = saved;
+}
+
+/* SHOW NOTE */
+document.getElementById("todayNote").innerHTML = getTodayNote();
+
+refresh();
+calcHoliday();
+}
+
+function populateNames(){
+let sel=document.getElementById("nameSelector");
+let names=[];
+
+for(let i=1;i<data.length;i++){
+let n=data[i][0]?.trim();
+if(n) names.push(n);
+}
+
+names = sortBySeniority(names);
+
+sel.add(new Option("Select Name",""));
+names.forEach(n=>sel.add(new Option(n,n)));
+}
+
+function refresh(){
+
+let today = formatDate(new Date());
+let shift = selectedName ? (getShift(today, selectedName) || "-") : "Select Name";
+
+let badge = document.getElementById("todayShiftBadge");
+
+/* TEXT */
+badge.innerText = "Today's Shift: " + shift;
+
+/* RESET CLASS */
+badge.className = "badge";
+
+/* APPLY COLOR */
+if(shift && shift !== "-" && shift !== "Select Name"){
+
+    let primary;
+
+    if(shift.includes("C")) primary = "C";
+    else if(shift.includes("B")) primary = "B";
+    else if(shift.includes("A")) primary = "A";
+    else primary = shift;
+
+    if(primary === "O") primary = "OFF";
+
+    badge.classList.add(primary);
+}
+
+render("today", today);
+}
+
+function getShift(date,name){
+let header=data[0].map(x=>x.trim());
+let col = header.indexOf(date);
+if(col === -1) return null;
+
+for(let i=1;i<data.length;i++){
+if(data[i][0]?.trim()===name){
+return data[i][col]?.trim() || null;
+}
+}
+}
+
+function getData(date){
+let header=data[0].map(x=>x.trim());
+let col = header.indexOf(date);
+if(col === -1) return {};
+let shifts={};
+
+for(let i=1;i<data.length;i++){
+
+let name=data[i][0]?.trim();
+let shift=data[i][col]?.trim();
+if(!shift) continue;
+
+if(shift==="OFF"){
+if(!shifts["OFF"]) shifts["OFF"]=[];
+shifts["OFF"].push({name:name,multi:false});
+continue;
+}
+
+let isMulti = shift.length>1;
+
+shift.replace(/[^A-Z]/g,"").split("").forEach(s=>{
+if(!shifts[s]) shifts[s]=[];
+shifts[s].push({name:name,multi:isMulti});
+});
+}
+return shifts;
+}
+
+function render(id,date){
+
+let box=document.getElementById(id);
+box.innerHTML="";
+
+let header=data[0].map(x=>x.trim());
+
+if(header.indexOf(date)===-1){
+
+    let msg = (id === "today")
+        ? "Shift schedule is not available for today"
+        : "Shift schedule is not available for the selected date";
+
+    box.innerHTML = `<div style="color:red;font-weight:bold;">
+    ${msg}
+    </div>`;
+
+    return;
+}
+
+let shifts=getData(date);
+
+/* MAIN */
+["A","B","C","G","OFF","L","T"].forEach(s=>{
+
+let list=shifts[s]||[];
+
+list = sortBySeniority(list.map(x=>x.name))
+       .map(n => list.find(x=>x.name===n));
+
+let alert=(["A","B","C"].includes(s)&&list.length<=2)?" ❗":"";
+
+let chips=list.map(obj=>{
+let sel=(selectedName && obj.name===selectedName)?"selected":"";
+let multi=obj.multi?" ❕":"";
+return `<span class="chip ${s} ${sel}">${obj.name}${multi}</span>`;
+}).join("");
+
+box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})${alert}</div>${chips||"-"}`;
+});
+
+/* D N */
+["D","N"].forEach(s=>{
+let list=shifts[s]||[];
+if(list.length===0) return;
+
+list = sortBySeniority(list.map(x=>x.name))
+       .map(n => list.find(x=>x.name===n));
+
+let chips=list.map(obj=>{
+let sel=(selectedName && obj.name===selectedName)?"selected":"";
+let multi=obj.multi?" ❕":"";
+return `<span class="chip ${s} ${sel}">${obj.name}${multi}</span>`;
+}).join("");
+
+box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})</div>${chips}`;
+});
+}
+
+function renderSelected(){
+let val=document.getElementById("datePicker").value;
+if(!val) return;
+
+let d=new Date(val);
+let formatted=formatDate(d);
+
+document.getElementById("selectedTitle").innerText =
+"SELECTED DATE ("+formatted+")";
+
+render("selected",formatted);
+}
+
+function onNameChange(){
+selectedName=document.getElementById("nameSelector").value;
+localStorage.setItem("ppu_name",selectedName);
+refresh();
+if(document.getElementById("datePicker").value){
+renderSelected();
+}
+}
+
+function calcHoliday(){
+
+    let today = new Date();
+    today.setHours(0,0,0,0);  // normalize
+
+    let nextGH = null;
+    let nextRH = null;
+
+    holidays.forEach(h => {
+        if(!h.date) return;
+
+        let [d,m,y] = h.date.split("-");
+
+        let hd = new Date(parseInt(y), parseInt(m)-1, parseInt(d));
+
+        if(hd < today) return;
+
+        if(h.type === "GH" && !nextGH) nextGH = h;
+        if(h.type === "RH" && !nextRH) nextRH = h;
+    });
+
+    document.getElementById("nextGH").innerText =
+        nextGH ? formatHolidayDate(nextGH.date) + " (" + nextGH.name + ")" : "-";
+
+    document.getElementById("nextRH").innerText =
+        nextRH ? formatHolidayDate(nextRH.date) : "-";
+}
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js")
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log("SW failed:", err));
+}
+
+</script>
+
+</body>
+</html>
