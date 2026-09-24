@@ -521,7 +521,7 @@ function calcHoliday(){
 
         let hd = new Date(parseInt(y), parseInt(m)-1, parseInt(d));
 
-        if(hd < today) return;
+        if(hd <= today) return;
 
         if(h.type === "GH" && !nextGH) nextGH = h;
         if(h.type === "RH" && !nextRH) nextRH = h;
