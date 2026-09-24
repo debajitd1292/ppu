@@ -119,6 +119,12 @@ select:focus, input:focus {
     font-size:12px;
     color:#555;
 }
+
+@keyframes blink {
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
 </style>
 </head>
 
@@ -150,6 +156,10 @@ select:focus, input:focus {
 </div>
 
 <div class="card">
+
+    <!-- 🔴 ALERT ABOVE TITLE -->
+    <div id="todayAlert"></div>
+
     <h3>TODAY</h3>
     <div id="today"></div>
 </div>
@@ -274,6 +284,32 @@ if(isGH || isRH) return true;
 return false;
 }
 
+function getActiveAlerts(){
+
+    let now = new Date();
+
+    let year = now.getFullYear();
+    let month = now.getMonth();
+    let date = now.getDate();
+    let hours = now.getHours();
+
+    let alerts = [];
+
+    // 🔴 1. Monthly Reset Alert (Last day 2PM → 1st 6AM)
+    let lastDay = new Date(year, month + 1, 0).getDate();
+
+    if((date === lastDay && hours >= 14) || (date === 1 && hours < 6)){
+        alerts.push("Reset Totalizers & Pump Running Hours<br>along with Blending Silo Changeover at 06:00 hrs");
+    }
+
+    // 🔴 2. Attendance Alert (19th → 21st full day)
+    if(date === 19 || date === 21){
+        alerts.push("Update/Sign Attendance Register");
+    }
+
+    return alerts;
+}
+
 /* EXISTING */
 function getTodayNote(){
 let today = new Date();
@@ -334,6 +370,24 @@ document.getElementById("nameSelector").value = saved;
 
 /* SHOW NOTE */
 document.getElementById("todayNote").innerHTML = getTodayNote();
+
+// 🔴 Show alerts ABOVE TODAY title
+let alertBox = document.getElementById("todayAlert");
+let alerts = getActiveAlerts();
+
+if(alerts.length > 0){
+    alertBox.innerHTML = `
+    <div style="
+        text-align:center;
+        color:red;
+        font-weight:bold;
+        margin-bottom:10px;
+        animation: blink 1s infinite;
+    ">
+    ${alerts.join("<br>")}
+    </div>
+    `;
+}
 
 refresh();
 calcHoliday();
