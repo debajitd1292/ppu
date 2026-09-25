@@ -22,6 +22,26 @@ body { font-family: Arial; margin:0; background:#eef1f5; }
     z-index: 1000;
 
     overflow: hidden; 
+
+    transition: all 0.3s ease;
+}
+
+.header.compact {
+    padding: 8px 10px;
+}
+
+.header.compact .logo {
+    transform: scale(0.7);
+    opacity: 0.7;
+}
+
+.header.compact h3 {
+    font-size: 16px;
+}
+
+.header.compact .badge {
+    font-size: 12px;
+    padding: 4px 10px;
 }
 
 .holiday-text {
@@ -31,13 +51,13 @@ body { font-family: Arial; margin:0; background:#eef1f5; }
 .logo { 
     width:60px; 
     height:60px; 
-    border-radius:50%;              /* perfect circle */ 
+    border-radius:50%; 
     object-fit:cover;
 
-    box-shadow:0 2px 8px rgba(0,0,0,0.3);  /* keep premium effect */
+    box-shadow:0 2px 8px rgba(0,0,0,0.3);
 
-    background:transparent;         /* no white ring */
-    padding:0;                      /* remove extra spacing */
+    background:transparent;
+    padding:0;
 
     opacity:0;                      
     transform:scale(0.8);           
@@ -60,7 +80,7 @@ body { font-family: Arial; margin:0; background:#eef1f5; }
     padding:12px;
     border-radius:12px;
 
-    margin-top:15px;   /* ensures spacing from sticky header */
+    margin-top:15px;
 }
 
 input, select {
@@ -571,6 +591,21 @@ if(alerts.length > 0){
 refresh();
 calcHoliday();
 renderTraining();
+
+let lastScroll = 0;
+
+window.addEventListener("scroll", function() {
+
+    let header = document.querySelector(".header");
+    let currentScroll = window.scrollY;
+
+    if(currentScroll > 80){
+        header.classList.add("compact");
+    } else {
+        header.classList.remove("compact");
+    }
+
+});
 }
 
 function populateNames(){
