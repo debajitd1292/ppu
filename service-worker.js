@@ -1,4 +1,4 @@
-const CACHE_NAME = "ppu-dashboard-v8";   // 🔁 change this on every update
+const CACHE_NAME = "ppu-dashboard-v8";
 
 const urlsToCache = [
     "./",
@@ -8,54 +8,68 @@ const urlsToCache = [
     "https://raw.githubusercontent.com/debajitd1292/ppu/main/logo.png"
 ];
 
-// 🔽 INSTALL
+// INSTALL
 self.addEventListener("install", event => {
-    console.log("Service Worker Installing...");
-
-    self.skipWaiting();   // 🔥 activate immediately
+    self.skipWaiting();
 
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                return cache.addAll(urlsToCache);
-            })
+        caches.open(CACHE_NAME).then(cache => {
+            return Promise.allSettled(
+                urlsToCache.map(url => cache.add(url))
+            );
+        })
     );
 });
 
-// 🔽 ACTIVATE
+// ACTIVATE
 self.addEventListener("activate", event => {
-    console.log("Service Worker Activating...");
-
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cache => {
                     if (cache !== CACHE_NAME) {
-                        console.log("Deleting old cache:", cache);
                         return caches.delete(cache);
                     }
                 })
             );
-        }).then(() => self.clients.claim()) // 🔥 take control immediately
+        }).then(() => self.clients.claim())
     );
 });
 
-// 🔽 FETCH (Network First Strategy)
+// FETCH
 self.addEventListener("fetch", event => {
 
-    event.respondWith(
-        fetch(event.request)
-            .then(response => {
-                // Save latest version in cache
-                return caches.open(CACHE_NAME).then(cache => {
-                    cache.put(event.request, response.clone());
-                    return response;
-                });
-            })
-            .catch(() => {
-                // Fallback to cache if offline
-                return caches.match(event.request);
-            })
-    );
+    const url = event.request.url;
 
+    // ✅ Always fetch fresh CSV (dynamic data)
+    if (url.includes(".csv")) {
+        event.respondWith(fetch(event.request));
+        return;
+    }
+
+    // ✅ Navigation fallback
+    if (event.request.mode === "navigate") {
+        event.respondWith(
+            fetch(event.request).catch(() => caches.match("./index.html"))
+        );
+        return;
+    }
+
+    // ✅ Cache-first for static assets
+    event.respondWith(
+        caches.match(event.request).then(cached => {
+
+            return cached || fetch(event.request).then(response => {
+
+                if (response && response.status === 200) {
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, response.clone());
+                    });
+                }
+
+                return response;
+            });
+
+        })
+    );
 });
