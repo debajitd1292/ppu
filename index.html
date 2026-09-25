@@ -11,15 +11,17 @@
 <style>
 body { font-family: Arial; margin:0; background:#eef1f5; }
 
-.header {
-    background:#1f4e79;
-    color:white;
-    text-align:center;
-    padding:15px 10px;
+.header { 
+    background:#1f4e79; 
+    color:white; 
+    text-align:center; 
+    padding:15px 10px; 
 
-    position: sticky;
-    top: 0;
-    z-index: 1000;        /* keeps it above everything */
+    position: sticky; 
+    top: 0; 
+    z-index: 1000;
+
+    position: relative; 
 }
 
 .holiday-text {
@@ -125,32 +127,158 @@ select:focus, input:focus {
     50% { opacity:0; }
     100% { opacity:1; }
 }
+
+.training-item {
+    background:#f8fafc;
+    border-left:4px solid #1f4e79;
+    padding:10px 12px;
+    border-radius:8px;
+    margin-bottom:10px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.08);
+}
+
+.training-date {
+    font-weight:bold;
+    color:#1f4e79;
+    font-size:13px;
+}
+
+.training-name {
+    font-size:14px;
+    margin:4px 0;
+}
+
+.training-type {
+    font-size:12px;
+    color:#555;
+}
+
+/* =========================
+   THEME TOGGLE SWITCH
+========================= */
+.theme-switch {
+    position:absolute;
+    top:12px;
+    right:25px;
+    width:40px;
+    height:22px;
+    z-index:2000;
+}
+
+.theme-switch input {
+    opacity:0;
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    cursor:pointer;
+    z-index:2;
+}
+
+.slider {
+    position:absolute;
+    cursor:pointer;
+    width:100%;
+    height:100%;
+    background:rgba(255,255,255,0.2);
+    border-radius:30px;
+    transition:0.3s;
+}
+
+.slider::before {
+    content:"";
+    position:absolute;
+    height:16px;
+    width:16px;
+    left:3px;
+    top:3px;
+    background:#90caf9;
+    border-radius:50%;
+    transition:0.3s;
+    box-shadow:0 0 8px rgba(144,202,249,0.6);
+}
+
+.theme-switch input:checked + .slider::before {
+    transform:translateX(18px);
+}
+
+.slider:hover {
+    transform: scale(1.05);
+}
+
+/* =========================
+   DARK MODE
+========================= */
+body.dark {
+    background:#0f172a;
+    color:#e2e8f0;
+}
+
+body.dark .header {
+    background:#020617;
+}
+
+body.dark .slider {
+    background:rgba(255,255,255,0.1);
+}
+
+body.dark .card {
+    background:#111827;
+    color:#e2e8f0;
+}
+
+body.dark input,
+body.dark select {
+    background:#1f2933;
+    color:#e2e8f0;
+    border:1px solid #374151;
+}
+
+body.dark .footer {
+    color:#94a3b8;
+}
+
+/* Keep shift colors intact */
+body.dark .chip {
+    opacity:0.95;
+}
+
+body.dark .badge {
+    box-shadow:0 0 6px rgba(255,255,255,0.1);
+}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-    <img src="https://raw.githubusercontent.com/debajitd1292/ppu/main/logo.png"
-     class="logo"
-     onload="this.style.opacity=1; this.style.transform='scale(1)'">
-    <h3>PPU Shift Schedule</h3>
-    <div id="todayDate"></div>
+    <img src="https://raw.githubusercontent.com/debajitd1292/ppu/main/logo.png" 
+     class="logo" 
+     onload="this.style.opacity=1; this.style.transform='scale(1)'"> 
 
-    <!-- ✅ ADDED NOTE HERE -->
-    <div id="todayNote" style="margin-top:5px;font-weight:bold;"></div>
+    <h3>PPU Shift Schedule</h3> 
+    <div id="todayDate"></div> 
 
-    <div class="badge" id="todayShiftBadge">Loading...</div>
-    <div class="holiday-text">
-        Next GH: <span id="nextGH"></span> |
-        Next RH: <span id="nextRH"></span>
+    <!-- ✅ ADDED NOTE HERE --> 
+    <div id="todayNote" style="margin-top:5px;font-weight:bold;"></div> 
+
+    <div class="badge" id="todayShiftBadge">Loading...</div> 
+
+    <div class="holiday-text"> 
+        Next GH: <span id="nextGH"></span> | 
+        Next RH: <span id="nextRH"></span> 
+    </div> 
+
+    <!-- 🌙 DARK MODE TOGGLE (ADD THIS) -->
+    <div id="themeToggle" class="theme-switch">
+        <input type="checkbox" id="toggleCheckbox">
+        <span class="slider"></span>
     </div>
+
 </div>
 
 <div class="card">
-    <label>Select Date:</label>
-    <input type="date" id="datePicker" onchange="renderSelected()">
-
     <label>Your Name:</label>
     <select id="nameSelector" onchange="onNameChange()"></select>
 </div>
@@ -165,8 +293,18 @@ select:focus, input:focus {
 </div>
 
 <div class="card">
+    <label>Select Date:</label>
+    <input type="date" id="datePicker" onchange="renderSelected()">
+</div>
+
+<div class="card">
     <h3 id="selectedTitle">SELECTED DATE</h3>
     <div id="selected"></div>
+</div>
+
+<div class="card">
+    <h3>TRAINING SCHEDULED FOR THE MONTH</h3>
+    <div id="trainingSection">Loading...</div>
 </div>
 
 <div class="footer">
@@ -178,11 +316,13 @@ select:focus, input:focus {
 const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv";
 const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv";
 const notesUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/notes.csv";
+const trainingUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/training.csv";
 
 let data = [];
 let holidays = [];
 let notes = [];
 let selectedName = "";
+let trainings = [];
 
 const seniorityOrder = [
 "Saiprasad","Abhigyan","Arshad","Sandip","Shashank","Debajit",
@@ -210,14 +350,24 @@ function sortBySeniority(list){
 Promise.all([
 fetch(shiftUrl).then(r=>r.text()),
 fetch(holidayUrl).then(r=>r.text()),
-fetch(notesUrl).then(r=>r.text())
-]).then(([shiftText,holidayText,notesText])=>{
+fetch(notesUrl).then(r=>r.text()),
+fetch(trainingUrl).then(r=>r.text())
+]).then(([shiftText,holidayText,notesText,trainingText])=>{
 
 data = shiftText.split("\n").map(r=>r.replace(/\r/g,"").split(/[,;]/));
 
 holidays = holidayText.split("\n").slice(1).map(r=>{
 let [d,t,n]=r.replace(/\r/g,"").split(/[,;]/);
 return {date:d?.trim(),type:t?.trim(),name:n?.trim()};
+});
+
+trainings = trainingText.split("\n").slice(1).map(r=>{
+let [d,n,t]=r.replace(/\r/g,"").split(/[,;]/);
+return {
+    date: d?.trim(),
+    name: n?.trim(),
+    type: t?.trim()
+};
 });
 
 notes = notesText.split("\n").slice(1).map(r=>{
@@ -303,7 +453,7 @@ function getActiveAlerts(){
     }
 
     // 🔴 2. Attendance Alert (19th → 21st full day)
-    if(date === 19 || date === 21){
+    if(date >= 19 && date <= 21){
         alerts.push("Update/Sign Attendance Register");
     }
 
@@ -347,7 +497,36 @@ return todaysNotes.map(n => {
 }).join("<br>");
 }
 
+function initTheme(){
+
+    let toggle = document.getElementById("toggleCheckbox");
+    if(!toggle) return;
+    let savedTheme = localStorage.getItem("theme");
+
+    // Load saved theme
+    if(savedTheme === "dark"){
+        document.body.classList.add("dark");
+        toggle.checked = true;
+    }
+
+    // Toggle event
+    toggle.addEventListener("change", function(){
+
+        if(this.checked){
+            document.body.classList.add("dark");
+            localStorage.setItem("theme","dark");
+        } else {
+            document.body.classList.remove("dark");
+            localStorage.setItem("theme","light");
+        }
+
+    });
+}
+
 function init(){
+
+initTheme();
+
 document.getElementById("today").innerHTML = "Loading...";
 
 let dateElem = document.getElementById("todayDate");
@@ -391,6 +570,7 @@ if(alerts.length > 0){
 
 refresh();
 calcHoliday();
+renderTraining();
 }
 
 function populateNames(){
@@ -549,6 +729,95 @@ document.getElementById("selectedTitle").innerText =
 "SELECTED DATE ("+formatted+")";
 
 render("selected",formatted);
+}
+
+function renderTraining(){
+
+    let box = document.getElementById("trainingSection");
+    box.innerHTML = "";
+
+    let refDate;
+
+    let selectedVal = document.getElementById("datePicker").value;
+
+    if(selectedVal){
+        refDate = new Date(selectedVal);
+    } else {
+        refDate = new Date();
+    }
+
+    let month = ("0"+(refDate.getMonth()+1)).slice(-2);
+
+    let filtered = trainings.filter(t => {
+        if(!t.date) return false;
+
+        let first = t.date.split("to")[0].trim();
+        let parts = first.split("-");
+        return parts[1] === month;
+    });
+
+    if(filtered.length === 0){
+        box.innerHTML = `
+        <div style="text-align:center;color:#777;font-weight:bold;">
+        No training scheduled for the month yet
+        </div>`;
+        return;
+    }
+
+    filtered.sort((a,b)=>{
+        let da = a.date.split("to")[0].trim();
+        let db = b.date.split("to")[0].trim();
+
+        let [d1,m1] = da.split("-");
+        let [d2,m2] = db.split("-");
+
+        return new Date(2025,m1-1,d1) - new Date(2025,m2-1,d2);
+    });
+
+    let today = new Date();
+    today.setHours(0,0,0,0);
+
+    filtered.forEach(t=>{
+
+    // --- extract start & end date ---
+    let parts = t.date.split("to").map(x=>x.trim());
+
+    let [sd, sm] = parts[0].split("-");
+    let startDate = new Date(today.getFullYear(), sm-1, sd);
+
+    let endDate = startDate;
+
+    if(parts.length > 1){
+        let [ed, em] = parts[1].split("-");
+        endDate = new Date(today.getFullYear(), em-1, ed);
+    }
+
+    // --- status check ---
+    let isPast = endDate < today;
+    let isToday = (startDate <= today && endDate >= today);
+
+    // --- styling ---
+    let style = "";
+    if(isPast){
+        style = "opacity:0.5;";
+    }
+
+    box.innerHTML += `
+    <div class="training-item" style="${style}">
+        
+        <!-- Line 1 -->
+        <div class="training-name" style="font-weight:bold;">
+            ${t.date} — ${t.name}
+        </div>
+
+        <!-- Line 2 -->
+        <div class="training-type">
+            ${t.type}
+        </div>
+
+    </div>
+    `;
+});
 }
 
 function onNameChange(){
