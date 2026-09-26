@@ -397,9 +397,28 @@ fetch(notesUrl).then(r=>r.text()),
 fetch(trainingUrl).then(r=>r.text())
 ]).then(([shiftText,holidayText,notesText,trainingText])=>{
 
+if(!shiftText || shiftText.trim() === ""){
+    document.getElementById("today").innerHTML =
+    "<div style='color:red;font-weight:bold;'>SHIFT DATA NOT LOADED</div>";
+    return;
+}
+
+if(!holidayText) holidayText = "";
+if(!notesText) notesText = "";
+if(!trainingText) trainingText = "";
+
 data = shiftText.split("\n").map(r=>r.replace(/\r/g,"").split(/[,;]/));
 
 header = data[0].map(x => x.trim());
+
+if(!header || header.length < 2){
+    console.error("Invalid CSV header");
+    return;
+}
+
+if(!selectedName && data.length > 1){
+    selectedName = data[1][0];   // first name from CSV
+}
 
 holidays = holidayText.split("\n").slice(1).map(r=>{
 let [d,t,n]=r.replace(/\r/g,"").split(/[,;]/);
@@ -810,8 +829,12 @@ function renderTraining(){
         if(!t.date) return false;
 
         let first = t.date.split("to")[0].trim();
+        if(!first || !first.includes("-")) return false;
+
         let parts = first.split("-");
-        return parts[1] === month;
+        if(parts.length < 2) return false;
+
+    return parts[1] === month;
     });
 
     if(filtered.length === 0){
@@ -885,10 +908,13 @@ function renderTraining(){
 function renderNext7Days(){
 
     let box = document.getElementById("next7Days");
+    if(!box) return;
 
+    if(!header || header.length === 0) return;
+    if(!data || data.length === 0) return;
     if(!selectedName){
-        box.innerHTML = "";
-        return;
+    box.innerHTML = "<div style='color:#777;'>Select Name</div>";
+    return;
     }
 
     let today = new Date();
@@ -931,6 +957,7 @@ refresh();
 if(document.getElementById("datePicker").value){
 renderSelected();
 }
+renderNext7Days();
 }
 
 function calcHoliday(){
@@ -962,7 +989,7 @@ function calcHoliday(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=9')
+  navigator.serviceWorker.register('./service-worker.js?v=12')
     .then(() => console.log("Service Worker Registered"));
 }
 
