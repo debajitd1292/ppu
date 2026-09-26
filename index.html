@@ -9,7 +9,12 @@
 <meta name="theme-color" content="#0d47a1">
 
 <style>
-body { font-family: Arial; margin:0; background:#eef1f5; }
+body { 
+    font-family: Arial; 
+    margin:0; 
+    background:#eef1f5; 
+    overflow-x: hidden;
+}
 
 .header { 
     background:#1f4e79; 
@@ -21,23 +26,23 @@ body { font-family: Arial; margin:0; background:#eef1f5; }
     top: 0; 
     z-index: 1000;
 
-    overflow: hidden; 
+    overflow-x: hidden;
 }
 
 .holiday-text {
-    font-size: 13px;   /* change as needed */
+    font-size: 13px;
 }
 
 .logo { 
     width:60px; 
     height:60px; 
-    border-radius:50%;              /* perfect circle */ 
+    border-radius:50%;
     object-fit:cover;
 
-    box-shadow:0 2px 8px rgba(0,0,0,0.3);  /* keep premium effect */
+    box-shadow:0 2px 8px rgba(0,0,0,0.3);
 
-    background:transparent;         /* no white ring */
-    padding:0;                      /* remove extra spacing */
+    background:transparent;
+    padding:0;
 
     opacity:0;                      
     transform:scale(0.8);           
@@ -60,7 +65,7 @@ body { font-family: Arial; margin:0; background:#eef1f5; }
     padding:12px;
     border-radius:12px;
 
-    margin-top:15px;   /* ensures spacing from sticky header */
+    margin-top:15px;
 }
 
 input, select {
@@ -126,6 +131,37 @@ select:focus, input:focus {
     0% { opacity:1; }
     50% { opacity:0; }
     100% { opacity:1; }
+}
+
+.next7-container {
+    display:flex;
+    justify-content:space-between;
+    gap:4px;
+    padding:6px 8px;
+}
+
+.day-card {
+    flex:1;
+    text-align:center;
+}
+
+.day-date {
+    font-size:10px;
+    margin-bottom:3px;
+    font-weight:bold;
+}
+
+.day-shift {
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-weight:bold;
+    margin:auto;
+    font-size:11px;
 }
 
 .training-item {
@@ -224,8 +260,9 @@ body.dark .slider {
 }
 
 body.dark .card {
-    background:#111827;
-    color:#e2e8f0;
+    background: #1e1e1e;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
 body.dark input,
@@ -303,6 +340,11 @@ body.dark .badge {
 </div>
 
 <div class="card">
+    <h3>My Next 7 Days</h3>
+    <div id="next7Days" class="next7-container"></div>
+</div>
+
+<div class="card">
     <h3>TRAINING SCHEDULED FOR THE MONTH</h3>
     <div id="trainingSection">Loading...</div>
 </div>
@@ -323,6 +365,7 @@ let holidays = [];
 let notes = [];
 let selectedName = "";
 let trainings = [];
+let header = [];
 
 const seniorityOrder = [
 "Saiprasad","Abhigyan","Arshad","Sandip","Shashank","Debajit",
@@ -355,6 +398,8 @@ fetch(trainingUrl).then(r=>r.text())
 ]).then(([shiftText,holidayText,notesText,trainingText])=>{
 
 data = shiftText.split("\n").map(r=>r.replace(/\r/g,"").split(/[,;]/));
+
+header = data[0].map(x => x.trim());
 
 holidays = holidayText.split("\n").slice(1).map(r=>{
 let [d,t,n]=r.replace(/\r/g,"").split(/[,;]/);
@@ -571,6 +616,7 @@ if(alerts.length > 0){
 refresh();
 calcHoliday();
 renderTraining();
+renderNext7Days();
 }
 
 function populateNames(){
@@ -620,19 +666,33 @@ render("today", today);
 }
 
 function getShift(date,name){
-let header=data[0].map(x=>x.trim());
-let col = header.indexOf(date);
-if(col === -1) return null;
 
-for(let i=1;i<data.length;i++){
-if(data[i][0]?.trim()===name){
-return data[i][col]?.trim() || null;
+    let col = header.indexOf(date);
+    if(col === -1) return null;
+
+    for(let i=1;i<data.length;i++){
+        if(data[i][0]?.trim() === name){
+            return data[i][col]?.trim() || null;
+        }
+    }
+
+    return null;   //
 }
-}
+
+function parseShift(shift){
+
+    if(!shift) return [];
+
+    shift = shift.trim();
+
+    // ✅ Keep OFF as single unit
+    if(shift === "OFF") return ["OFF"];
+
+    // ✅ Split A, B, C, etc.
+    return shift.match(/[A-Z]/g) || [];
 }
 
 function getData(date){
-let header=data[0].map(x=>x.trim());
 let col = header.indexOf(date);
 if(col === -1) return {};
 let shifts={};
@@ -651,7 +711,7 @@ continue;
 
 let isMulti = shift.length>1;
 
-shift.replace(/[^A-Z]/g,"").split("").forEach(s=>{
+parseShift(shift).forEach(s=>{
 if(!shifts[s]) shifts[s]=[];
 shifts[s].push({name:name,multi:isMulti});
 });
@@ -664,15 +724,13 @@ function render(id,date){
 let box=document.getElementById(id);
 box.innerHTML="";
 
-let header=data[0].map(x=>x.trim());
-
 if(header.indexOf(date)===-1){
 
     let msg = (id === "today")
         ? "Shift schedule is not available for today"
         : "Shift schedule is not available for the selected date";
 
-    box.innerHTML = `<div style="color:red;font-weight:bold;">
+    box.innerHTML = `<div style="color:#777;font-weight:bold;">
     ${msg}
     </div>`;
 
@@ -758,20 +816,24 @@ function renderTraining(){
 
     if(filtered.length === 0){
         box.innerHTML = `
-        <div style="text-align:center;color:#777;font-weight:bold;">
+        <div style="color:#777;font-weight:bold;">
         No training scheduled for the month yet
         </div>`;
         return;
     }
 
-    filtered.sort((a,b)=>{
-        let da = a.date.split("to")[0].trim();
-        let db = b.date.split("to")[0].trim();
+    filtered.sort((a,b)=>{ 
 
-        let [d1,m1] = da.split("-");
-        let [d2,m2] = db.split("-");
+        let da = a.date.split("to")[0].trim(); 
+        let db = b.date.split("to")[0].trim(); 
 
-        return new Date(2025,m1-1,d1) - new Date(2025,m2-1,d2);
+        let [d1,m1] = da.split("-"); 
+        let [d2,m2] = db.split("-"); 
+
+        let year = new Date().getFullYear();
+
+        return new Date(year, m1-1, d1) - new Date(year, m2-1, d2); 
+
     });
 
     let today = new Date();
@@ -799,7 +861,7 @@ function renderTraining(){
     // --- styling ---
     let style = "";
     if(isPast){
-        style = "opacity:0.5;";
+        style = "opacity:0.6;";
     }
 
     box.innerHTML += `
@@ -818,6 +880,48 @@ function renderTraining(){
     </div>
     `;
 });
+}
+
+function renderNext7Days(){
+
+    let box = document.getElementById("next7Days");
+
+    if(!selectedName){
+        box.innerHTML = "";
+        return;
+    }
+
+    let today = new Date();
+    let html = "";
+
+    for(let i=0;i<7;i++){
+
+        let d = new Date(today);
+        d.setDate(today.getDate() + i);
+
+        let dd = String(d.getDate()).padStart(2,'0');
+        let mm = String(d.getMonth()+1).padStart(2,'0');
+        let yyyy = d.getFullYear();
+
+        let dateStr = `${dd}-${mm}-${yyyy}`;
+
+        let rawShift = getShift(dateStr, selectedName) || "-";
+
+        let shiftClass = rawShift === "OFF" ? "OFF" : (rawShift.match(/[A-Z]/)?.[0] || "");
+
+        let shiftText = rawShift;
+
+        html += `
+        <div class="day-card">
+            <div class="day-date">${dd}</div>
+            <div class="day-shift ${shiftClass}">
+                ${shiftText}
+            </div>
+        </div>
+        `;
+    }
+
+    box.innerHTML = html;
 }
 
 function onNameChange(){
@@ -858,7 +962,7 @@ function calcHoliday(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js')
+  navigator.serviceWorker.register('./service-worker.js?v=8')
     .then(() => console.log("Service Worker Registered"));
 }
 
