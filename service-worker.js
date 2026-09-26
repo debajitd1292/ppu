@@ -1,4 +1,4 @@
-const CACHE_NAME = "ppu-dashboard-v9";   // 🔁 change version on every update
+const CACHE_NAME = "ppu-dashboard-v10";   // 🔁 change version on every update
 
 const urlsToCache = [
     "./",
