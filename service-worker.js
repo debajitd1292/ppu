@@ -1,4 +1,4 @@
-const CACHE_NAME = "ppu-dashboard-v9";
+const CACHE_NAME = "ppu-dashboard-v9";   // 🔁 change version on every update
 
 const urlsToCache = [
     "./",
@@ -8,26 +8,31 @@ const urlsToCache = [
     "https://raw.githubusercontent.com/debajitd1292/ppu/main/logo.png"
 ];
 
-// INSTALL
+
+// 🔽 INSTALL
 self.addEventListener("install", event => {
-    self.skipWaiting();
+    console.log("Service Worker Installing...");
+
+    self.skipWaiting();   // activate immediately
 
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
-            return Promise.allSettled(
-                urlsToCache.map(url => cache.add(url))
-            );
+            return cache.addAll(urlsToCache);
         })
     );
 });
 
-// ACTIVATE
+
+// 🔽 ACTIVATE
 self.addEventListener("activate", event => {
+    console.log("Service Worker Activating...");
+
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cache => {
                     if (cache !== CACHE_NAME) {
+                        console.log("Deleting old cache:", cache);
                         return caches.delete(cache);
                     }
                 })
@@ -36,40 +41,33 @@ self.addEventListener("activate", event => {
     );
 });
 
-// FETCH
+
+// 🔽 FETCH
 self.addEventListener("fetch", event => {
 
-    const url = event.request.url;
+    let url = event.request.url;
 
-    // ✅ Always fetch fresh CSV (dynamic data)
+    // ✅ 1. ALWAYS get fresh CSV (CRITICAL FIX)
     if (url.includes(".csv")) {
-        event.respondWith(fetch(event.request));
-        return;
-    }
-
-    // ✅ Navigation fallback
-    if (event.request.mode === "navigate") {
         event.respondWith(
-            fetch(event.request).catch(() => caches.match("./index.html"))
+            fetch(event.request, { cache: "no-store" })
+                .catch(() => caches.match(event.request))
         );
         return;
     }
 
-    // ✅ Cache-first for static assets
+    // ✅ 2. Normal files → Network first, then cache
     event.respondWith(
-        caches.match(event.request).then(cached => {
-
-            return cached || fetch(event.request).then(response => {
-
-                if (response && response.status === 200) {
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, response.clone());
-                    });
-                }
-
-                return response;
-            });
-
-        })
+        fetch(event.request)
+            .then(response => {
+                return caches.open(CACHE_NAME).then(cache => {
+                    cache.put(event.request, response.clone());
+                    return response;
+                });
+            })
+            .catch(() => {
+                return caches.match(event.request);
+            })
     );
+
 });
