@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PPU Shift Dashboard</title>
+<title>PPU PolyOps Dashboard</title>
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d47a1">
@@ -104,7 +104,7 @@ select:focus, input:focus {
 .OFF { background:#1b5e20; }
 
 .D { background:#43a047; }
-.N { background:#212121; }
+.N { background:#6b7280; color:white; }
 .L { background:#ffd600; color:black; }
 .T { background:#00acc1; color:black; }
 
@@ -116,7 +116,9 @@ select:focus, input:focus {
 .badge.OFF { background:#1b5e20; }
 
 .badge.D { background:#43a047; }
-.badge.N { background:#212121; }
+.badge.N { background:#6b7280; color:white; }
+
+body.dark .badge.N { background:#9ca3af; color:black; }
 .badge.L { background:#ffd600; color:black; }
 .badge.T { background:#00acc1; color:black; }
 
@@ -125,6 +127,11 @@ select:focus, input:focus {
     padding:15px;
     font-size:12px;
     color:#555;
+}
+
+.NA {
+    background: #9e9e9e;
+    color: white;
 }
 
 @keyframes blink {
@@ -165,12 +172,18 @@ select:focus, input:focus {
 }
 
 .training-item {
-    background:#f8fafc;
-    border-left:4px solid #1f4e79;
-    padding:10px 12px;
-    border-radius:8px;
-    margin-bottom:10px;
-    box-shadow:0 1px 4px rgba(0,0,0,0.08);
+    background: linear-gradient(135deg, #ffffff, #f1f5f9);
+    border-left: 5px solid #1f4e79;
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    transition: all 0.25s ease;
+}
+
+.training-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
 }
 
 .training-date {
@@ -187,6 +200,34 @@ select:focus, input:focus {
 .training-type {
     font-size:12px;
     color:#555;
+}
+
+/* Training Status */
+
+/* Past */
+.past-training {
+    opacity: 0.5;
+}
+
+/* Today */
+.today-training {
+    border-left: 5px solid #22c55e !important;
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+}
+
+/* Upcoming */
+.upcoming-training {
+    border-left: 5px solid #f59e0b;
+}
+
+/* Dark Mode Status */
+body.dark .today-training {
+    background: linear-gradient(135deg, #064e3b, #022c22);
+    border-left: 5px solid #22c55e;
+}
+
+body.dark .upcoming-training {
+    border-left: 5px solid #fbbf24;
 }
 
 /* =========================
@@ -246,6 +287,20 @@ select:focus, input:focus {
 /* =========================
    DARK MODE
 ========================= */
+body.dark .training-item {
+    background: linear-gradient(135deg, #1e293b, #111827);
+    border-left: 5px solid #60a5fa;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+body.dark .training-name {
+    color: #e2e8f0;
+}
+
+body.dark .training-type {
+    color: #94a3b8;
+}
+
 body.dark {
     background:#0f172a;
     color:#e2e8f0;
@@ -294,7 +349,7 @@ body.dark .badge {
      class="logo" 
      onload="this.style.opacity=1; this.style.transform='scale(1)'"> 
 
-    <h3>PPU Shift Schedule</h3> 
+    <h3>PPU PolyOps Dashboard</h3> 
     <div id="todayDate"></div> 
 
     <!-- ✅ ADDED NOTE HERE --> 
@@ -325,27 +380,30 @@ body.dark .badge {
     <!-- 🔴 ALERT ABOVE TITLE -->
     <div id="todayAlert"></div>
 
-    <h3>TODAY</h3>
+    <h3>Today's Shift</h3>
     <div id="today"></div>
 </div>
 
-<div class="card">
-    <label>Select Date:</label>
-    <input type="date" id="datePicker" onchange="renderSelected()">
+<div class="card"> 
+
+    <h3 id="selectedTitle">Select Date & View Shift</h3> 
+
+    <!-- Date Picker -->
+    <label>Select Date:</label> 
+    <input type="date" id="datePicker" onchange="renderSelected()"> 
+
+    <!-- Shift Output -->
+    <div id="selected" style="margin-top:10px;"></div> 
+
 </div>
 
 <div class="card">
-    <h3 id="selectedTitle">SELECTED DATE</h3>
-    <div id="selected"></div>
-</div>
-
-<div class="card">
-    <h3>UPCOMING 7 DAYS SHIFT</h3>
+    <h3>Upcoming Shifts (Next 7 Days)</h3>
     <div id="next7Days" class="next7-container"></div>
 </div>
 
 <div class="card">
-    <h3>TRAINING PLAN FOR THIS MONTH</h3>
+    <h3>Training Plan For This Month</h3>
     <div id="trainingSection">Loading...</div>
 </div>
 
@@ -355,10 +413,12 @@ body.dark .badge {
 
 <script>
 
-const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv";
-const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv";
-const notesUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/notes.csv";
-const trainingUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/training.csv";
+const DATA_VERSION = "v14";   // 🔁 update when CSV changes
+
+const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv?v=" + DATA_VERSION;
+const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv?v=" + DATA_VERSION;
+const notesUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/notes.csv?v=" + DATA_VERSION;
+const trainingUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/training.csv?v=" + DATA_VERSION;
 
 let data = [];
 let holidays = [];
@@ -391,11 +451,11 @@ function sortBySeniority(list){
 }
 
 Promise.all([
-fetch(shiftUrl).then(r=>r.text()),
-fetch(holidayUrl).then(r=>r.text()),
-fetch(notesUrl).then(r=>r.text()),
-fetch(trainingUrl).then(r=>r.text())
-]).then(([shiftText,holidayText,notesText,trainingText])=>{
+  fetch(shiftUrl, { cache: "no-store" }).then(r=>r.text()),
+  fetch(holidayUrl, { cache: "no-store" }).then(r=>r.text()),
+  fetch(notesUrl, { cache: "no-store" }).then(r=>r.text()),
+  fetch(trainingUrl, { cache: "no-store" }).then(r=>r.text())
+]).then(([shiftText, holidayText, notesText, trainingText]) => {
 
 if(!shiftText || shiftText.trim() === ""){
     document.getElementById("today").innerHTML =
@@ -803,7 +863,7 @@ let d=new Date(val);
 let formatted=formatDate(d);
 
 document.getElementById("selectedTitle").innerText =
-"SELECTED DATE ("+formatted+")";
+"Selected Date Shift ("+formatted+")";
 
 render("selected",formatted);
 }
@@ -834,7 +894,7 @@ function renderTraining(){
         let parts = first.split("-");
         if(parts.length < 2) return false;
 
-    return parts[1] === month;
+    return String(parseInt(parts[1])) === String(parseInt(month));
     });
 
     if(filtered.length === 0){
@@ -881,18 +941,22 @@ function renderTraining(){
     let isPast = endDate < today;
     let isToday = (startDate <= today && endDate >= today);
 
-    // --- styling ---
-    let style = "";
+    let extraClass = "";
+
     if(isPast){
-        style = "opacity:0.6;";
+        extraClass = "past-training";
+    } else if(isToday){
+        extraClass = "today-training";
+    } else {
+        extraClass = "upcoming-training";
     }
 
     box.innerHTML += `
-    <div class="training-item" style="${style}">
+    <div class="training-item ${extraClass}">
         
         <!-- Line 1 -->
         <div class="training-name" style="font-weight:bold;">
-            ${t.date} — ${t.name}
+            ${isToday ? "🟢 " : isPast ? "⚪ " : "🟡 "} ${t.date} — ${t.name}
         </div>
 
         <!-- Line 2 -->
@@ -933,7 +997,15 @@ function renderNext7Days(){
 
         let rawShift = getShift(dateStr, selectedName) || "-";
 
-        let shiftClass = rawShift === "OFF" ? "OFF" : (rawShift.match(/[A-Z]/)?.[0] || "");
+        // ✅ Handle "-" case
+        let shiftClass;
+        if(rawShift === "-"){
+            shiftClass = "NA";   // new class
+        } else if(rawShift === "OFF"){
+            shiftClass = "OFF";
+        } else {
+            shiftClass = rawShift.match(/[A-Z]/)?.[0] || "";
+        }
 
         let shiftText = rawShift;
 
@@ -989,7 +1061,7 @@ function calcHoliday(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=13')
+  navigator.serviceWorker.register('./service-worker.js?v=14')
     .then(() => console.log("Service Worker Registered"));
 }
 
