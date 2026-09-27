@@ -59,6 +59,21 @@ body {
     font-size:14px;
 }
 
+.info-bar {
+    background: linear-gradient(135deg, #1f4e79, #163a5f);
+    color: white;
+    margin: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
 .card {
     background:white;
     margin:10px;
@@ -310,6 +325,12 @@ body.dark .header {
     background:#020617;
 }
 
+body.dark .info-bar {
+    background: linear-gradient(135deg, #0f172a, #020617);
+    color: #e2e8f0;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
 body.dark .slider {
     background:rgba(255,255,255,0.1);
 }
@@ -370,6 +391,11 @@ body.dark .badge {
 
 </div>
 
+<div class="info-bar">
+    <div><strong>HOD:</strong> Sh. Pradeep Rawat</div>
+    <div><strong>AIC:</strong> Sh. Manoj Kumar Haloi</div>
+</div>
+
 <div class="card">
     <label>Your Name:</label>
     <select id="nameSelector" onchange="onNameChange()"></select>
@@ -413,7 +439,7 @@ body.dark .badge {
 
 <script>
 
-const DATA_VERSION = "v14";   // 🔁 update when CSV changes
+const DATA_VERSION = "v15";   // 🔁 update when CSV change
 
 const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv?v=" + DATA_VERSION;
 const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv?v=" + DATA_VERSION;
@@ -1061,7 +1087,7 @@ function calcHoliday(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=14')
+  navigator.serviceWorker.register('./service-worker.js?v=15')
     .then(() => console.log("Service Worker Registered"));
 }
 
