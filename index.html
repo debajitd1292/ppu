@@ -16,17 +16,46 @@ body {
     overflow-x: hidden;
 }
 
-.header { 
-    background:#1f4e79; 
-    color:white; 
-    text-align:center; 
-    padding:15px 10px; 
-
-    position: sticky; 
-    top: 0; 
+.header {
+    position: sticky;
+    top: 0;
     z-index: 1000;
 
+    padding: 18px 12px;
+
+    /* Premium gradient */
+    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+
+    /* Glass effect */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    /* Subtle border */
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+
+    /* Depth shadow */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+
+    text-align: center;
+    color: #e2e8f0;
+
     overflow-x: hidden;
+}
+
+#todayDate {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+}
+
+.header h3 {
+    margin: 6px 0 4px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    /* subtle glow */
+    text-shadow: 0 0 8px rgba(255,255,255,0.15);
 }
 
 .holiday-text {
@@ -51,15 +80,22 @@ body {
 
 .badge {
     display:inline-block;
-    background:#c2185b;
     padding:6px 14px;
     border-radius:20px;
     margin:8px 0;
     font-weight:bold;
     font-size:14px;
+
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+
+    box-shadow: 
+        0 2px 6px rgba(0,0,0,0.3),
+        inset 0 1px 2px rgba(255,255,255,0.2);
+
+    border: 1px solid rgba(255,255,255,0.15);
 }
 
-.info-bar {
+.info-bar {			/* ✅ HOD/AIC */
     background: linear-gradient(135deg, #1f4e79, #163a5f);
     color: white;
     margin: 10px;
@@ -71,7 +107,46 @@ body {
     flex-direction: column;
     gap: 4px;
 
+    align-items: center;     
+    text-align: center;
+
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.info-bar div {			/* ✅ HOD/AIC */
+    width: 100%;
+}
+
+.section-header {		/* ✅ Exec/Non Exec */
+    display: inline-block;
+    padding: 6px 14px;
+    margin: 12px 0 8px 0;
+
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    border-radius: 999px; /* pill shape */
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    border: 1px solid rgba(255,255,255,0.2);
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.exec-header {			/* ✅ Exec */
+    color: #0d47a1;
+    background: linear-gradient(135deg, rgba(13,71,161,0.15), rgba(13,71,161,0.05));
+    border: 1px solid rgba(13,71,161,0.3);
+}
+
+.nonexec-header {		/* ✅ Non Exec */
+    color: #b71c1c;
+    background: linear-gradient(135deg, rgba(183,28,28,0.15), rgba(183,28,28,0.05));
+    border: 1px solid rgba(183,28,28,0.3);
 }
 
 .card {
@@ -112,9 +187,20 @@ select:focus, input:focus {
 .selected { border:2px solid gold; }
 
 /* COLORS */
-.A { background:#8e24aa; }
-.B { background:#ff9800; }
-.C { background:#1e40ff; }
+.A { 
+    background: linear-gradient(135deg, #9333ea, #6b21a8);
+    box-shadow: 0 2px 6px rgba(147,51,234,0.4);
+}
+
+.B { 
+    background: linear-gradient(135deg, #f59e0b, #b45309);
+    box-shadow: 0 2px 6px rgba(245,158,11,0.4);
+}
+
+.C { 
+    background: linear-gradient(135deg, #2563eb, #1e3a8a);
+    box-shadow: 0 2px 6px rgba(37,99,235,0.4);
+}
 .G { background:#e53935; }
 .OFF { background:#1b5e20; }
 
@@ -124,9 +210,20 @@ select:focus, input:focus {
 .T { background:#00acc1; color:black; }
 
 /* Badge dynamic colors */
-.badge.A { background:#8e24aa; }
-.badge.B { background:#ff9800; }
-.badge.C { background:#1e40ff; }
+.badge.A { 
+    background: linear-gradient(135deg, #9333ea, #6b21a8);
+    box-shadow: 0 0 10px rgba(147,51,234,0.5);
+}
+
+.badge.B { 
+    background: linear-gradient(135deg, #f59e0b, #b45309);
+    box-shadow: 0 0 10px rgba(245,158,11,0.5);
+}
+
+.badge.C { 
+    background: linear-gradient(135deg, #2563eb, #1e3a8a);
+    box-shadow: 0 0 10px rgba(37,99,235,0.5);
+}
 .badge.G { background:#e53935; }
 .badge.OFF { background:#1b5e20; }
 
@@ -136,6 +233,23 @@ select:focus, input:focus {
 body.dark .badge.N { background:#9ca3af; color:black; }
 .badge.L { background:#ffd600; color:black; }
 .badge.T { background:#00acc1; color:black; }
+
+.chip.selected {
+    box-shadow: 
+        0 0 8px rgba(255,255,255,0.6),
+        0 0 14px rgba(255,255,255,0.3);
+    transform: scale(1.05);
+}
+
+/* Smooth hover effect */
+.chip {
+    transition: all 0.2s ease;
+}
+
+.chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
 
 .footer {
     text-align:center;
@@ -149,17 +263,49 @@ body.dark .badge.N { background:#9ca3af; color:black; }
     color: white;
 }
 
-@keyframes blink {
+.notice-alert {			/* ✅ Alerts */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 10px 14px;
+    margin-bottom: 12px;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+
+    color: #b71c1c;
+
+    background: linear-gradient(135deg, #fdecea, #f8d7da);
+    border: 1px solid rgba(183, 28, 28, 0.3);
+
+    box-shadow: 0 4px 10px rgba(183,28,28,0.15);
+
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {		/* ✅ Alerts */
+    0%   { box-shadow: 0 0 6px rgba(183,28,28,0.2); }
+    50%  { box-shadow: 0 0 16px rgba(183,28,28,0.5); }
+    100% { box-shadow: 0 0 6px rgba(183,28,28,0.2); }
+}
+
+@keyframes blink {		/* ✅ Alerts Global */
     0% { opacity:1; }
     50% { opacity:0; }
     100% { opacity:1; }
 }
 
 .next7-container {
-    display:flex;
-    justify-content:space-between;
-    gap:4px;
-    padding:6px 8px;
+    display: flex;
+    gap: 8px;
+    padding: 8px 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
 }
 
 .day-card {
@@ -341,6 +487,32 @@ body.dark .card {
     box-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
+body.dark .section-header {		/* ✅ DARK Exec/Non Exec */
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+body.dark .exec-header {		/* ✅ DARK Exec */
+    color: #90caf9;
+    background: linear-gradient(135deg, rgba(30,64,255,0.25), rgba(30,64,255,0.1));
+    border: 1px solid rgba(144,202,249,0.4);
+}
+
+body.dark .nonexec-header {		/* ✅ DARK Non Exec */
+    color: #ef9a9a;
+    background: linear-gradient(135deg, rgba(183,28,28,0.3), rgba(183,28,28,0.1));
+    border: 1px solid rgba(239,154,154,0.4);
+}
+
+body.dark .notice-alert {		/* ✅ DARK Alerts */
+    color: #ff8a80;
+
+    background: linear-gradient(135deg, #3b0a0a, #1f0a0a);
+    border: 1px solid rgba(255,138,128,0.4);
+
+    box-shadow: 0 4px 14px rgba(0,0,0,0.7);
+}
+
 body.dark input,
 body.dark select {
     background:#1f2933;
@@ -392,13 +564,22 @@ body.dark .badge {
 </div>
 
 <div class="info-bar">
-    <div><strong>HOD:</strong> Sh. Pradeep Rawat</div>
-    <div><strong>AIC:</strong> Sh. Manoj Kumar Haloi</div>
+    <div><strong>Head of Department:</strong> Sh. Pradeep Rawat</div>
+    <div><strong>Area In-charge:</strong> Sh. Manoj Kumar Haloi</div>
 </div>
 
 <div class="card">
+
+    <label>Select Category:</label>
+    <select id="categorySelector" onchange="onCategoryChange()">
+        <option value="" disabled selected>Select Category</option>
+        <option value="exec">Executive</option>
+        <option value="nonexec">Non-Executive</option>
+    </select>
+
     <label>Your Name:</label>
     <select id="nameSelector" onchange="onNameChange()"></select>
+
 </div>
 
 <div class="card">
@@ -434,17 +615,18 @@ body.dark .badge {
 </div>
 
 <div class="footer">
-    © 2026 • Developed by DD
+    © 2026 • Developed by DebajitD
 </div>
 
 <script>
 
-const DATA_VERSION = "v15";   // 🔁 update when CSV change
+const DATA_VERSION = "v16";   // 🔁 update when CSV change
 
 const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv?v=" + DATA_VERSION;
 const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv?v=" + DATA_VERSION;
 const notesUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/notes.csv?v=" + DATA_VERSION;
 const trainingUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/training.csv?v=" + DATA_VERSION;
+const nonExecUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/nonexec_shift.csv?v=" + DATA_VERSION;
 
 let data = [];
 let holidays = [];
@@ -452,6 +634,12 @@ let notes = [];
 let selectedName = "";
 let trainings = [];
 let header = [];
+let nonExecData = [];
+let nonExecHeader = [];
+
+const nonExecSeniorityOrder = [
+    "Lalit","Achuit","Bidyut","Shashadhar","Pranjal","Diganta","Akib"
+];
 
 const seniorityOrder = [
 "Saiprasad","Abhigyan","Arshad","Sandip","Shashank","Debajit",
@@ -480,8 +668,9 @@ Promise.all([
   fetch(shiftUrl, { cache: "no-store" }).then(r=>r.text()),
   fetch(holidayUrl, { cache: "no-store" }).then(r=>r.text()),
   fetch(notesUrl, { cache: "no-store" }).then(r=>r.text()),
-  fetch(trainingUrl, { cache: "no-store" }).then(r=>r.text())
-]).then(([shiftText, holidayText, notesText, trainingText]) => {
+  fetch(trainingUrl, { cache: "no-store" }).then(r=>r.text()),
+  fetch(nonExecUrl, { cache: "no-store" }).then(r=>r.text())
+]).then(([shiftText, holidayText, notesText, trainingText, nonExecText]) => {
 
 if(!shiftText || shiftText.trim() === ""){
     document.getElementById("today").innerHTML =
@@ -497,14 +686,17 @@ data = shiftText.split("\n").map(r=>r.replace(/\r/g,"").split(/[,;]/));
 
 header = data[0].map(x => x.trim());
 
+nonExecText = nonExecText || "";
+
+nonExecData = nonExecText.split("\n").map(r=>r.replace(/\r/g,"").split(/[,;]/));
+nonExecHeader = nonExecData[0]?.map(x => x.trim()) || [];
+
 if(!header || header.length < 2){
     console.error("Invalid CSV header");
     return;
 }
 
-if(!selectedName && data.length > 1){
-    selectedName = data[1][0];   // first name from CSV
-}
+selectedName = "";
 
 holidays = holidayText.split("\n").slice(1).map(r=>{
 let [d,t,n]=r.replace(/\r/g,"").split(/[,;]/);
@@ -584,6 +776,36 @@ if(isGH || isRH) return true;
 return false;
 }
 
+// 🔴 CUSTOM ALERTS CONFIG (ADD HERE)
+const customAlerts = [
+
+    // ✅ WEEKLY ALERT (Every Thursday 9 AM – 4 PM)
+    {
+    dayOfWeek: 4,   // 0=Sun, 1=Mon ... 4=Thu
+    fromHour: 9,
+    toHour: 16,
+    text: "Weekly Operations Review Meeting<br>at CCR Conference Room at 3 PM",
+    repeat: "weekly"
+    },
+
+    // ✅ YEARLY ALERT (Example: PMS Filling)
+    {
+        from: { day: 1, month: 4, hour: 0, min: 0 },
+        to:   { day: 10, month: 4, hour: 23, min: 59 },
+        text: "Reminder: PMS filing to be completed by 10 April",
+        repeat: "yearly"
+    },
+
+    // ✅ ONE-TIME ALERT (Example: 10 Oct 2026, 14:00–18:00)
+    {
+        from: new Date(2026, 9, 28, 9, 0),   // YYYY MM DD HR MIN
+        to:   new Date(2026, 9, 28, 17, 0),
+        text: "Operations Meeting<br>at CCR Conference Room at 3 PM",
+        repeat: "once"
+    }
+
+];
+
 function getActiveAlerts(){
 
     let now = new Date();
@@ -606,6 +828,59 @@ function getActiveAlerts(){
     if(date >= 19 && date <= 21){
         alerts.push("Update/Sign Attendance Register");
     }
+    // 🔴 3 & 4. Custom Alerts (Yearly + One-time)
+
+    customAlerts.forEach(a => {
+
+    if(a.repeat === "yearly"){
+
+        let from = new Date(
+            year,
+            a.from.month - 1,
+            a.from.day,
+            a.from.hour,
+            a.from.min
+        );
+
+        let to = new Date(
+            year,
+            a.to.month - 1,
+            a.to.day,
+            a.to.hour,
+            a.to.min
+        );
+
+        if(now >= from && now <= to){
+            alerts.push(a.text);
+        }
+
+    } 
+    else if(a.repeat === "once"){
+
+        if(now >= a.from && now <= a.to){
+            alerts.push(a.text);
+        }
+
+    } 
+    else if(a.repeat === "weekly"){
+
+        let currentDay = now.getDay();   // 0–6
+        let currentMinutes = now.getHours()*60 + now.getMinutes();
+
+        let fromMinutes = a.fromHour * 60;
+        let toMinutes   = a.toHour * 60;
+
+        if(
+            currentDay === a.dayOfWeek &&
+            currentMinutes >= fromMinutes &&
+            currentMinutes <= toMinutes
+        ){
+            alerts.push(a.text);
+        }
+
+    }
+
+});
 
     return alerts;
 }
@@ -691,10 +966,11 @@ if(isSpecialDay()){
 populateNames();
 
 /* AUTO SAVE */
-let saved = localStorage.getItem("ppu_name");
-if(saved){
-selectedName = saved;
-document.getElementById("nameSelector").value = saved;
+let savedName = localStorage.getItem("ppu_name");
+
+if(savedName){
+    selectedName = savedName;
+    document.getElementById("nameSelector").value = savedName;
 }
 
 /* SHOW NOTE */
@@ -706,14 +982,8 @@ let alerts = getActiveAlerts();
 
 if(alerts.length > 0){
     alertBox.innerHTML = `
-    <div style="
-        text-align:center;
-        color:red;
-        font-weight:bold;
-        margin-bottom:10px;
-        animation: blink 1s infinite;
-    ">
-    ${alerts.join("<br>")}
+    <div class="notice-alert">
+        ⚠ ${alerts.join(" | ")}
     </div>
     `;
 }
@@ -725,17 +995,36 @@ renderNext7Days();
 }
 
 function populateNames(){
+
 let sel=document.getElementById("nameSelector");
+let category = document.getElementById("categorySelector")?.value;
+if(!category) return;
+
 let names=[];
 
-for(let i=1;i<data.length;i++){
-let n=data[i][0]?.trim();
-if(n) names.push(n);
+if(category === "exec"){
+    for(let i=1;i<data.length;i++){
+        let n=data[i][0]?.trim();
+        if(n) names.push(n);
+    }
+    names = sortBySeniority(names);
+}else{
+    for(let i=1;i<nonExecData.length;i++){
+        let n=nonExecData[i][0]?.trim();
+        if(n) names.push(n);
+    }
+    names = names.sort((a,b)=>{
+        let ia = nonExecSeniorityOrder.indexOf(a);
+        let ib = nonExecSeniorityOrder.indexOf(b);
+        if(ia === -1) ia = 999;
+        if(ib === -1) ib = 999;
+        return ia - ib;
+    });
 }
 
-names = sortBySeniority(names);
-
+sel.innerHTML = "";
 sel.add(new Option("Select Name",""));
+
 names.forEach(n=>sel.add(new Option(n,n)));
 }
 
@@ -747,7 +1036,11 @@ let shift = selectedName ? (getShift(today, selectedName) || "-") : "Select Name
 let badge = document.getElementById("todayShiftBadge");
 
 /* TEXT */
-badge.innerText = "Today's Shift: " + shift;
+if(!selectedName){
+    badge.innerText = "Select a name to view shift";
+}else{
+    badge.innerText = "Today's Shift: " + shift;
+}
 
 /* RESET CLASS */
 badge.className = "badge";
@@ -772,16 +1065,22 @@ render("today", today);
 
 function getShift(date,name){
 
-    let col = header.indexOf(date);
+    let category = document.getElementById("categorySelector")?.value;
+    if(!category) return null;
+
+    let localData = (category === "exec") ? data : nonExecData;
+    let localHeader = (category === "exec") ? header : nonExecHeader;
+
+    let col = localHeader.indexOf(date);
     if(col === -1) return null;
 
-    for(let i=1;i<data.length;i++){
-        if(data[i][0]?.trim() === name){
-            return data[i][col]?.trim() || null;
+    for(let i=1;i<localData.length;i++){
+        if(localData[i][0]?.trim() === name){
+            return localData[i][col]?.trim() || null;
         }
     }
 
-    return null;   //
+    return null;
 }
 
 function parseShift(shift){
@@ -824,10 +1123,37 @@ shifts[s].push({name:name,multi:isMulti});
 return shifts;
 }
 
+function getNonExecData(date){
+
+    let col = nonExecHeader.indexOf(date);
+    if(col === -1) return {};
+
+    let shifts={};
+
+    for(let i=1;i<nonExecData.length;i++){
+
+        let name=nonExecData[i][0]?.trim();
+        let shift=nonExecData[i][col]?.trim();
+        if(!shift) continue;
+
+        let isMulti = shift.length>1;
+
+        parseShift(shift).forEach(s=>{
+            if(!shifts[s]) shifts[s]=[];
+            shifts[s].push({name:name,multi:isMulti});
+        });
+    }
+
+    return shifts;
+}
+
 function render(id,date){
 
+console.log("Render called for:", id, date);
 let box=document.getElementById(id);
 box.innerHTML="";
+// ✅ Show Executive header only when rendering
+box.innerHTML += `<div class="section-header exec-header">Executive</div>`;
 
 if(header.indexOf(date)===-1){
 
@@ -848,6 +1174,7 @@ let shifts=getData(date);
 ["A","B","C","G","OFF","L","T"].forEach(s=>{
 
 let list=shifts[s]||[];
+if(list.length === 0) return;
 
 list = sortBySeniority(list.map(x=>x.name))
        .map(n => list.find(x=>x.name===n));
@@ -865,6 +1192,7 @@ box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})${ale
 
 /* D N */
 ["D","N"].forEach(s=>{
+
 let list=shifts[s]||[];
 if(list.length===0) return;
 
@@ -879,8 +1207,39 @@ return `<span class="chip ${s} ${sel}">${obj.name}${multi}</span>`;
 
 box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})</div>${chips}`;
 });
-}
 
+// ================= NON-EXEC (FIXED - SINGLE RENDER) =================
+
+let nonExecShifts = getNonExecData(date);
+
+let hasNonExec = Object.keys(nonExecShifts).some(k => nonExecShifts[k]?.length);
+
+if(hasNonExec){
+
+    box.innerHTML += `<hr><div class="section-header nonexec-header">Non-Executive</div>`;
+
+    ["A","B","C","G","OFF","L","T","D","N"].forEach(s=>{
+
+        let list = nonExecShifts[s] || [];
+        if(list.length === 0) return;
+
+        list = list.sort((a,b)=>{
+            let ia = nonExecSeniorityOrder.indexOf(a.name);
+            let ib = nonExecSeniorityOrder.indexOf(b.name);
+            if(ia === -1) ia = 999;
+            if(ib === -1) ib = 999;
+            return ia - ib;
+        });
+
+        let chips = list.map(obj=>{
+            let sel=(selectedName && obj.name===selectedName)?"selected":"";
+            return `<span class="chip ${s} ${sel}">${obj.name}</span>`;
+        }).join("");
+
+        box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})</div>${chips}`;
+    });
+}
+}
 function renderSelected(){
 let val=document.getElementById("datePicker").value;
 if(!val) return;
@@ -1003,8 +1362,8 @@ function renderNext7Days(){
     if(!header || header.length === 0) return;
     if(!data || data.length === 0) return;
     if(!selectedName){
-    box.innerHTML = "<div style='color:#777;'>Select Name</div>";
-    return;
+        box.innerHTML = "<div style='color:#777;'>Select name to view upcoming shifts</div>";
+        return;
     }
 
     let today = new Date();
@@ -1058,6 +1417,29 @@ renderSelected();
 renderNext7Days();
 }
 
+function onCategoryChange(){
+
+    let category = document.getElementById("categorySelector").value;
+    localStorage.setItem("selectedCategory", category);
+
+    // Reset selected name
+    selectedName = "";
+
+    // Clear name dropdown completely
+    document.getElementById("nameSelector").innerHTML = '<option value="">Select Name</option>';
+
+    // Clear UI sections
+    document.getElementById("today").innerHTML = "";
+    document.getElementById("selected").innerHTML = "";
+
+    // Populate names based on category
+    populateNames();
+
+    // Update UI
+    refresh();
+    renderNext7Days();
+}
+
 function calcHoliday(){
 
     let today = new Date();
@@ -1087,9 +1469,33 @@ function calcHoliday(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=15')
+  navigator.serviceWorker.register('./service-worker.js?v=16')
     .then(() => console.log("Service Worker Registered"));
 }
+
+// ✅ AUTO RESTORE ON PAGE LOAD
+document.addEventListener("DOMContentLoaded", function(){
+
+    // 1. Restore category
+    let savedCategory = localStorage.getItem("selectedCategory");
+    if(savedCategory){
+        document.getElementById("categorySelector").value = savedCategory;
+    }
+
+    // 2. Load names based on category
+    populateNames();
+
+    // 3. Restore name
+    let savedName = localStorage.getItem("ppu_name");
+    if(savedName){
+        selectedName = savedName;
+        document.getElementById("nameSelector").value = savedName;
+    }
+
+    // 4. Refresh UI
+    refresh();
+    renderNext7Days();
+});
 
 </script>
 
