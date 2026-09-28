@@ -43,8 +43,9 @@ body {
 }
 
 #todayDate {
-    font-size: 13px;
-    opacity: 0.85;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.9;
     margin-bottom: 4px;
 }
 
@@ -95,17 +96,18 @@ body {
     border: 1px solid rgba(255,255,255,0.15);
 }
 
-.info-bar {			/* ✅ HOD/AIC */
+.info-bar {			/* ✅ HOD/AIC Sec */
     background: linear-gradient(135deg, #1f4e79, #163a5f);
     color: white;
     margin: 10px;
-    padding: 10px 12px;
+    padding: 12px 14px;
     border-radius: 10px;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 500;
 
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 
     align-items: center;     
     text-align: center;
@@ -113,7 +115,7 @@ body {
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-.info-bar div {			/* ✅ HOD/AIC */
+.info-bar div {			/* ✅ HOD/AIC Sec */
     width: 100%;
 }
 
@@ -545,7 +547,6 @@ body.dark .badge {
     <h3>PPU OPERATIONS DASHBOARD</h3> 
     <div id="todayDate"></div> 
 
-    <!-- ✅ ADDED NOTE HERE --> 
     <div id="todayNote" style="margin-top:5px;font-weight:bold;"></div> 
 
     <div class="badge" id="todayShiftBadge">Loading...</div> 
@@ -555,7 +556,6 @@ body.dark .badge {
         Next RH: <span id="nextRH"></span> 
     </div> 
 
-    <!-- 🌙 DARK MODE TOGGLE (ADD THIS) -->
     <div id="themeToggle" class="theme-switch">
         <input type="checkbox" id="toggleCheckbox">
         <span class="slider"></span>
@@ -584,7 +584,6 @@ body.dark .badge {
 
 <div class="card">
 
-    <!-- 🔴 ALERT ABOVE TITLE -->
     <div id="todayAlert"></div>
 
     <h3>Today's Shift</h3>
@@ -595,11 +594,8 @@ body.dark .badge {
 
     <h3 id="selectedTitle">Select Date & View Shift</h3> 
 
-    <!-- Date Picker -->
     <label>Select Date:</label> 
     <input type="date" id="datePicker" onchange="renderSelected()"> 
-
-    <!-- Shift Output -->
     <div id="selected" style="margin-top:10px;"></div> 
 
 </div>
@@ -620,7 +616,7 @@ body.dark .badge {
 
 <script>
 
-const DATA_VERSION = "v16";   // 🔁 update when CSV change
+const DATA_VERSION = "v15";   // 🔁 update when CSV change
 
 const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv?v=" + DATA_VERSION;
 const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv?v=" + DATA_VERSION;
@@ -744,7 +740,6 @@ const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov",
 return day + suffix + " " + months[parseInt(m)-1];
 }
 
-/* ✅ NEW FUNCTION (ADDED) */
 function isSpecialDay(){
 
 let today = new Date();
@@ -776,7 +771,6 @@ if(isGH || isRH) return true;
 return false;
 }
 
-// 🔴 CUSTOM ALERTS CONFIG (ADD HERE)
 const customAlerts = [
 
     // ✅ WEEKLY ALERT (Every Thursday 9 AM – 4 PM)
@@ -784,7 +778,7 @@ const customAlerts = [
     dayOfWeek: 4,   // 0=Sun, 1=Mon ... 4=Thu
     fromHour: 9,
     toHour: 16,
-    text: "Weekly Operations Review Meeting<br>at CCR Conference Room at 3 PM",
+    text: "Weekly Operations Review Meeting<br>CCR Conference Room at 3 PM",
     repeat: "weekly"
     },
 
@@ -792,7 +786,7 @@ const customAlerts = [
     {
         from: { day: 1, month: 4, hour: 0, min: 0 },
         to:   { day: 10, month: 4, hour: 23, min: 59 },
-        text: "Reminder: PMS filing to be completed by 10 April",
+        text: "Reminder: PMS Filing to be completed by 10 April",
         repeat: "yearly"
     },
 
@@ -800,7 +794,7 @@ const customAlerts = [
     {
         from: new Date(2026, 9, 28, 9, 0),   // YYYY MM DD HR MIN
         to:   new Date(2026, 9, 28, 17, 0),
-        text: "Operations Meeting<br>at CCR Conference Room at 3 PM",
+        text: "Operations Meeting at CCR Conference Room at 3 PM",
         repeat: "once"
     }
 
@@ -887,9 +881,9 @@ function getActiveAlerts(){
 
 /* EXISTING */
 function getTodayNote(){
-let today = new Date();
-let key = ("0"+today.getDate()).slice(-2) + "-" +
-          ("0"+(today.getMonth()+1)).slice(-2);
+    let today = new Date();
+    let key = ("0"+today.getDate()).slice(-2) + "-" +
+              ("0"+(today.getMonth()+1)).slice(-2);
 
 let todaysNotes = notes.filter(n => n.date === key);
 
@@ -952,15 +946,14 @@ function init(){
 
 initTheme();
 
-document.getElementById("today").innerHTML = "Loading...";
+    document.getElementById("today").innerHTML = "Loading...";
 
-let dateElem = document.getElementById("todayDate");
-dateElem.innerText = new Date().toDateString();
+    let dateElem = document.getElementById("todayDate");
+    dateElem.innerText = new Date().toDateString();
 
-/* ✅ APPLY GREEN COLOR */
-if(isSpecialDay()){
+if(isSpecialDay()){		/* ✅ Special Days */
     dateElem.style.color = "#ffd600";
-    dateElem.style.fontWeight = "bold";
+    dateElem.style.fontWeight = "600";
 }
 
 populateNames();
@@ -1089,36 +1082,36 @@ function parseShift(shift){
 
     shift = shift.trim();
 
-    // ✅ Keep OFF as single unit
+    // Keep OFF as single unit
     if(shift === "OFF") return ["OFF"];
 
-    // ✅ Split A, B, C, etc.
+    // Split A, B, C, etc.
     return shift.match(/[A-Z]/g) || [];
 }
 
 function getData(date){
-let col = header.indexOf(date);
-if(col === -1) return {};
-let shifts={};
+    let col = header.indexOf(date);
+    if(col === -1) return {};
+    let shifts={};
 
 for(let i=1;i<data.length;i++){
 
-let name=data[i][0]?.trim();
-let shift=data[i][col]?.trim();
-if(!shift) continue;
+    let name=data[i][0]?.trim();
+    let shift=data[i][col]?.trim();
+    if(!shift) continue;
 
-if(shift==="OFF"){
-if(!shifts["OFF"]) shifts["OFF"]=[];
-shifts["OFF"].push({name:name,multi:false});
-continue;
+    if(shift==="OFF"){
+    if(!shifts["OFF"]) shifts["OFF"]=[];
+    shifts["OFF"].push({name:name,multi:false});
+    continue;
 }
 
 let isMulti = shift.length>1;
 
-parseShift(shift).forEach(s=>{
-if(!shifts[s]) shifts[s]=[];
-shifts[s].push({name:name,multi:isMulti});
-});
+    parseShift(shift).forEach(s=>{
+    if(!shifts[s]) shifts[s]=[];
+    shifts[s].push({name:name,multi:isMulti});
+    });
 }
 return shifts;
 }
@@ -1149,11 +1142,11 @@ function getNonExecData(date){
 
 function render(id,date){
 
-console.log("Render called for:", id, date);
-let box=document.getElementById(id);
-box.innerHTML="";
-// ✅ Show Executive header only when rendering
-box.innerHTML += `<div class="section-header exec-header">Executive</div>`;
+    console.log("Render called for:", id, date);
+    let box=document.getElementById(id);
+    box.innerHTML="";
+
+    box.innerHTML += `<div class="section-header exec-header">Executive</div>`;
 
 if(header.indexOf(date)===-1){
 
@@ -1241,11 +1234,11 @@ if(hasNonExec){
 }
 }
 function renderSelected(){
-let val=document.getElementById("datePicker").value;
-if(!val) return;
+    let val=document.getElementById("datePicker").value;
+    if(!val) return;
 
-let d=new Date(val);
-let formatted=formatDate(d);
+    let d=new Date(val);
+    let formatted=formatDate(d);
 
 document.getElementById("selectedTitle").innerText =
 "Selected Date Shift ("+formatted+")";
@@ -1408,11 +1401,11 @@ function renderNext7Days(){
 }
 
 function onNameChange(){
-selectedName=document.getElementById("nameSelector").value;
-localStorage.setItem("ppu_name",selectedName);
-refresh();
-if(document.getElementById("datePicker").value){
-renderSelected();
+    selectedName=document.getElementById("nameSelector").value;
+    localStorage.setItem("ppu_name",selectedName);
+    refresh();
+    if(document.getElementById("datePicker").value){
+    renderSelected();
 }
 renderNext7Days();
 }
@@ -1469,7 +1462,7 @@ function calcHoliday(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=16')
+  navigator.serviceWorker.register('./service-worker.js?v=15')
     .then(() => console.log("Service Worker Registered"));
 }
 
