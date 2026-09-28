@@ -1,8 +1,8 @@
-const CACHE_NAME = "ppu-dashboard-v15";   // 🔁 change version on every update
+const CACHE_NAME = "ppu-dashboard-v16";   // 🔁 change version on every update
 
 const urlsToCache = [
     "./",
-    "./index.html?v=15",
+    "./index.html?v=16",
     "./manifest.json",
     "./service-worker.js",
     "https://raw.githubusercontent.com/debajitd1292/ppu/main/logo.png"
