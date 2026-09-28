@@ -814,8 +814,8 @@ function getActiveAlerts(){
     // 🔴 1. Monthly Reset Alert (Last day 2PM → 1st 6AM)
     let lastDay = new Date(year, month + 1, 0).getDate();
 
-    if((date === lastDay && hours >= 14) || (date === 1 && hours < 6)){
-        alerts.push("Reset Totalizers & Pump Running Hours<br>along with Blending Silo Changeover at 06:00 hrs");
+    if((date === lastDay && hours >= 7) || (date === 1 && hours < 6)){
+        alerts.push("Reset Totalizers, Pump Running Hours & Change Blending Silo<br>at 06:00 hours on 1st Day of the Month<br>Record Readings before Reset");
     }
 
     // 🔴 2. Attendance Alert (19th → 21st full day)
