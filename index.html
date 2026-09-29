@@ -43,7 +43,7 @@ body {
 }
 
 #todayDate {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     opacity: 0.9;
     margin-bottom: 4px;
@@ -778,7 +778,7 @@ const customAlerts = [
     dayOfWeek: 4,   // 0=Sun, 1=Mon ... 4=Thu
     fromHour: 9,
     toHour: 16,
-    text: "Weekly Operations Review Meeting<br>CCR Conference Room at 3 PM",
+    text: "PPU Weekly Review Meeting<br>Today at 4 PM at CCR Conference Room",
     repeat: "weekly"
     },
 
@@ -786,7 +786,7 @@ const customAlerts = [
     {
         from: { day: 1, month: 4, hour: 0, min: 0 },
         to:   { day: 10, month: 4, hour: 23, min: 59 },
-        text: "Reminder: PMS Filing to be completed by 10 April",
+        text: "Reminder: PMS filing to be completed by 10th April",
         repeat: "yearly"
     },
 
@@ -811,11 +811,11 @@ function getActiveAlerts(){
 
     let alerts = [];
 
-    // 🔴 1. Monthly Reset Alert (Last day 2PM → 1st 6AM)
+    // 🔴 1. Monthly Reset Alert (Last day 9AM → 1st 6AM)
     let lastDay = new Date(year, month + 1, 0).getDate();
 
-    if((date === lastDay && hours >= 7) || (date === 1 && hours < 6)){
-        alerts.push("Reset Totalizers, Pump Running Hours & Change Blending Silo<br>at 06:00 hours on 1st Day of the Month<br>Record Readings before Reset");
+    if((date === lastDay && hours >= 9) || (date === 1 && hours < 6)){
+        alerts.push("Reset Totalizers, Pump Running Hours & Blending Silo<br>On 1st Day of the Month at 6 AM (Record Readings before Reset)");
     }
 
     // 🔴 2. Attendance Alert (19th → 21st full day)
