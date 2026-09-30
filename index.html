@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+f<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -146,18 +146,25 @@ select:focus, input:focus {
 
 .shift-active-box {
     position: relative;
-    padding: 6px;
+    padding: 5px;
     border-radius: 10px;
 }
 
 .shift-active-box::before {
     content: "";
     position: absolute;
-    inset: -2px;
+
+    top: -0px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+
     border-radius: 12px;
+
     background: linear-gradient(90deg, transparent, #0d47a1, transparent);
     background-size: 200% 100%;
     animation: moveBorder 2s linear infinite;
+
     z-index: 0;
 }
 
@@ -308,6 +315,11 @@ body.dark .badge.N { background:#9ca3af; color:black; }
     padding:15px;
     font-size:12px;
     color:#555;
+}
+
+#lastUpdated {
+    font-size: 11px;
+    opacity: 0.8;
 }
 
 .NA {
@@ -571,15 +583,19 @@ body.dark .notice-alert {		/* ✅ DARK Alerts */
 body.dark .shift-active-box::before {
     background: linear-gradient(
         90deg,
-        transparent,
-        rgba(220, 220, 220, 0.25),
-        rgba(180, 180, 180, 0.35),
-        rgba(220, 220, 220, 0.25),
-        transparent
+        transparent 0%,
+        rgba(200,200,200,0.2) 30%,
+        rgba(230,230,230,0.5) 55%,
+        rgba(255,255,255,0.85) 75%,
+        rgba(255,255,255,1) 90%,
+        rgba(255,255,255,0.9) 100%
     );
 
-    filter: blur(1.2px);
-    opacity: 0.65;
+    background-size: 200% 100%;
+    animation: moveBorder 2s linear infinite;
+
+    filter: blur(1px);
+    opacity: 0.9;
 }
 
 body.dark input,
@@ -591,6 +607,10 @@ body.dark select {
 
 body.dark .footer {
     color:#94a3b8;
+}
+
+body.dark #lastUpdated {
+    color: #94a3b8;
 }
 
 /* Keep shift colors intact */
@@ -607,7 +627,7 @@ body.dark .badge {
 <body>
 
 <div class="header">
-    <img src="https://raw.githubusercontent.com/debajitd1292/ppu/main/logo.png" 
+    <img src="https://raw.githubusercontent.com/debajitd1292/beta/main/logo.png" 
      class="logo" 
      onload="this.style.opacity=1; this.style.transform='scale(1)'"> 
 
@@ -684,18 +704,19 @@ body.dark .badge {
 </div>
 
 <div class="footer">
+    <div id="lastUpdated" style="margin-bottom:6px;"></div>
     © 2026 • Developed by DebajitD
 </div>
 
 <script>
 
-const DATA_VERSION = "v18";   // 🔁 update when CSV change
+const DATA_VERSION = "v15";   // 🔁 update when CSV change
 
-const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv?v=" + DATA_VERSION;
-const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv?v=" + DATA_VERSION;
-const notesUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/notes.csv?v=" + DATA_VERSION;
-const trainingUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/training.csv?v=" + DATA_VERSION;
-const nonExecUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/nonexec_shift.csv?v=" + DATA_VERSION;
+const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/beta/main/shift.csv?v=" + DATA_VERSION;
+const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/beta/main/holiday.csv?v=" + DATA_VERSION;
+const notesUrl = "https://raw.githubusercontent.com/debajitd1292/beta/main/notes.csv?v=" + DATA_VERSION;
+const trainingUrl = "https://raw.githubusercontent.com/debajitd1292/beta/main/training.csv?v=" + DATA_VERSION;
+const nonExecUrl = "https://raw.githubusercontent.com/debajitd1292/beta/main/nonexec_shift.csv?v=" + DATA_VERSION;
 
 let data = [];
 let holidays = [];
@@ -705,6 +726,7 @@ let trainings = [];
 let header = [];
 let nonExecData = [];
 let nonExecHeader = [];
+let isDataLoaded = false;
 
 const nonExecSeniorityOrder = [
     "Lalit","Achuit","Bidyut","Shashadhar","Pranjal","Diganta","Akib",
@@ -735,11 +757,11 @@ function sortBySeniority(list){
 }
 
 Promise.all([
-  fetch(shiftUrl,).then(r=>r.text()),
-  fetch(holidayUrl,).then(r=>r.text()),
-  fetch(notesUrl,).then(r=>r.text()),
-  fetch(trainingUrl,).then(r=>r.text()),
-  fetch(nonExecUrl,).then(r=>r.text())
+  fetch(shiftUrl).then(r=>r.text()),
+  fetch(holidayUrl).then(r=>r.text()),
+  fetch(notesUrl).then(r=>r.text()),
+  fetch(trainingUrl).then(r=>r.text()),
+  fetch(nonExecUrl).then(r=>r.text())
 ]).then(([shiftText, holidayText, notesText, trainingText, nonExecText]) => {
 
 if(!shiftText || shiftText.trim() === ""){
@@ -788,6 +810,9 @@ return {date:d?.trim(),type:t?.trim(),name:n?.trim(),message:m?.trim()};
 });
 
 init();
+
+isDataLoaded = true;
+updateLastUpdated();
 
 })
 
@@ -974,6 +999,17 @@ return todaysNotes.map(n => {
 }).join("<br>");
 }
 
+function updateLastUpdated(){		// Last Sync
+    let now = new Date();
+
+    let time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    let date = now.toLocaleDateString([], { day: '2-digit', month: 'short' });
+
+    document.getElementById("lastUpdated").innerText =
+        "Last Sync: " + date + " • " + time;
+}
+
 function getCurrentShiftInfo() {
     let now = new Date();
 
@@ -1051,11 +1087,14 @@ if(isSpecialDay()){		/* ✅ Special Days */
     dateElem.style.fontWeight = "600";
 }
 
+let savedCategory = localStorage.getItem("selectedCategory");
+if(savedCategory){
+    document.getElementById("categorySelector").value = savedCategory;
+}
+
 populateNames();
 
-/* AUTO SAVE */
 let savedName = localStorage.getItem("ppu_name");
-
 if(savedName){
     selectedName = savedName;
     document.getElementById("nameSelector").value = savedName;
@@ -1561,6 +1600,58 @@ function onCategoryChange(){
     renderNext7Days();
 }
 
+function autoRefreshData(){ 
+
+    console.log("🔄 Auto refresh triggered"); 
+
+    Promise.all([ 
+        fetch(shiftUrl, { cache: "no-store" }).then(r=>r.text()), 
+        fetch(holidayUrl, { cache: "no-store" }).then(r=>r.text()), 
+        fetch(notesUrl, { cache: "no-store" }).then(r=>r.text()), 
+        fetch(trainingUrl, { cache: "no-store" }).then(r=>r.text()), 
+        fetch(nonExecUrl, { cache: "no-store" }).then(r=>r.text()) 
+    ])
+    .then(([shiftText, holidayText, notesText, trainingText, nonExecText]) => { 
+ 
+        data = shiftText.split("\n").map(r=>r.replace(/\r/g,"").split(/[,;]/)); 
+        header = data[0].map(x => x.trim()); 
+
+        holidays = holidayText.split("\n").slice(1).map(r=>{ 
+            let [d,t,n]=r.replace(/\r/g,"").split(/[,;]/); 
+            return {date:d?.trim(),type:t?.trim(),name:n?.trim()}; 
+        }); 
+
+        trainings = trainingText.split("\n").slice(1).map(r=>{ 
+            let [d,n,t]=r.replace(/\r/g,"").split(/[,;]/); 
+            return {date:d?.trim(),name:n?.trim(),type:t?.trim()}; 
+        }); 
+
+        notes = notesText.split("\n").slice(1).map(r=>{ 
+            let [d,t,n,m]=r.replace(/\r/g,"").split(/[,;]/); 
+            return {date:d?.trim(),type:t?.trim(),name:n?.trim(),message:m?.trim()}; 
+        }); 
+
+        nonExecData = nonExecText.split("\n").map(r=>r.replace(/\r/g,"").split(/[,;]/)); 
+        nonExecHeader = nonExecData[0]?.map(x => x.trim()) || []; 
+
+        document.getElementById("todayNote").innerHTML = getTodayNote(); 
+
+        refresh();                 
+        renderNext7Days();         
+        renderTraining();          
+
+        if(document.getElementById("datePicker").value){ 
+            renderSelected();      
+        } 
+
+        calcHoliday();             
+    })
+
+    .catch(err => {
+        console.error("Auto refresh failed:", err);
+    });
+}
+
 function calcHoliday(){
 
     let today = new Date();
@@ -1590,32 +1681,20 @@ function calcHoliday(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=18')
+  navigator.serviceWorker.register('./service-worker.js?v=15')
     .then(() => console.log("Service Worker Registered"));
 }
 
-// ✅ AUTO RESTORE ON PAGE LOAD
-document.addEventListener("DOMContentLoaded", function(){
+// ⏱ Auto refresh every 2 minutes
+setInterval(() => {
+    if(isDataLoaded) autoRefreshData();
+}, 120000);
 
-    // 1. Restore category
-    let savedCategory = localStorage.getItem("selectedCategory");
-    if(savedCategory){
-        document.getElementById("categorySelector").value = savedCategory;
+// 🔁 Refresh when user comes back to tab
+document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "visible" && isDataLoaded){
+        autoRefreshData();
     }
-
-    // 2. Load names based on category
-    populateNames();
-
-    // 3. Restore name
-    let savedName = localStorage.getItem("ppu_name");
-    if(savedName){
-        selectedName = savedName;
-        document.getElementById("nameSelector").value = savedName;
-    }
-
-    // 4. Refresh UI
-    refresh();
-    renderNext7Days();
 });
 
 </script>
