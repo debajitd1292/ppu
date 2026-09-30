@@ -825,7 +825,7 @@ const customAlerts = [
     dayOfWeek: 4,   // 0=Sun, 1=Mon ... 4=Thu
     fromHour: 9,
     toHour: 16,
-    text: "PPU Weekly Review Meeting<br>Today at 4 PM • CCR Conference Room",
+    text: "PPU Weekly Review Meeting today at 4 PM • CCR Conference Room",
     repeat: "weekly"
     },
 
@@ -854,7 +854,7 @@ function getActiveAlerts(){
     let lastDay = new Date(year, month + 1, 0).getDate();
 
     if((date === lastDay && hours >= 9) || (date === 1 && hours < 6)){
-        alerts.push("Reset Totalizers, Pump Running Hours & Blending Silo<br>On 1st Day of the Month at 6 AM • Record Readings before Reset");
+        alerts.push("Reset Totalizers, Pump Running Hours & Blending Silo on 1st Day of the Month at 6 AM • Record Readings before Reset");
     }
 
     // 🔴 2. Attendance Alert (19th → 21st full day)
