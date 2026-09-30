@@ -96,7 +96,7 @@ body {
     border: 1px solid rgba(255,255,255,0.15);
 }
 
-.info-bar {		/* ✅ HOD/AIC Sec */
+.info-bar {			/* ✅ HOD/AIC Sec */
     background: linear-gradient(135deg, #1f4e79, #163a5f);
     color: white;
     margin: 10px;
@@ -119,14 +119,14 @@ body {
     width: 100%;
 }
 
-.row {			/* ✅ Side by Side */
+.row {			/* ✅ Side by side */
     display: flex;
     gap: 10px;
 }
 
 .field {
     flex: 1;
-    min-width: 0;
+    min-width: 0;   /* prevents overflow on mobile */
 }
 
 input, select {
@@ -143,6 +143,30 @@ select:focus, input:focus {
     outline: none;
     border: 2px solid gold;
 }
+
+.shift-active-box {
+    position: relative;
+    padding: 6px;
+    border-radius: 10px;
+}
+
+.shift-active-box::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, transparent, #0d47a1, transparent);
+    background-size: 200% 100%;
+    animation: moveBorder 2s linear infinite;
+    z-index: 0;
+}
+
+.shift-active-box > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== Mobile Optimization ===== */
 
 @media (max-width: 600px) {
     .row {
@@ -180,13 +204,13 @@ select:focus, input:focus {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.exec-header {		/* ✅ Exec */
+.exec-header {			/* ✅ Exec */
     color: #0d47a1;
     background: linear-gradient(135deg, rgba(13,71,161,0.15), rgba(13,71,161,0.05));
     border: 1px solid rgba(13,71,161,0.3);
 }
 
-.nonexec-header {	/* ✅ Non Exec */
+.nonexec-header {		/* ✅ Non Exec */
     color: #b71c1c;
     background: linear-gradient(135deg, rgba(183,28,28,0.15), rgba(183,28,28,0.05));
     border: 1px solid rgba(183,28,28,0.3);
@@ -199,21 +223,6 @@ select:focus, input:focus {
     border-radius:12px;
 
     margin-top:15px;
-}
-
-input, select {
-    width:100%;
-    height:40px;
-    padding:6px 10px;
-    margin-top:6px;
-    border-radius:8px;
-    border:1px solid #ccc;
-    box-sizing:border-box;
-}
-
-select:focus, input:focus {
-    outline:none;
-    border:2px solid gold;
 }
 
 .shift-title { font-weight:bold; margin-top:10px; }
@@ -323,21 +332,23 @@ body.dark .badge.N { background:#9ca3af; color:black; }
 
     color: #b71c1c;
 
-    background: linear-gradient(135deg, #fdecea, #f8d7da);
-    border: 1px solid rgba(183, 28, 28, 0.3);
+    /* improved gradient */
+    background: linear-gradient(135deg, #fff5f5, #ffe3e3);
 
-    box-shadow: 0 4px 10px rgba(183,28,28,0.15);
+    border: 1px solid rgba(183, 28, 28, 0.25);
+
+    box-shadow: 0 4px 10px rgba(183,28,28,0.12);
 
     animation: pulseGlow 2s infinite;
 }
 
-@keyframes pulseGlow {	/* ✅ Alerts */
-    0%   { box-shadow: 0 0 6px rgba(183,28,28,0.2); }
-    50%  { box-shadow: 0 0 16px rgba(183,28,28,0.5); }
-    100% { box-shadow: 0 0 6px rgba(183,28,28,0.2); }
+@keyframes pulseGlow {		/* ✅ Alerts */
+    0%   { box-shadow: 0 0 6px rgba(183,28,28,0.15); }
+    50%  { box-shadow: 0 0 14px rgba(183,28,28,0.35); }
+    100% { box-shadow: 0 0 6px rgba(183,28,28,0.15); }
 }
 
-@keyframes blink {	/* ✅ Alerts Global */
+@keyframes blink {		/* ✅ Alerts Global */
     0% { opacity:1; }
     50% { opacity:0; }
     100% { opacity:1; }
@@ -548,12 +559,27 @@ body.dark .nonexec-header {		/* ✅ DARK Non Exec */
 }
 
 body.dark .notice-alert {		/* ✅ DARK Alerts */
-    color: #ff8a80;
+    color: #ffb4b4;
 
-    background: linear-gradient(135deg, #3b0a0a, #1f0a0a);
-    border: 1px solid rgba(255,138,128,0.4);
+    background: linear-gradient(135deg, #2a0f0f, #140707);
 
-    box-shadow: 0 4px 14px rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,138,128,0.25);
+
+    box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+}
+
+body.dark .shift-active-box::before {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(220, 220, 220, 0.25),
+        rgba(180, 180, 180, 0.35),
+        rgba(220, 220, 220, 0.25),
+        transparent
+    );
+
+    filter: blur(1.2px);
+    opacity: 0.65;
 }
 
 body.dark input,
@@ -663,7 +689,7 @@ body.dark .badge {
 
 <script>
 
-const DATA_VERSION = "v17";   // 🔁 update when CSV change
+const DATA_VERSION = "v18";   // 🔁 update when CSV change
 
 const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv?v=" + DATA_VERSION;
 const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv?v=" + DATA_VERSION;
@@ -681,7 +707,8 @@ let nonExecData = [];
 let nonExecHeader = [];
 
 const nonExecSeniorityOrder = [
-    "Lalit","Achuit","Bidyut","Shashadhar","Pranjal","Diganta","Akib"
+    "Lalit","Achuit","Bidyut","Shashadhar","Pranjal","Diganta","Akib",
+    "Op-DPK","Op-SAM","Op-NBN","Op-ANK","Op-ANP","Op-UTP","Op-GRD","Op-NYN"
 ];
 
 const seniorityOrder = [
@@ -708,11 +735,11 @@ function sortBySeniority(list){
 }
 
 Promise.all([
-  fetch(shiftUrl, { cache: "no-store" }).then(r=>r.text()),
-  fetch(holidayUrl, { cache: "no-store" }).then(r=>r.text()),
-  fetch(notesUrl, { cache: "no-store" }).then(r=>r.text()),
-  fetch(trainingUrl, { cache: "no-store" }).then(r=>r.text()),
-  fetch(nonExecUrl, { cache: "no-store" }).then(r=>r.text())
+  fetch(shiftUrl,).then(r=>r.text()),
+  fetch(holidayUrl,).then(r=>r.text()),
+  fetch(notesUrl,).then(r=>r.text()),
+  fetch(trainingUrl,).then(r=>r.text()),
+  fetch(nonExecUrl,).then(r=>r.text())
 ]).then(([shiftText, holidayText, notesText, trainingText, nonExecText]) => {
 
 if(!shiftText || shiftText.trim() === ""){
@@ -825,7 +852,7 @@ const customAlerts = [
     dayOfWeek: 4,   // 0=Sun, 1=Mon ... 4=Thu
     fromHour: 9,
     toHour: 16,
-    text: "PPU Weekly Review Meeting today at 4 PM • CCR Conference Room",
+    text: "PPU Weekly Review Meeting<br>Today at 4 PM • CCR Conference Room",
     repeat: "weekly"
     },
 
@@ -854,7 +881,7 @@ function getActiveAlerts(){
     let lastDay = new Date(year, month + 1, 0).getDate();
 
     if((date === lastDay && hours >= 9) || (date === 1 && hours < 6)){
-        alerts.push("Reset Totalizers, Pump Running Hours & Blending Silo on 1st Day of the Month at 6 AM • Record Readings before Reset");
+        alerts.push("Reset Totalizers, Pump Running Hours & Blending Silo<br>On 1st Day of the Month at 6 AM • Record Readings before Reset");
     }
 
     // 🔴 2. Attendance Alert (19th → 21st full day)
@@ -911,7 +938,6 @@ function getActiveAlerts(){
     return alerts;
 }
 
-/* EXISTING */
 function getTodayNote(){
     let today = new Date();
     let key = ("0"+today.getDate()).slice(-2) + "-" +
@@ -946,6 +972,43 @@ return todaysNotes.map(n => {
     return n.message;
 
 }).join("<br>");
+}
+
+function getCurrentShiftInfo() {
+    let now = new Date();
+
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+
+    let currentDate = formatDate(now);
+
+    // previous date
+    let prev = new Date(now);
+    prev.setDate(prev.getDate() - 1);
+    let prevDate = formatDate(prev);
+
+    // A Shift: 06:00–14:00
+    if(hours >= 6 && hours < 14){
+        return { shift: "A", date: currentDate };
+    }
+
+    // B Shift: 14:00–22:00
+    if(hours >= 14 && hours < 22){
+        return { shift: "B", date: currentDate };
+    }
+
+    // C Shift split logic
+    if(hours >= 22){
+        // same day C
+        return { shift: "C", date: currentDate };
+    }
+
+    if(hours < 6){
+        // 🔴 IMPORTANT: after midnight → previous date C shift
+        return { shift: "C", date: prevDate };
+    }
+
+    return null;
 }
 
 function initTheme(){
@@ -1184,17 +1247,16 @@ function render(id,date){
 if(header.indexOf(date)===-1){
 
     let msg = (id === "today")
-        ? "Shift schedule is not available for today"
-        : "Shift schedule is not available for the selected date";
+        ? "No shift data available in CSV for today"
+        : "No shift data available for selected date";
 
-    box.innerHTML = `<div style="color:#777;font-weight:bold;">
+    // ✅ Show message but DO NOT stop execution
+    box.innerHTML += `<div style="color:#777;font-weight:bold; margin-bottom:10px;">
     ${msg}
     </div>`;
-
-    return;
 }
 
-let shifts=getData(date);
+let shifts = (header.indexOf(date) === -1) ? {} : getData(date);
 
 /* MAIN */
 ["A","B","C","G","OFF","L","T"].forEach(s=>{
@@ -1210,10 +1272,28 @@ let alert=(["A","B","C"].includes(s)&&list.length<=2)?" ❗":"";
 let chips=list.map(obj=>{
 let sel=(selectedName && obj.name===selectedName)?"selected":"";
 let multi=obj.multi?" ❕":"";
-return `<span class="chip ${s} ${sel}">${obj.name}${multi}</span>`;
+let active = "";
+let current = getCurrentShiftInfo();
+
+if(current && s === current.shift && date === current.date){
+    active = "active-shift";
+}
+
+return `<span class="chip ${s} ${sel} ${active}">${obj.name}${multi}</span>`;
 }).join("");
 
-box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})${alert}</div>${chips||"-"}`;
+let activeClass = "";
+let current = getCurrentShiftInfo();
+
+if(current && s === current.shift && date === current.date){
+    activeClass = "shift-active-box";
+}
+
+box.innerHTML += `
+<div class="${activeClass}">
+    <div class="shift-title">${shiftLabels[s]} (${list.length})${alert}</div>
+    ${chips || "-"}
+</div>`;
 });
 
 /* D N */
@@ -1228,7 +1308,14 @@ list = sortBySeniority(list.map(x=>x.name))
 let chips=list.map(obj=>{
 let sel=(selectedName && obj.name===selectedName)?"selected":"";
 let multi=obj.multi?" ❕":"";
-return `<span class="chip ${s} ${sel}">${obj.name}${multi}</span>`;
+let active = "";
+let current = getCurrentShiftInfo();
+
+if(current && s === current.shift && date === current.date){
+    active = "active-shift";
+}
+
+return `<span class="chip ${s} ${sel} ${active}">${obj.name}${multi}</span>`;
 }).join("");
 
 box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})</div>${chips}`;
@@ -1236,7 +1323,7 @@ box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})</div
 
 // ================= NON-EXEC (FIXED - SINGLE RENDER) =================
 
-let nonExecShifts = getNonExecData(date);
+let nonExecShifts = (nonExecHeader.indexOf(date) === -1) ? {} : getNonExecData(date);
 
 let hasNonExec = Object.keys(nonExecShifts).some(k => nonExecShifts[k]?.length);
 
@@ -1262,7 +1349,18 @@ if(hasNonExec){
             return `<span class="chip ${s} ${sel}">${obj.name}</span>`;
         }).join("");
 
-        box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})</div>${chips}`;
+        let activeClass = "";
+let current = getCurrentShiftInfo();
+
+if(current && s === current.shift && date === current.date){
+    activeClass = "shift-active-box";
+}
+
+box.innerHTML += `
+<div class="${activeClass}">
+    <div class="shift-title">${shiftLabels[s]} (${list.length})</div>
+    ${chips}
+</div>`;
     });
 }
 }
@@ -1448,20 +1546,17 @@ function onCategoryChange(){
     let category = document.getElementById("categorySelector").value;
     localStorage.setItem("selectedCategory", category);
 
-    // Reset selected name
     selectedName = "";
 
-    // Clear name dropdown completely
+    localStorage.removeItem("ppu_name");
+
     document.getElementById("nameSelector").innerHTML = '<option value="">Select Name</option>';
 
-    // Clear UI sections
     document.getElementById("today").innerHTML = "";
     document.getElementById("selected").innerHTML = "";
 
-    // Populate names based on category
     populateNames();
 
-    // Update UI
     refresh();
     renderNext7Days();
 }
@@ -1495,7 +1590,7 @@ function calcHoliday(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=17')
+  navigator.serviceWorker.register('./service-worker.js?v=18')
     .then(() => console.log("Service Worker Registered"));
 }
 
