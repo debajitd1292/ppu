@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PPU OPERATIONS DASHBOARD</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d47a1">
 
@@ -59,8 +61,31 @@ body {
     text-shadow: 0 0 8px rgba(255,255,255,0.15);
 }
 
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+h1 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-variant-numeric: tabular-nums;
+}
+
 .holiday-text {
     font-size: 13px;
+}
+
+.day-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 2px;
+    text-align: center;
 }
 
 .logo { 
@@ -127,6 +152,28 @@ body {
 .field {
     flex: 1;
     min-width: 0;   /* prevents overflow on mobile */
+}
+
+.alert-item {
+    margin-bottom: 8px;
+}
+
+.alert-item:last-child {
+    margin-bottom: 0;
+}
+
+#alertSection {
+    margin: 10px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity:0; transform: translateY(-4px); }
+    to { opacity:1; transform: translateY(0); }
+}
+
+#alertSection:empty {
+    display: none;
 }
 
 input, select {
@@ -329,6 +376,7 @@ body.dark .badge.N { background:#9ca3af; color:black; }
 
 .notice-alert {		/* ✅ Alerts */
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
@@ -344,7 +392,6 @@ body.dark .badge.N { background:#9ca3af; color:black; }
 
     color: #b71c1c;
 
-    /* improved gradient */
     background: linear-gradient(135deg, #fff5f5, #ffe3e3);
 
     border: 1px solid rgba(183, 28, 28, 0.25);
@@ -661,6 +708,8 @@ body.dark .badge {
     <div><strong>Area In-charge:</strong> Sh. Manoj Kumar Haloi</div>
 </div>
 
+<div id="alertSection" style="margin:10px;"></div>
+
 <div class="card">
 
     <div class="row">
@@ -683,8 +732,6 @@ body.dark .badge {
 
 <div class="card">
 
-    <div id="todayAlert"></div>
-
     <h3>Today's Shift</h3>
     <div id="today"></div>
 </div>
@@ -705,7 +752,7 @@ body.dark .badge {
 </div>
 
 <div class="card">
-    <h3>Training Plan For This Month</h3>
+    <h3 id="trainingHeader">Training Schedule</h3>
     <div id="trainingSection">Loading...</div>
 </div>
 
@@ -716,7 +763,7 @@ body.dark .badge {
 
 <script>
 
-const DATA_VERSION = "v19";   // 🔁 update when CSV change
+const DATA_VERSION = "v20";   // 🔁 update when CSV change
 
 const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv?v=" + DATA_VERSION;
 const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv?v=" + DATA_VERSION;
@@ -752,6 +799,37 @@ const shiftLabels = {
 "L":"Leave","T":"Training/Tour"
 };
 
+function updateHeaderDate(){
+
+    let dateElem = document.getElementById("todayDate");
+    if(!dateElem) return;
+
+    let now = new Date();
+
+    dateElem.innerText = now.toDateString();
+
+    if(isSpecialDay()){
+        dateElem.style.color = "#ffd600";
+        dateElem.style.fontWeight = "600";
+    } else {
+        dateElem.style.color = "";
+        dateElem.style.fontWeight = "";
+    }
+}
+
+function updateTrainingHeader(){
+
+    let header = document.getElementById("trainingHeader");
+    if(!header) return;
+
+    let now = new Date();
+
+    let month = now.toLocaleString("default", { month: "long" });
+    let year = now.getFullYear();
+
+    header.innerText = `Training Schedule for ${month} ${year}`;
+}
+
 function sortBySeniority(list){
     return list.sort((a,b)=>{
         let ia = seniorityOrder.indexOf(a.trim());
@@ -779,6 +857,7 @@ if(!shiftText || shiftText.trim() === ""){
 if(!holidayText) holidayText = "";
 if(!notesText) notesText = "";
 if(!trainingText) trainingText = "";
+if(!nonExecText) nonExecText = "";
 
 data = shiftText.split("\n").map(r=>r.replace(/\r/g,"").split(/[,;]/));
 
@@ -883,7 +962,7 @@ const customAlerts = [
     dayOfWeek: 4,   // 0=Sun, 1=Mon ... 4=Thu
     fromHour: 9,
     toHour: 16,
-    text: "PPU Weekly Review Meeting<br>Today at 4 PM • CCR Conference Room",
+    text: "PPU Weekly Review Meeting today at 4 PM • CCR Conference Room",
     repeat: "weekly"
     },
 
@@ -967,6 +1046,46 @@ function getActiveAlerts(){
 });
 
     return alerts;
+}
+
+function renderAlerts(){
+
+    let alertBox = document.getElementById("alertSection");
+    if(!alertBox) return;
+
+    let alerts = getActiveAlerts();
+
+    if(alerts.length > 0){
+        alertBox.innerHTML = `
+           <div class="notice-alert">
+               ${alerts.map(a => `<div class="alert-item">📢 ${a}</div>`).join("")}
+           </div>
+        `;
+        alertBox.style.display = "block";
+
+        triggerAlertVibration(alerts);
+
+    } else {
+        alertBox.innerHTML = "";
+        alertBox.style.display = "none";
+    }
+}
+
+function triggerAlertVibration(alerts){
+
+    if(!("vibrate" in navigator)) return;
+
+    let newKey = alerts.join("|");
+    let oldKey = localStorage.getItem("lastAlertKey");
+
+    if(newKey && newKey !== oldKey){
+        navigator.vibrate([200,100,200,100,400]);
+        localStorage.setItem("lastAlertKey", newKey);
+    }
+
+    if(!newKey){
+        localStorage.removeItem("lastAlertKey");
+    }
 }
 
 function getTodayNote(){
@@ -1079,51 +1198,39 @@ function initTheme(){
     });
 }
 
-function init(){
+function init(){ 
 
-initTheme();
+    initTheme(); 
 
-    document.getElementById("today").innerHTML = "Loading...";
+    document.getElementById("today").innerHTML = "Loading..."; 
 
-    let dateElem = document.getElementById("todayDate");
-    dateElem.innerText = new Date().toDateString();
+    updateHeaderDate();
 
-if(isSpecialDay()){		/* ✅ Special Days */
-    dateElem.style.color = "#ffd600";
-    dateElem.style.fontWeight = "600";
-}
+    let savedCategory = localStorage.getItem("selectedCategory"); 
+    if(savedCategory){ 
+        document.getElementById("categorySelector").value = savedCategory; 
+    } 
 
-let savedCategory = localStorage.getItem("selectedCategory");
-if(savedCategory){
-    document.getElementById("categorySelector").value = savedCategory;
-}
+    populateNames(); 
 
-populateNames();
+    let savedName = localStorage.getItem("ppu_name"); 
+    if(savedName){ 
+        selectedName = savedName; 
+        document.getElementById("nameSelector").value = savedName; 
+    } 
 
-let savedName = localStorage.getItem("ppu_name");
-if(savedName){
-    selectedName = savedName;
-    document.getElementById("nameSelector").value = savedName;
-}
+    renderNext7Days();
 
-document.getElementById("todayNote").innerHTML = getTodayNote();
+    document.getElementById("todayNote").innerHTML = getTodayNote(); 
 
-let alertBox = document.getElementById("todayAlert");
-let alerts = getActiveAlerts();
+    updateHeaderDate();    
 
-if(alerts.length > 0){
-    alertBox.innerHTML = `
-    <div class="notice-alert">
-        ⚠ ${alerts.join(" | ")}
-    </div>`;
-} else {
-    alertBox.innerHTML = "";
-}
+    renderAlerts();
+    updateTrainingHeader(); 
+    renderTraining();
 
-refresh();
-calcHoliday();
-renderTraining();
-renderNext7Days();
+    calcHoliday(); 
+    refresh(); 
 }
 
 function populateNames(){
@@ -1245,7 +1352,7 @@ for(let i=1;i<data.length;i++){
     continue;
 }
 
-let isMulti = shift.length>1;
+let isMulti = (shift !== "OFF" && shift.length > 1);
 
     parseShift(shift).forEach(s=>{
     if(!shifts[s]) shifts[s]=[];
@@ -1268,7 +1375,13 @@ function getNonExecData(date){
         let shift=nonExecData[i][col]?.trim();
         if(!shift) continue;
 
-        let isMulti = shift.length>1;
+        if(shift === "OFF"){
+            if(!shifts["OFF"]) shifts["OFF"] = [];
+            shifts["OFF"].push({name:name,multi:false});
+            continue;
+        }
+
+        let isMulti = (shift !== "OFF" && shift.length > 1);
 
         parseShift(shift).forEach(s=>{
             if(!shifts[s]) shifts[s]=[];
@@ -1285,20 +1398,24 @@ function render(id,date){
     let box=document.getElementById(id);
     box.innerHTML="";
 
-    box.innerHTML += `<div class="section-header exec-header">Executive</div>`;
+let shifts = (header.indexOf(date) === -1) ? {} : getData(date);
 
-if(header.indexOf(date)===-1){
+if(Object.keys(shifts).length === 0){
 
     let msg = (id === "today")
-        ? "No shift data available for today"
-        : "No shift data available for selected date";
+        ? "Shift schedule is not available for today"
+        : "Shift schedule is not available for selected date";
 
     box.innerHTML += `<div style="color:#777;font-weight:bold; margin-bottom:10px;">
     ${msg}
     </div>`;
 }
 
-let shifts = (header.indexOf(date) === -1) ? {} : getData(date);
+let hasExec = Object.values(shifts).some(arr => arr.length > 0);
+
+if(hasExec){
+    box.innerHTML += `<div class="section-header exec-header">Executive</div>`;
+}
 
 /* MAIN */
 ["A","B","C","G","OFF","L","T"].forEach(s=>{
@@ -1367,7 +1484,7 @@ box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})</div
 
 let nonExecShifts = (nonExecHeader.indexOf(date) === -1) ? {} : getNonExecData(date);
 
-let hasNonExec = Object.keys(nonExecShifts).some(k => nonExecShifts[k]?.length);
+let hasNonExec = Object.values(nonExecShifts).some(arr => arr.length > 0);
 
 if(hasNonExec){
 
@@ -1520,25 +1637,29 @@ function renderTraining(){
 });
 }
 
-function renderNext7Days(){
+function renderNext7Days(){ 
+ 
+        let box = document.getElementById("next7Days"); 
+        if(!box) return; 
+ 
+        if(!header || header.length === 0 || !data || data.length === 0){
+            box.innerHTML = "<div style='color:#777;'>Loading...</div>";
+            return;
+        }
 
-    let box = document.getElementById("next7Days");
-    if(!box) return;
+        if(!selectedName){ 
+            box.innerHTML = "<div style='color:#777;'>Select name to view upcoming shifts</div>"; 
+            return; 
+        } 
+        let today = new Date();
+        let html = "";
 
-    if(!header || header.length === 0) return;
-    if(!data || data.length === 0) return;
-    if(!selectedName){
-        box.innerHTML = "<div style='color:#777;'>Select name to view upcoming shifts</div>";
-        return;
-    }
-
-    let today = new Date();
-    let html = "";
-
-    for(let i=0;i<7;i++){
+        for(let i=0;i<7;i++){
 
         let d = new Date(today);
         d.setDate(today.getDate() + i);
+        let dayNames = ["S","M","T","W","T","F","S"];
+        let dayLabel = dayNames[d.getDay()];
 
         let dd = String(d.getDate()).padStart(2,'0');
         let mm = String(d.getMonth()+1).padStart(2,'0');
@@ -1550,7 +1671,7 @@ function renderNext7Days(){
 
         let shiftClass;
         if(rawShift === "-"){
-            shiftClass = "NA";   // new class
+            shiftClass = "NA";
         } else if(rawShift === "OFF"){
             shiftClass = "OFF";
         } else {
@@ -1559,13 +1680,14 @@ function renderNext7Days(){
 
         let shiftText = rawShift;
 
-        html += `
+        html += ` 
         <div class="day-card">
-            <div class="day-date">${dd}</div>
-            <div class="day-shift ${shiftClass}">
-                ${shiftText}
-            </div>
-        </div>
+            <div class="day-name">${dayLabel}</div> 
+            <div class="day-date">${dd}</div> 
+            <div class="day-shift ${shiftClass}"> 
+                ${shiftText} 
+            </div> 
+        </div> 
         `;
     }
 
@@ -1614,6 +1736,8 @@ function autoRefreshData(){
         fetch(nonExecUrl, { cache: "no-store" }).then(r=>r.text()) 
     ])
     .then(([shiftText, holidayText, notesText, trainingText, nonExecText]) => { 
+
+        updateHeaderDate();
  
         data = shiftText.split("\n").map(r=>r.replace(/\r/g,"").split(/[,;]/)); 
         header = data[0].map(x => x.trim()); 
@@ -1638,9 +1762,15 @@ function autoRefreshData(){
 
         document.getElementById("todayNote").innerHTML = getTodayNote(); 
 
+        let alertBox = document.getElementById("alertSection");
+        
+
+        renderAlerts();
+        updateTrainingHeader();
+        renderTraining();
+
         refresh();                 
-        renderNext7Days();         
-        renderTraining();          
+        renderNext7Days();            
 
         if(document.getElementById("datePicker").value){ 
             renderSelected();      
@@ -1683,7 +1813,7 @@ function calcHoliday(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=19')
+  navigator.serviceWorker.register('./service-worker.js?v=20')
     .then(() => console.log("Service Worker Registered"));
 }
 
