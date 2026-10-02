@@ -637,18 +637,9 @@ body.dark .shift-active-box::before {
     background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(200,200,200,0.2) 30%,
-        rgba(230,230,230,0.5) 55%,
-        rgba(255,255,255,0.85) 75%,
-        rgba(255,255,255,1) 90%,
-        rgba(255,255,255,0.9) 100%
+        rgba(207, 216, 220, 0.25) 60%,
+        #eceff1 100%
     );
-
-    background-size: 200% 100%;
-    animation: moveBorder 2s linear infinite;
-
-    filter: blur(1px);
-    opacity: 0.9;
 }
 
 body.dark input,
@@ -763,7 +754,7 @@ body.dark .badge {
 
 <script>
 
-const DATA_VERSION = "v20";   // 🔁 update when CSV change
+const DATA_VERSION = "v21";   // 🔁 update when CSV change
 
 const shiftUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/shift.csv?v=" + DATA_VERSION;
 const holidayUrl = "https://raw.githubusercontent.com/debajitd1292/ppu/main/holiday.csv?v=" + DATA_VERSION;
@@ -794,7 +785,7 @@ const seniorityOrder = [
 
 const shiftLabels = {
 "A":"A Shift","B":"B Shift","C":"C Shift",
-"G":"General","OFF":"Rest/Off",
+"G":"General","OFF":"Rest / Off / Holiday",
 "D":"Day Shift","N":"Night Shift",
 "L":"Leave","T":"Training/Tour"
 };
@@ -1124,7 +1115,7 @@ return todaysNotes.map(n => {
 }).join("<br>");
 }
 
-function updateLastUpdated(){		// Last Sync
+function updateLastUpdated(){
     let now = new Date();
 
     let time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -1211,15 +1202,19 @@ function init(){
         document.getElementById("categorySelector").value = savedCategory; 
     } 
 
-    populateNames(); 
+    populateNames();
 
-    let savedName = localStorage.getItem("ppu_name"); 
-    if(savedName){ 
-        selectedName = savedName; 
-        document.getElementById("nameSelector").value = savedName; 
-    } 
-
+    setTimeout(() => {
+        let savedName = localStorage.getItem("ppu_name");
+        if(savedName){
+            selectedName = savedName;
+            document.getElementById("nameSelector").value = savedName;
+    }
+    
+    refresh();
     renderNext7Days();
+
+}, 0);
 
     document.getElementById("todayNote").innerHTML = getTodayNote(); 
 
@@ -1813,7 +1808,7 @@ function calcHoliday(){
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js?v=20')
+  navigator.serviceWorker.register('./service-worker.js?v=21')
     .then(() => console.log("Service Worker Registered"));
 }
 
