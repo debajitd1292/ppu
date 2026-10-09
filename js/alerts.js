@@ -76,6 +76,50 @@ function getActiveAlerts(){
             return;
         }
 
+        
+        /* =========================
+           MONTH-END
+           Last day 10:00 AM
+           to first day 06:00 AM
+           ========================= */
+
+        if(repeat === "month-end"){
+
+            const currentMinutes =
+                now.getHours() * 60 +
+                now.getMinutes();
+
+            const fromMinutes =
+                from.getHours() * 60 +
+                from.getMinutes();
+
+            const toMinutes =
+                to.getHours() * 60 +
+                to.getMinutes();
+
+            const lastDayOfMonth =
+                new Date(
+                    now.getFullYear(),
+                    now.getMonth() + 1,
+                    0
+                ).getDate();
+
+            const isLastDay =
+                now.getDate() === lastDayOfMonth;
+
+            const isFirstDay =
+                now.getDate() === 1;
+
+            if(
+                (isLastDay && currentMinutes >= fromMinutes) ||
+                (isFirstDay && currentMinutes <= toMinutes)
+            ){
+                active.push(a.text);
+            }
+
+            return;
+        }
+
 
         /* =========================
            DAILY
