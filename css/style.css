@@ -1,3 +1,28 @@
+/*
+===============================================================================
+PPU OPERATIONS DASHBOARD — CSS INDEX
+===============================================================================
+
+01. GLOBAL & BASE                  — body, h1
+02. HEADER & LOGO                  — .header, #todayDate, .logo, .badge
+03. HOD / AREA IN-CHARGE            — .info-bar, .info-row, .info-label, .info-name
+04. LAYOUT & FORM CONTROLS          — .row, .field, input, select
+05. ALERTS                          — #alertSection, .notice-alert, .alert-item
+06. EXECUTIVE / NON-EXEC HEADERS  — .section-header, .exec-header, .nonexec-header
+07. SHIFT DISPLAY & COLORS         — .card, .chip, .A, .B, .C, .G, .OFF, etc.
+08. FOOTER & LAST UPDATED           — .footer, #lastUpdated
+09. NEXT 7 DAYS                     — .next7-container, .day-card, .day-date, .day-shift
+10. TRAINING                        — .training-item, .training-name, .training-type
+11. THEME TOGGLE                    — .theme-switch, .slider
+12. DARK MODE OVERRIDES             — selectors beginning with body.dark
+13. PRODUCTION PLAN                 — .production-card, .production-target, .production-table
+14. RESPONSIVE DESIGN                — @media rules
+15. ANIMATIONS                       — @keyframes
+
+===============================================================================
+*/
+
+/* ==================== 01. GLOBAL & BASE ==================== */
 body { 
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -8,6 +33,7 @@ body {
     overflow-x: hidden;
 }
 
+/* ==================== 02. HEADER & LOGO ==================== */
 .header {
     position: sticky;
     top: 0;
@@ -102,7 +128,8 @@ h1 {
     border: 1px solid rgba(255,255,255,0.15);
 }
 
-.info-bar {		/* ✅ HOD/AIC Sec */
+/* ==================== 03. HOD / AREA IN-CHARGE ==================== */
+.info-bar {
     background: linear-gradient(135deg, #1f4e79, #163a5f);
     color: white;
     margin: 10px;
@@ -142,7 +169,8 @@ h1 {
     white-space: nowrap;
 }
 
-.row {			/* ✅ Side by side */
+/* ==================== 04. LAYOUT & FORM CONTROLS ==================== */
+.row {
     display: flex;
     gap: 10px;
 }
@@ -152,6 +180,7 @@ h1 {
     min-width: 0;   /* prevents overflow on mobile */
 }
 
+/* ==================== 05. ALERTS ==================== */
 /* ===== Premium Alert Section ===== */
 
 #alertSection {
@@ -195,7 +224,8 @@ h1 {
     display: none;
 }
 
-@keyframes fadeIn {
+/* ==================== 15. ANIMATIONS ==================== */
+@keyframes fadeIn@keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(-4px);
@@ -252,7 +282,8 @@ select:focus, input:focus {
 
 /* ===== Mobile Optimization ===== */
 
-@media (max-width: 600px) {
+/* ==================== 14. RESPONSIVE DESIGN ==================== */
+@media (max-width: 600px)@media (max-width: 600px) {
     .row {
         flex-direction: row;
     }
@@ -268,7 +299,8 @@ select:focus, input:focus {
     }
 }
 
-.section-header {	/* ✅ Exec/Non Exec */
+/* ==================== 06. EXECUTIVE / NON-EXECUTIVE HEADERS ==================== */
+.section-header {
     display: inline-block;
     padding: 6px 14px;
     margin: 12px 0 8px 0;
@@ -288,18 +320,19 @@ select:focus, input:focus {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.exec-header {			/* ✅ Exec */
+.exec-header {
     color: #0d47a1;
     background: linear-gradient(135deg, rgba(13,71,161,0.15), rgba(13,71,161,0.05));
     border: 1px solid rgba(13,71,161,0.3);
 }
 
-.nonexec-header {		/* ✅ Non Exec */
+.nonexec-header {
     color: #b71c1c;
     background: linear-gradient(135deg, rgba(183,28,28,0.15), rgba(183,28,28,0.05));
     border: 1px solid rgba(183,28,28,0.3);
 }
 
+/* ==================== 07. SHIFT DISPLAY & COLORS ==================== */
 .card {
     background:white;
     margin:10px;
@@ -387,6 +420,7 @@ body.dark .badge.N { background:#9ca3af; color:black; }
     box-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
 
+/* ==================== 08. FOOTER & LAST UPDATED ==================== */
 .footer {
     text-align:center;
     padding:15px;
@@ -438,18 +472,19 @@ body.dark .badge.N { background:#9ca3af; color:black; }
     animation: pulseGlow 2s infinite;
 }
 
-@keyframes pulseGlow {		/* ✅ Alerts */
+@keyframes pulseGlow {
     0%   { box-shadow: 0 0 6px rgba(183,28,28,0.15); }
     50%  { box-shadow: 0 0 14px rgba(183,28,28,0.35); }
     100% { box-shadow: 0 0 6px rgba(183,28,28,0.15); }
 }
 
-@keyframes blink {		/* ✅ Alerts Global */
+@keyframes blink {
     0% { opacity:1; }
     50% { opacity:0; }
     100% { opacity:1; }
 }
 
+/* ==================== 09. NEXT 7 DAYS ==================== */
 .next7-container {
     display: flex;
     gap: 8px;
@@ -482,6 +517,7 @@ body.dark .badge.N { background:#9ca3af; color:black; }
     font-size:11px;
 }
 
+/* ==================== 10. TRAINING ==================== */
 .training-item {
     background: linear-gradient(135deg, #ffffff, #f1f5f9);
     border-left: 5px solid #1f4e79;
@@ -541,7 +577,9 @@ body.dark .upcoming-training {
     border-left: 5px solid #fbbf24;
 }
 
+/* ==================== 11. THEME TOGGLE ==================== */
 /* =========================
+   THEME TOGGLE SWITCH/* =========================
    THEME TOGGLE SWITCH
 ========================= */
 .theme-switch {
@@ -595,7 +633,9 @@ body.dark .upcoming-training {
     transform: scale(1.05);
 }
 
+/* ==================== 12. DARK MODE OVERRIDES ==================== */
 /* =========================
+   DARK MODE/* =========================
    DARK MODE
 ========================= */
 body.dark .training-item {
@@ -637,24 +677,24 @@ body.dark .card {
     box-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
-body.dark .section-header {		/* ✅ DARK Exec/Non Exec */
+body.dark .section-header {
     border: 1px solid rgba(255,255,255,0.15);
     box-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
-body.dark .exec-header {		/* ✅ DARK Exec */
+body.dark .exec-header {
     color: #90caf9;
     background: linear-gradient(135deg, rgba(30,64,255,0.25), rgba(30,64,255,0.1));
     border: 1px solid rgba(144,202,249,0.4);
 }
 
-body.dark .nonexec-header {		/* ✅ DARK Non Exec */
+body.dark .nonexec-header {
     color: #ef9a9a;
     background: linear-gradient(135deg, rgba(183,28,28,0.3), rgba(183,28,28,0.1));
     border: 1px solid rgba(239,154,154,0.4);
 }
 
-body.dark .notice-alert {		/* ✅ DARK Alerts */
+body.dark .notice-alert {
     color: #ffb4b4;
 
     background: linear-gradient(135deg, #2a0f0f, #140707);
@@ -667,7 +707,7 @@ body.dark .notice-alert {		/* ✅ DARK Alerts */
         0 0 20px rgba(255,50,50,0.18);
 }
 
-body.dark .notice-alert .alert-item {	/* ✅ Alerts Addtn */
+body.dark .notice-alert .alert-item {
     color: #ffffff;
 }
 
@@ -704,7 +744,9 @@ body.dark .badge {
     box-shadow:0 0 6px rgba(255,255,255,0.1);
 }
 
+/* ==================== 13. PRODUCTION PLAN ==================== */
 /* =========================
+   PRODUCTION PLAN/* =========================
    PRODUCTION PLAN
    ========================= */
 
@@ -926,4 +968,21 @@ body.dark .production-table tbody tr:not(.production-today):not(.production-past
         gap: 6px;
     }
 
+}
+
+/* Fix date selector overflow on iPhones */
+input[type="date"] {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.field {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
