@@ -3,7 +3,6 @@ let selectedName = "";
 let header = [];
 let nonExecData = [];
 let nonExecHeader = [];
-let isDataLoaded = false;
 
 let seniorityOrder = [];
 let nonExecSeniorityOrder = [];
@@ -110,8 +109,7 @@ function init(){
 }, 0);
 
     document.getElementById("todayNote").innerHTML = getTodayNote(); 
-
-    updateHeaderDate();    
+   
 
     renderAlerts();
     updateTrainingHeader(); 
@@ -406,8 +404,6 @@ if(alertsText !== undefined){
         document.getElementById("todayNote").innerHTML =
             getTodayNote();
 
-        let alertBox =
-            document.getElementById("alertSection");
 
         renderAlerts();
         updateTrainingHeader();

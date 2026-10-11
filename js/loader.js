@@ -110,8 +110,6 @@ Promise.all([
 
     loadAlerts();
 
-    isDataLoaded = true;
-
     const lastUpdatedEl = document.getElementById("lastUpdated");
 
     if (lastUpdatedEl) {

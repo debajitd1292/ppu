@@ -22,7 +22,6 @@ function getCurrentShiftInfo() {
     let now = new Date();
 
     let hours = now.getHours();
-    let minutes = now.getMinutes();
 
     let currentDate = formatDate(now);
 
