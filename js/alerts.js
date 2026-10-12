@@ -1,6 +1,5 @@
 let alertsData = [];
 
-
 function parseAlertDateTime(value){
 
     if(!value) return null;
@@ -35,7 +34,6 @@ function parseAlertDateTime(value){
     );
 }
 
-
 function getActiveAlerts(){
 
     let now = new Date();
@@ -53,35 +51,19 @@ function getActiveAlerts(){
 
         let repeat = (a.repeat || "once").trim().toLowerCase();
 
-
-        /* =========================
-           ONCE
-           ========================= */
-
         if(repeat === "once"){
 
             if(now >= from && now <= to){
-                active.push(a.text);
+                active.push(a);
             }
 
             return;
         }
 
 
-        /* =========================
-           VALIDITY PERIOD
-           ========================= */
-
         if(now < from || now > to){
             return;
         }
-
-        
-        /* =========================
-           MONTH-END
-           Last day 10:00 AM
-           to first day 06:00 AM
-           ========================= */
 
         if(repeat === "month-end"){
 
@@ -114,16 +96,11 @@ function getActiveAlerts(){
                 (isLastDay && currentMinutes >= fromMinutes) ||
                 (isFirstDay && currentMinutes <= toMinutes)
             ){
-                active.push(a.text);
+                active.push(a);
             }
 
             return;
         }
-
-
-        /* =========================
-           DAILY
-           ========================= */
 
         if(repeat === "daily"){
 
@@ -143,16 +120,11 @@ function getActiveAlerts(){
                 currentMinutes >= fromMinutes &&
                 currentMinutes <= toMinutes
             ){
-                active.push(a.text);
+                active.push(a);
             }
 
             return;
         }
-
-
-        /* =========================
-           WEEKLY
-           ========================= */
 
         if(repeat === "weekly"){
 
@@ -175,16 +147,11 @@ function getActiveAlerts(){
                 currentMinutes >= fromMinutes &&
                 currentMinutes <= toMinutes
             ){
-                active.push(a.text);
+                active.push(a);
             }
 
             return;
         }
-
-
-        /* =========================
-           MONTHLY
-           ========================= */
 
         if(repeat === "monthly"){
 
@@ -205,16 +172,11 @@ function getActiveAlerts(){
                 currentMinutes >= fromMinutes &&
                 currentMinutes <= toMinutes
             ){
-                active.push(a.text);
+                active.push(a);
             }
 
             return;
         }
-
-
-        /* =========================
-           YEARLY
-           ========================= */
 
         if(repeat === "yearly"){
 
@@ -236,7 +198,7 @@ function getActiveAlerts(){
                 currentMinutes >= fromMinutes &&
                 currentMinutes <= toMinutes
             ){
-                active.push(a.text);
+                active.push(a);
             }
 
             return;
@@ -246,7 +208,6 @@ function getActiveAlerts(){
 
     return active;
 }
-
 
 function loadAlerts(){
 
@@ -290,7 +251,6 @@ function loadAlerts(){
             const textIndex =
                 header.indexOf("alarm text");
 
-
             alertsData = rows
                 .slice(1)
                 .map(row => {
@@ -318,7 +278,6 @@ function loadAlerts(){
                     a.text
                 );
 
-
             renderAlerts();
 
         })
@@ -337,7 +296,6 @@ function loadAlerts(){
         });
 }
 
-
 function renderAlerts(){
 
     let alertBox = document.getElementById("alertSection");
@@ -351,50 +309,17 @@ function renderAlerts(){
         alertBox.innerHTML = `
             <div class="notice-alert">
                 ${alerts.map(a => `
-                    <div class="alert-item">${a}</div>
+                    <div class="alert-item">${a.text}</div>
                 `).join("")}
             </div>
         `;
 
         alertBox.style.display = "block";
 
-        triggerAlertVibration(alerts);
-
     } else {
 
         alertBox.innerHTML = "";
 
         alertBox.style.display = "none";
-    }
-}
-
-
-function triggerAlertVibration(alerts){
-
-    if(!("vibrate" in navigator)) return;
-
-    let newKey = alerts.join("|");
-
-    let oldKey =
-        localStorage.getItem("lastAlertKey");
-
-    if(newKey && newKey !== oldKey){
-
-        navigator.vibrate([
-            200,
-            100,
-            200,
-            100,
-            400
-        ]);
-
-        localStorage.setItem(
-            "lastAlertKey",
-            newKey
-        );
-    }
-
-    if(!newKey){
-        localStorage.removeItem("lastAlertKey");
     }
 }
