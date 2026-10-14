@@ -2,27 +2,29 @@
 ===============================================================================
 PPU OPERATIONS DASHBOARD — CSS INDEX
 ===============================================================================
-
-01. GLOBAL & BASE                  — body, h1
-02. HEADER & LOGO                  — .header, #todayDate, .logo, .badge
-03. HOD / AREA IN-CHARGE            — .info-bar, .info-row, .info-label, .info-name
-04. LAYOUT & FORM CONTROLS          — .row, .field, input, select
-05. ALERTS                          — #alertSection, .notice-alert, .alert-item
-06. EXECUTIVE / NON-EXEC HEADERS  — .section-header, .exec-header, .nonexec-header
-07. SHIFT DISPLAY & COLORS         — .card, .chip, .A, .B, .C, .G, .OFF, etc.
-08. FOOTER & LAST UPDATED           — .footer, #lastUpdated
-09. NEXT 7 DAYS                     — .next7-container, .day-card, .day-date, .day-shift
-10. TRAINING                        — .training-item, .training-name, .training-type
-11. THEME TOGGLE                    — .theme-switch, .slider
-12. DARK MODE OVERRIDES             — selectors beginning with body.dark
-13. PRODUCTION PLAN                 — .production-card, .production-target, .production-table
-14. RESPONSIVE DESIGN                — @media rules
-15. ANIMATIONS                       — @keyframes
-
+01. Global & base
+02. Header, logo & date
+03. HOD / Area in-charge
+04. Layout & form controls
+05. Alerts & animations
+06. Executive / non-executive headers
+07. Shift cards, chips & shift colours
+08. Footer & last-updated text
+09. Monthly shift calendar
+10. Training
+11. Theme toggle
+12. Dark-mode overrides
+13. Production plan
+14. App pages & general responsive rules
+15. IMS targets
+16. Training / Production / Settings / Shift headings
+17. Today's shift glass highlight
+18. Bottom navigation (single source of truth)
 ===============================================================================
 */
 
 /* ==================== 01. GLOBAL & BASE ==================== */
+
 body { 
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -34,6 +36,7 @@ body {
 }
 
 /* ==================== 02. HEADER & LOGO ==================== */
+
 .header {
     position: sticky;
     top: 0;
@@ -129,6 +132,7 @@ h1 {
 }
 
 /* ==================== 03. HOD / AREA IN-CHARGE ==================== */
+
 .info-bar {
     background: linear-gradient(135deg, #1f4e79, #163a5f);
     color: white;
@@ -170,6 +174,7 @@ h1 {
 }
 
 /* ==================== 04. LAYOUT & FORM CONTROLS ==================== */
+
 .row {
     display: flex;
     gap: 10px;
@@ -177,11 +182,10 @@ h1 {
 
 .field {
     flex: 1;
-    min-width: 0;   /* prevents overflow on mobile */
+    min-width: 0;
 }
 
 /* ==================== 05. ALERTS ==================== */
-/* ===== Premium Alert Section ===== */
 
 #alertSection {
     margin: 10px;
@@ -225,7 +229,8 @@ h1 {
 }
 
 /* ==================== 15. ANIMATIONS ==================== */
-@keyframes fadeIn@keyframes fadeIn {
+
+@keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(-4px);
@@ -283,7 +288,8 @@ select:focus, input:focus {
 /* ===== Mobile Optimization ===== */
 
 /* ==================== 14. RESPONSIVE DESIGN ==================== */
-@media (max-width: 600px)@media (max-width: 600px) {
+
+@media (max-width: 600px) {
     .row {
         flex-direction: row;
     }
@@ -300,6 +306,7 @@ select:focus, input:focus {
 }
 
 /* ==================== 06. EXECUTIVE / NON-EXECUTIVE HEADERS ==================== */
+
 .section-header {
     display: inline-block;
     padding: 6px 14px;
@@ -333,6 +340,7 @@ select:focus, input:focus {
 }
 
 /* ==================== 07. SHIFT DISPLAY & COLORS ==================== */
+
 .card {
     background:white;
     margin:10px;
@@ -421,6 +429,7 @@ body.dark .badge.N { background:#9ca3af; color:black; }
 }
 
 /* ==================== 08. FOOTER & LAST UPDATED ==================== */
+
 .footer {
     text-align:center;
     padding:15px;
@@ -484,40 +493,146 @@ body.dark .badge.N { background:#9ca3af; color:black; }
     100% { opacity:1; }
 }
 
-/* ==================== 09. NEXT 7 DAYS ==================== */
+/* ===== FULL MONTH SHIFT CALENDAR ===== */
+
 .next7-container {
+    display: block;
+    padding: 8px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.calendar-month {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    color: #1f4e79;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 3px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.calendar-weekday {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    padding: 5px 0;
+}
+
+.calendar-empty {
+    min-width: 0;
+}
+
+.calendar-day {
+    min-width: 0;
+    min-height: 46px;
+    box-sizing: border-box;
     display: flex;
-    gap: 8px;
-    padding: 8px 10px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2px;
+    padding: 3px 1px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
 }
 
-.day-card {
-    flex:1;
-    text-align:center;
+.calendar-date {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
 }
 
-.day-date {
-    font-size:10px;
-    margin-bottom:3px;
-    font-weight:bold;
+.calendar-shift {
+    min-width: 0;
+    max-width: 100%;
 }
 
-.day-shift {
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:white;
-    font-weight:bold;
-    margin:auto;
-    font-size:11px;
+.calendar-shift .day-shift {
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    color: white;
+    font-weight: 700;
+    font-size: 10px;
+    margin: 0 auto;
+    white-space: nowrap;
+}
+
+.calendar-today {
+    border: 2px solid #2563eb;
+    background: #dbeafe;
+    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.12);
+}
+
+.calendar-today .calendar-date {
+    color: #1d4ed8;
+}
+
+/* Dark mode */
+body.dark .calendar-month {
+    color: #93c5fd;
+}
+
+body.dark .calendar-weekday {
+    color: #cbd5e1;
+}
+
+body.dark .calendar-day {
+    background: #111827;
+    border-color: #374151;
+}
+
+body.dark .calendar-today {
+    background: #1e3a5f;
+    border: 2px solid #60a5fa;
+}
+
+body.dark .calendar-today .calendar-date {
+    color: #bfdbfe;
+}
+
+/* Compact calendar on small screens */
+@media (max-width: 380px) {
+    .calendar-grid {
+        gap: 2px;
+    }
+
+    .calendar-day {
+        min-height: 42px;
+        padding: 3px 0;
+        border-radius: 6px;
+    }
+
+    .calendar-weekday {
+        font-size: 10px;
+    }
+
+    .calendar-date {
+        font-size: 11px;
+    }
+
+    .calendar-shift .day-shift {
+        width: 21px;
+        height: 21px;
+        font-size: 9px;
+    }
 }
 
 /* ==================== 10. TRAINING ==================== */
+
 .training-item {
     background: linear-gradient(135deg, #ffffff, #f1f5f9);
     border-left: 5px solid #1f4e79;
@@ -578,10 +693,8 @@ body.dark .upcoming-training {
 }
 
 /* ==================== 11. THEME TOGGLE ==================== */
-/* =========================
-   THEME TOGGLE SWITCH/* =========================
-   THEME TOGGLE SWITCH
-========================= */
+
+/* Theme toggle switch */
 .theme-switch {
     position:absolute;
     top:12px;
@@ -634,10 +747,7 @@ body.dark .upcoming-training {
 }
 
 /* ==================== 12. DARK MODE OVERRIDES ==================== */
-/* =========================
-   DARK MODE/* =========================
-   DARK MODE
-========================= */
+
 body.dark .training-item {
     background: linear-gradient(135deg, #1e293b, #111827);
     border-left: 5px solid #60a5fa;
@@ -745,10 +855,6 @@ body.dark .badge {
 }
 
 /* ==================== 13. PRODUCTION PLAN ==================== */
-/* =========================
-   PRODUCTION PLAN/* =========================
-   PRODUCTION PLAN
-   ========================= */
 
 .production-card{
     margin-top:18px;
@@ -862,8 +968,6 @@ body.dark .badge {
     width:90px;
 }
 
-
-/* Today's production */
 .production-today td{
     background:linear-gradient(135deg,#ecfdf5,#d1fae5);
     font-weight:700;
@@ -889,8 +993,6 @@ body.dark .production-past{
     color:#777;
 }
 
-
-/* Dark mode */
 body.dark .production-card{
     background:#111827;
     box-shadow:0 4px 12px rgba(0,0,0,.5);
@@ -985,4 +1087,777 @@ input[type="date"] {
     min-width: 0;
     max-width: 100%;
     box-sizing: border-box;
+}
+
+/* ===== APP PAGE NAVIGATION ===== */
+
+.app-page {
+  display: none;
+}
+
+.app-page.active {
+  display: block;
+}
+
+/* Reserve space for the fixed bottom navigation */
+body {
+  padding-bottom: 90px;
+}
+
+/* Bottom navigation layout is consolidated in the final section. */
+
+.nav-item {
+  min-width: 0;
+  min-height: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--nav-text, #666666);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-item.active {
+  color: var(--nav-active, #1565c0);
+  background: var(--nav-active-bg, #eaf2ff);
+}
+
+.nav-item:focus-visible {
+  outline: 2px solid var(--nav-active, #1565c0);
+  outline-offset: -2px;
+}
+
+/* More-page menu buttons */
+.more-menu {
+  display: grid;
+  gap: 12px;
+}
+
+.more-menu button {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #d7dce3;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+body.dark {
+  --nav-bg: #171a20;
+  --nav-border: #343943;
+  --nav-text: #c4c9d2;
+  --nav-active: #90baff;
+  --nav-active-bg: #26364e;
+}
+
+body.dark .more-menu button {
+  border-color: #414752;
+}
+
+/* ===== IMS TARGETS PAGE ===== */
+
+.ims-card > h3 {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.ims-section {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--nav-border, #e0e0e0);
+}
+
+.ims-section:last-child {
+  border-bottom: none;
+}
+
+.ims-section-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.ims-values {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ims-value {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ims-value-label {
+  font-size: 10px;
+  color: var(--nav-text, #777);
+}
+
+.ims-value-number {
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+body.dark .ims-section {
+  border-color: #343943;
+}
+
+@media (max-width: 360px) {
+  .ims-values {
+    gap: 5px;
+  }
+
+  .ims-value-label {
+    font-size: 9px;
+  }
+
+  .ims-value-number {
+    font-size: 11px;
+  }
+}
+
+/* ===== IMS TARGETS: MODERN CARD DESIGN ===== */
+
+.ims-card {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+.ims-card > h3 {
+    margin: 8px 0 16px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1f4e79, #2563a6);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+.ims-section {
+    background: linear-gradient(135deg, #ffffff, #f1f5f9);
+    border-left: 5px solid #1f4e79;
+    border-radius: 10px;
+    padding: 13px 12px;
+    margin-bottom: 12px;
+    border-bottom: none;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ims-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.ims-section-title {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.45;
+    color: #1f4e79;
+}
+
+.ims-values {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.ims-value {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 8px 6px;
+    border-radius: 7px;
+    background: rgba(148, 163, 184, 0.10);
+}
+
+.ims-value-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.ims-value-number {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #1e293b;
+    overflow-wrap: anywhere;
+}
+
+/* Dark mode */
+body.dark .ims-card > h3 {
+    background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+}
+
+body.dark .ims-section {
+    background: linear-gradient(135deg, #1e293b, #111827);
+    border-left-color: #60a5fa;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+body.dark .ims-section-title {
+    color: #93c5fd;
+}
+
+body.dark .ims-value {
+    background: rgba(148, 163, 184, 0.10);
+}
+
+body.dark .ims-value-label {
+    color: #94a3b8;
+}
+
+body.dark .ims-value-number {
+    color: #e2e8f0;
+}
+
+/* Compact mobile layout */
+@media (max-width: 360px) {
+    .ims-section {
+        padding: 11px 9px;
+    }
+
+    .ims-section-title {
+        font-size: 13px;
+    }
+
+    .ims-values {
+        gap: 5px;
+    }
+
+    .ims-value {
+        padding: 7px 4px;
+    }
+
+    .ims-value-label {
+        font-size: 9px;
+    }
+
+    .ims-value-number {
+        font-size: 11px;
+    }
+}
+
+/* ===== MATCHING PRODUCTION & TRAINING HEADERS ===== */
+
+#trainingHeader,
+#productionPlanHeader {
+    margin: 8px 0 16px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #1f4e79, #2563a6);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* Keep the production month text consistent with the header */
+#productionPlanMonth {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* Dark mode */
+body.dark #trainingHeader,
+body.dark #productionPlanHeader {
+    background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+body.dark #productionPlanMonth {
+    color: #ffffff;
+}
+
+/* Smaller phones */
+@media (max-width: 360px) {
+    #trainingHeader,
+    #productionPlanHeader {
+        padding: 12px 9px;
+        font-size: 15px;
+    }
+}
+
+/* ===== SETTINGS / DISPLAY OPTIONS ===== */
+.settings-card > h3 {
+    margin: 4px 0 16px;
+    text-align: center;
+}
+
+.settings-card > label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.settings-card #displayMode {
+    margin-top: 0;
+}
+
+.settings-details {
+    margin-top: 18px;
+}
+
+.settings-details h4 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.settings-details p {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.4;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-details p span:first-child {
+    flex-shrink: 0;
+    color: #6b7280;
+}
+
+.settings-details p span:last-child {
+    text-align: right;
+    overflow-wrap: anywhere;
+    font-weight: 400;
+}
+
+body.dark .settings-details p {
+    border-bottom-color: #343943;
+}
+
+body.dark .settings-details p span:first-child {
+    color: #9ca3af;
+}
+
+/* ===== SETTINGS HEADER — MATCH IMS DESIGN ===== */
+#settingsHeader {
+    margin: 8px 0 16px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #1f4e79, #2563a6);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+body.dark #settingsHeader {
+    background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 360px) {
+    #settingsHeader {
+        padding: 12px 9px;
+        font-size: 15px;
+    }
+}
+
+/* Match section headers to HOD/AIC colours in dark mode */
+body.dark #page-production .production-card > h3,
+body.dark #page-training .card > h3,
+body.dark #page-ims .ims-card > h3,
+body.dark #page-others .settings-card > h3 {
+    background: linear-gradient(135deg, #0f172a, #020617);
+    color: #e2e8f0;
+    padding: 12px 14px;
+    margin: 0 0 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+}
+
+/* Match IMS heading spacing with Training in dark mode */
+body.dark #page-ims .ims-card {
+    padding: 17px 12px 14px;
+}
+
+body.dark #page-ims .ims-card > h3 {
+    margin: 0 0 14px;
+    border-radius: 10px;
+}
+
+/* Match IMS heading spacing in light mode */
+body:not(.dark) #page-ims .ims-card {
+    padding: 17px 12px 14px;
+}
+
+body:not(.dark) #page-ims .ims-card > h3 {
+    margin: 0 0 14px;
+    border-radius: 10px;
+}
+
+/* IMS outer card background in light mode */
+body:not(.dark) #page-ims .ims-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 17px 12px 14px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* Keep the IMS heading rounded on all four corners */
+body:not(.dark) #page-ims .ims-card > h3 {
+    border-radius: 10px;
+    margin: 0 0 14px;
+}
+
+/* Match Shift section headings with other dashboard sections */
+
+/* ===== SHIFT HEADINGS — MATCH OTHER DASHBOARD SECTIONS ===== */
+
+#page-shifts #shiftCalendarHeading,
+#page-shifts #selectedTitle {
+    background: linear-gradient(135deg, #1f4e79, #2563a6);
+    color: #ffffff;
+    padding: 14px 12px;
+    margin: 8px 0 16px;
+    border-radius: 12px;
+    border: none;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+}
+
+/* Dark mode */
+
+body.dark #page-shifts #shiftCalendarHeading,
+body.dark #page-shifts #selectedTitle {
+    background: linear-gradient(135deg, #0f172a, #020617);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+}
+
+
+@media (max-width: 360px) {
+    #page-shifts #shiftCalendarHeading,
+    #page-shifts #selectedTitle {
+        padding: 12px 9px;
+        font-size: 15px;
+    }
+}
+
+
+
+/* Left-align Production, Training, IMS and Settings headings */
+#page-production .production-card > h3,
+#page-training .card > h3,
+#page-ims .ims-card > h3,
+#page-others .settings-card > h3 {
+    text-align: left;
+}
+
+
+/* Modern, clean shift calendar */
+.calendar-day {
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+/* Highlight only today's date */
+
+.calendar-day.calendar-today {
+    border: 1.5px solid rgba(37, 99, 235, 0.55);
+    background: rgba(219, 234, 254, 0.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+        0 3px 10px rgba(37, 99, 235, 0.08);
+}
+
+
+/* Dark mode */
+body.dark .calendar-day {
+    border-color: transparent;
+    background: transparent;
+}
+
+
+body.dark .calendar-day.calendar-today {
+    border: 1.5px solid rgba(147, 197, 253, 0.48);
+    background: rgba(96, 165, 250, 0.10);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== TODAY'S SHIFT: GLASS HIGHLIGHT ===== */
+
+#next7Days .active-shift,
+#next7Days .shift-active-box {
+    background: rgba(120, 170, 220, 0.12);
+    border: 1px solid rgba(160, 205, 245, 0.38);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 4px 14px rgba(0, 0, 0, 0.06);
+    transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+/* Light mode glass */
+body:not(.dark) #next7Days .active-shift,
+body:not(.dark) #next7Days .shift-active-box {
+    background: rgba(59, 130, 246, 0.09);
+    border-color: rgba(59, 130, 246, 0.28);
+}
+
+/* Dark mode glass */
+body.dark #next7Days .active-shift,
+body.dark #next7Days .shift-active-box {
+    background: rgba(148, 190, 255, 0.10);
+    border-color: rgba(160, 195, 255, 0.24);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 4px 16px rgba(0, 0, 0, 0.16);
+}
+
+
+/* =============================================================================
+   18. BOTTOM NAVIGATION — CONSOLIDATED
+   Mobile: swipe/scroll horizontally through fixed-width tabs.
+   Desktop: show all six tabs evenly across a centred navigation track.
+   Keep all bottom-navigation rules in this section only.
+   ============================================================================= */
+
+.bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0;
+    padding: 6px 3px calc(6px + env(safe-area-inset-bottom));
+    background: var(--nav-bg, #ffffff);
+    border-top: 1px solid var(--nav-border, #dddddd);
+    box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* Scrollable row of navigation tabs */
+.bottom-nav .nav-scroll {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0 auto;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 2px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+}
+
+.bottom-nav .nav-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* Fixed tab width makes horizontal scrolling possible on phones */
+.bottom-nav .nav-scroll .nav-item {
+    flex: 0 0 76px;
+    width: 76px;
+    min-width: 76px;
+    max-width: 76px;
+    min-height: 48px;
+    padding: 4px 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--nav-text, #666666);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.15;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav .nav-scroll .nav-item svg {
+    display: block;
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.bottom-nav .nav-scroll .nav-item.active {
+    color: var(--nav-active, #1565c0);
+    background: var(--nav-active-bg, #eaf2ff);
+}
+
+.bottom-nav .nav-scroll .nav-item:focus-visible {
+    outline: 2px solid var(--nav-active, #1565c0);
+    outline-offset: -2px;
+}
+
+/* Navigation arrows: JavaScript adds .is-visible when scrolling is available */
+.bottom-nav .nav-arrow {
+    display: flex;
+    flex: 0 0 24px;
+    width: 24px;
+    min-width: 24px;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 7px;
+    background: var(--nav-active-bg, #eaf2ff);
+    color: var(--nav-active, #1565c0);
+    font-size: 27px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+.bottom-nav .nav-arrow.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Dark theme navigation colours */
+body.dark {
+    --nav-bg: #171a20;
+    --nav-border: #343943;
+    --nav-text: #c4c9d2;
+    --nav-active: #90baff;
+    --nav-active-bg: #26364e;
+}
+
+/* Compact labels and icons on narrow phones */
+@media (max-width: 380px) {
+    .bottom-nav {
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+
+    .bottom-nav .nav-scroll .nav-item {
+        flex-basis: 70px;
+        width: 70px;
+        min-width: 70px;
+        max-width: 70px;
+        font-size: 8px;
+        gap: 2px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .bottom-nav .nav-scroll .nav-item svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .bottom-nav .nav-arrow {
+        flex-basis: 21px;
+        width: 21px;
+        min-width: 21px;
+        font-size: 24px;
+    }
+}
+
+/* Desktop: centre and distribute all six tabs; scrolling remains available if needed */
+@media (min-width: 768px) {
+    .bottom-nav {
+        justify-content: center;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .bottom-nav .nav-scroll {
+        flex: 0 1 900px;
+        width: 100%;
+        max-width: 900px;
+        justify-content: space-evenly;
+        overflow-x: auto;
+    }
+
+    .bottom-nav .nav-scroll .nav-item {
+        flex: 1 1 0;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+        white-space: normal;
+    }
+
+    .bottom-nav .nav-arrow {
+        display: none;
+    }
 }
