@@ -11,8 +11,12 @@ const notesUrl =
 const alertsUrl =
     baseUrl + "updates/alerts.csv?v=" + DATA_VERSION;
 
+
 const trainingUrl =
     baseUrl + "updates/training.csv?v=" + DATA_VERSION;
+
+const imsUrl =
+    baseUrl + "updates/ims.csv?v=" + DATA_VERSION;
 
 const productionPlanUrl =
     baseUrl + "production/production_plan.csv?v=" + DATA_VERSION;

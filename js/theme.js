@@ -1,47 +1,23 @@
-function initTheme(){
+function initTheme() {
+    const displayMode = document.getElementById("displayMode");
 
-    let toggle = document.getElementById("toggleCheckbox");
+    if (!displayMode) return;
 
-    if(!toggle) return;
+    // Load the previously saved theme
+    const savedTheme = localStorage.getItem("theme") || "light";
 
-    let savedTheme =
-        localStorage.getItem("theme");
+    applyTheme(savedTheme);
 
+    // Keep the selector synchronized with the active theme
+    displayMode.value = savedTheme;
 
-    // Load saved theme
-
-    if(savedTheme === "dark"){
-
-        document.body.classList.add("dark");
-        toggle.checked = true;
-
-    }
-
-
-    // Toggle event
-
-    toggle.addEventListener("change", function(){
-
-        if(this.checked){
-
-            document.body.classList.add("dark");
-
-            localStorage.setItem(
-                "theme",
-                "dark"
-            );
-
-        }else{
-
-            document.body.classList.remove("dark");
-
-            localStorage.setItem(
-                "theme",
-                "light"
-            );
-
-        }
-
+    // Apply the selected display mode
+    displayMode.addEventListener("change", function () {
+        applyTheme(this.value);
+        localStorage.setItem("theme", this.value);
     });
 
+    function applyTheme(theme) {
+        document.body.classList.toggle("dark", theme === "dark");
+    }
 }

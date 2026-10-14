@@ -13,6 +13,7 @@ Promise.all([
     fetch(trainingUrl).then(r => r.text()),
     fetch(productionPlanUrl).then(r => r.text()),
     fetch(productionTargetUrl).then(r => r.text()),
+    fetch(imsUrl).then(r => r.text()),
     fetchCSV(nonExecUrlPrev, true),
     fetch(nonExecUrl).then(r => r.text()),
     fetch(nonExecUrlNext).then(r => r.text()),
@@ -28,6 +29,7 @@ Promise.all([
     trainingText,
     productionPlanText,
     productionTargetText,
+    imsText,
     nonExecTextPrev,
     nonExecTextCurrent,
     nonExecTextNext,
@@ -105,6 +107,8 @@ Promise.all([
         productionPlanText,
         productionTargetText
     );
+
+    loadIMSData(imsText);
 
     init();
 

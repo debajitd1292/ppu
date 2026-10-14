@@ -139,9 +139,10 @@ async function renderSelected(){
 }
 
 
+
 function renderNext7Days(){
 
-    let box = document.getElementById("next7Days");
+    const box = document.getElementById("next7Days");
 
     if(!box) return;
 
@@ -156,60 +157,86 @@ function renderNext7Days(){
     if(!selectedName){
 
         box.innerHTML =
-            "<div style='color:#777;'>Select name to view upcoming shifts</div>";
+            "<div style='color:#777;'>Select name to view shifts</div>";
 
         return;
     }
 
-    let today = new Date();
-    let html = "";
+    const today = new Date();
 
-    for(let i = 0; i < 7; i++){
+    const heading = document.getElementById("shiftCalendarHeading");
 
-        let d = new Date(today);
+    if (heading) {
+        heading.textContent = "My Shift Schedule for " +
+            today.toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric"
+            });
+    }
 
-        d.setDate(today.getDate() + i);
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const todayDate = today.getDate();
 
-        let dayNames = ["S","M","T","W","T","F","S"];
-        let dayLabel = dayNames[d.getDay()];
+    const firstDay = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-        let dd = String(d.getDate()).padStart(2,"0");
-        let mm = String(d.getMonth() + 1).padStart(2,"0");
-        let yyyy = d.getFullYear();
+    // Monday-first calendar
+    const startOffset = firstDay.getDay();
 
-        let dateStr = `${dd}-${mm}-${yyyy}`;
+    const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-        let rawShift =
-            getShift(dateStr, selectedName) || "-";
+        let html = `
+        <div class="calendar-grid">
+    `;
+
+    // Weekday headings
+    weekdays.forEach(day => {
+        html += `<div class="calendar-weekday">${day}</div>`;
+    });
+
+    // Empty cells before the first day
+    for(let i = 0; i < startOffset; i++){
+        html += `<div class="calendar-empty"></div>`;
+    }
+
+    // All dates in the current month
+    for(let day = 1; day <= daysInMonth; day++){
+
+        const d = new Date(year, month, day);
+
+        const dd = String(day).padStart(2, "0");
+        const mm = String(month + 1).padStart(2, "0");
+        const dateStr = `${dd}-${mm}-${year}`;
+
+        const rawShift = getShift(dateStr, selectedName) || "-";
 
         let shiftClass;
 
         if(rawShift === "-"){
-
             shiftClass = "NA";
-
         }else if(rawShift === "OFF"){
-
             shiftClass = "OFF";
-
         }else{
-
-            shiftClass =
-                rawShift.match(/[A-Z]/)?.[0] || "";
+            shiftClass = rawShift.match(/[A-Z]/)?.[0] || "";
         }
 
-        let shiftText = rawShift;
+        const isToday = day === todayDate;
 
         html += `
-        <div class="day-card">
-            <div class="day-name">${dayLabel}</div>
-            <div class="day-date">${dd}</div>
-            <div class="day-shift ${shiftClass}">
-                ${shiftText}
+            <div class="calendar-day ${isToday ? "calendar-today" : ""}">
+                <div class="calendar-date">${day}</div>
+                <div class="calendar-shift">
+                    <span class="day-shift ${shiftClass}">${rawShift}</span>
+                </div>
             </div>
-        </div>
         `;
     }
 
+    html += `
+        </div>
+    `;
+
     box.innerHTML = html;
 }
+

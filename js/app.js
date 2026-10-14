@@ -317,7 +317,8 @@ function autoRefreshData(){
         fetchCSV(nonExecUrlNext, true),
         fetchCSV(seniorityExecUrl, true),
         fetchCSV(seniorityNonExecUrl, true),
-        fetchCSV(alertsUrl, true)
+        fetchCSV(alertsUrl, true),
+        fetchCSV(imsUrl, true)
     ])
 
     .then(([
@@ -332,7 +333,8 @@ function autoRefreshData(){
         nonExecTextNext,
         seniorityExecText,
         seniorityNonExecText,
-        alertsText
+        alertsText,
+        imsText
     ]) => {
 
         updateHeaderDate();
@@ -388,6 +390,10 @@ if(alertsText !== undefined){
 
 
         loadNotesData(notesText);
+
+        if (imsText !== undefined && imsText !== null) {
+            loadIMSData(imsText);
+        }
 
         const nonExecCurrent = parseCSV(nonExecTextCurrent);
         const nonExecNext = parseCSV(nonExecTextNext);
@@ -453,3 +459,167 @@ if(alertsText !== undefined){
 
     });
 }
+
+
+/* ===== DASHBOARD PAGE NAVIGATION ===== */
+
+function navigateToPage(page, addHistory = true) {
+    const validPages = [
+        "home",
+        "shifts",
+        "production",
+        "training",
+        "more",
+        "ims",
+        "others"
+    ];
+
+    if (!validPages.includes(page)) {
+        return;
+    }
+
+    if (page !== "more") {
+        localStorage.setItem("lastDashboardPage", page);
+    }
+
+    const targetPage = document.getElementById("page-" + page);
+
+    if (!targetPage) {
+        console.error("Dashboard page not found:", page);
+        return;
+    }
+
+    document.querySelectorAll(".app-page").forEach(function (section) {
+        section.classList.toggle("active", section === targetPage);
+    });
+
+    const activeTab = page;
+
+    document.querySelectorAll(".bottom-nav .nav-item").forEach(function (item) {
+        const isActive = item.dataset.page === activeTab;
+
+        item.classList.toggle("active", isActive);
+
+        if (isActive) {
+            item.setAttribute("aria-current", "page");
+        } else {
+            item.removeAttribute("aria-current");
+        }
+    });
+
+    revealActiveNavItem();
+    updateNavArrows();
+
+    if (addHistory) {
+        history.pushState(
+            { dashboardPage: page },
+            "",
+            "#" + page
+        );
+    }
+
+    window.scrollTo(0, 0);
+}
+
+/* ===== HORIZONTAL BOTTOM NAVIGATION ===== */
+
+function updateNavArrows() {
+    const scroller = document.getElementById("navScroll");
+    const leftArrow = document.getElementById("navArrowLeft");
+    const rightArrow = document.getElementById("navArrowRight");
+
+    if (!scroller || !leftArrow || !rightArrow) return;
+
+    const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+    const canScroll = maxScroll > 2;
+
+    leftArrow.classList.toggle(
+        "is-visible",
+        canScroll && scroller.scrollLeft > 2
+    );
+
+    rightArrow.classList.toggle(
+        "is-visible",
+        canScroll && scroller.scrollLeft < maxScroll - 2
+    );
+}
+
+function revealActiveNavItem() {
+    const scroller = document.getElementById("navScroll");
+    const activeItem = document.querySelector(
+        "#navScroll .nav-item.active"
+    );
+
+    if (!scroller || !activeItem) return;
+
+    const itemLeft = activeItem.offsetLeft;
+    const itemRight = itemLeft + activeItem.offsetWidth;
+    const visibleLeft = scroller.scrollLeft;
+    const visibleRight = visibleLeft + scroller.clientWidth;
+
+    if (itemLeft < visibleLeft) {
+        scroller.scrollTo({
+            left: itemLeft,
+            behavior: "smooth"
+        });
+    } else if (itemRight > visibleRight) {
+        scroller.scrollTo({
+            left: itemRight - scroller.clientWidth,
+            behavior: "smooth"
+        });
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const scroller = document.getElementById("navScroll");
+    const leftArrow = document.getElementById("navArrowLeft");
+    const rightArrow = document.getElementById("navArrowRight");
+
+    if (!scroller || !leftArrow || !rightArrow) return;
+
+    leftArrow.addEventListener("click", function () {
+        scroller.scrollBy({
+            left: -Math.max(140, scroller.clientWidth * 0.7),
+            behavior: "smooth"
+        });
+    });
+
+    rightArrow.addEventListener("click", function () {
+        scroller.scrollBy({
+            left: Math.max(140, scroller.clientWidth * 0.7),
+            behavior: "smooth"
+        });
+    });
+
+    scroller.addEventListener("scroll", updateNavArrows);
+    window.addEventListener("resize", updateNavArrows);
+
+    updateNavArrows();
+});
+
+window.addEventListener("popstate", function () {
+    navigateToPage("home", false);
+    history.replaceState({ dashboardPage: "home" }, "", "#home");
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const validPages = [
+        "home",
+        "shifts",
+        "production",
+        "training",
+        "ims",
+        "others"
+    ];
+
+    const savedPage = localStorage.getItem("lastDashboardPage");
+    const initialPage = validPages.includes(savedPage) ? savedPage : "home";
+
+    navigateToPage(initialPage, false);
+    history.replaceState(
+        { dashboardPage: initialPage },
+        "",
+        "#" + initialPage
+    );
+});
+
