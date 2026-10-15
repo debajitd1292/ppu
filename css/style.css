@@ -1861,3 +1861,377 @@ body.dark {
         display: none;
     }
 }
+
+
+
+/* =====================================================
+   PLANT PAGE — CONSOLIDATED MODERN LAYOUT
+   ===================================================== */
+
+#page-plant {
+  padding-bottom: 20px;
+}
+
+/* Page heading: retain the existing Training/IMS-style header */
+#page-plant #plantHeader {
+  background: linear-gradient(135deg, #1f4e79, #2563a6);
+  color: #fff;
+  padding: 14px 12px;
+  margin: 0 0 14px;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+body.dark #page-plant #plantHeader {
+  background: linear-gradient(135deg, #0f172a, #020617);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+/* Reactor and Extruder: one large card per row */
+#page-plant #plantMajorCards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  width: 100%;
+  margin: 14px 0 20px;
+}
+
+#page-plant .plant-major-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 19px 20px;
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid #94a3b8;
+  border-radius: 15px;
+  background: #fff;
+  color: #1e293b;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.055);
+  overflow-wrap: anywhere;
+}
+
+#page-plant .plant-major-card.plant-running {
+  border-left-color: #16a34a;
+}
+
+#page-plant .plant-major-card.plant-shutdown {
+  border-left-color: #dc2626;
+}
+
+#page-plant .plant-major-card.plant-unknown {
+  border-left-color: #94a3b8;
+}
+
+/* Equipment names */
+#page-plant .plant-card-title {
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 750;
+  color: #1e293b;
+}
+
+/* Status text */
+#page-plant .plant-status-text {
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+#page-plant .plant-major-card.plant-running .plant-status-text,
+#page-plant .plant-fpu-card.plant-fpu-inline .plant-status-text {
+  color: #15803d;
+}
+
+#page-plant .plant-major-card.plant-shutdown .plant-status-text {
+  color: #dc2626;
+}
+
+#page-plant .plant-major-card.plant-unknown .plant-status-text,
+#page-plant .plant-fpu-card.plant-fpu-unknown .plant-status-text {
+  color: #64748b;
+}
+
+/* Event dates and duration */
+#page-plant .plant-event-date {
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #64748b;
+  overflow-wrap: anywhere;
+}
+
+#page-plant .plant-duration {
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 650;
+  color: #334155;
+  overflow-wrap: anywhere;
+}
+
+/* FPU: two columns, six cards, three rows */
+#page-plant #plantFpuCards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  margin: 12px 0 18px;
+  align-items: stretch;
+}
+
+/* Compact, neutral FPU cards */
+#page-plant .plant-fpu-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  min-height: 112px;
+  box-sizing: border-box;
+  padding: 13px 12px;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #cbd5e1;
+  border-radius: 13px;
+  background: #f8fafc;
+  color: #1e293b;
+  box-shadow: 0 2px 9px rgba(15, 23, 42, 0.045);
+  overflow-wrap: anywhere;
+}
+
+/* Keep all FPU cards neutral */
+#page-plant .plant-fpu-card.plant-fpu-inline,
+#page-plant .plant-fpu-card.plant-fpu-standby,
+#page-plant .plant-fpu-card.plant-fpu-custom,
+#page-plant .plant-fpu-card.plant-fpu-unknown {
+  border-left-color: #cbd5e1;
+}
+
+#page-plant .plant-fpu-card .plant-card-title {
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 750;
+}
+
+#page-plant .plant-fpu-card .plant-status-text {
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 750;
+}
+
+#page-plant .plant-fpu-card.plant-fpu-inline .plant-status-text {
+  color: #15803d;
+}
+
+#page-plant .plant-fpu-card.plant-fpu-standby .plant-status-text {
+  color: #c2410c;
+}
+
+#page-plant .plant-fpu-card.plant-fpu-custom .plant-status-text {
+  color: #2563eb;
+}
+
+#page-plant .plant-fpu-card .plant-event-date,
+#page-plant .plant-fpu-card .plant-duration {
+  font-size: 11px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+/* Data refresh message */
+#page-plant #plantDataNote {
+  margin: 8px 2px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+/* Dark mode */
+body.dark #page-plant .plant-major-card,
+body.dark #page-plant .plant-fpu-card {
+  background: #171a20;
+  color: #e2e8f0;
+  border-top-color: #3b4350;
+  border-right-color: #3b4350;
+  border-bottom-color: #3b4350;
+}
+
+body.dark #page-plant .plant-card-title {
+  color: #e2e8f0;
+}
+
+body.dark #page-plant .plant-event-date,
+body.dark #page-plant #plantDataNote {
+  color: #aab4c3;
+}
+
+body.dark #page-plant .plant-duration {
+  color: #cbd5e1;
+}
+
+body.dark #page-plant .plant-major-card.plant-running {
+  border-left-color: #16a34a;
+}
+
+body.dark #page-plant .plant-major-card.plant-shutdown {
+  border-left-color: #dc2626;
+}
+
+/* Small mobile screens: retain two FPU columns */
+@media (max-width: 360px) {
+  #page-plant #plantFpuCards {
+    gap: 7px;
+  }
+
+  #page-plant .plant-fpu-card {
+    padding: 11px 9px;
+    min-height: 108px;
+  }
+
+  #page-plant .plant-fpu-card .plant-card-title {
+    font-size: 12px;
+  }
+
+  #page-plant .plant-fpu-card .plant-event-date,
+  #page-plant .plant-fpu-card .plant-duration {
+    font-size: 10px;
+  }
+
+  #page-plant .plant-major-card {
+    padding: 16px;
+  }
+}
+
+
+/* =====================================================
+   PLANT — COMPACT CARDS & INLINE BORDER HIGHLIGHT
+   ===================================================== */
+
+/* Reduce spacing between major equipment cards */
+#page-plant #plantMajorCards {
+  gap: 9px;
+  margin: 10px 0 13px;
+}
+
+/* More compact Reactor and Extruder */
+#page-plant .plant-major-card {
+  padding: 12px 14px;
+  gap: 3px;
+  border-radius: 12px;
+}
+
+/* Reduce spacing between FPU cards */
+#page-plant #plantFpuCards {
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+/* Compact FPU cards */
+#page-plant .plant-fpu-card {
+  padding: 10px 11px;
+  gap: 3px;
+  min-height: 0;
+  border-radius: 11px;
+}
+
+/* Equipment names */
+#page-plant .plant-major-card .plant-card-title {
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+#page-plant .plant-fpu-card .plant-card-title {
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+/* Compact status text */
+#page-plant .plant-status-text {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+/* Compact dates and duration */
+#page-plant .plant-event-date,
+#page-plant .plant-duration {
+  margin: 0;
+  line-height: 1.35;
+}
+
+#page-plant .plant-major-card .plant-event-date,
+#page-plant .plant-major-card .plant-duration {
+  font-size: 11px;
+}
+
+#page-plant .plant-fpu-card .plant-event-date,
+#page-plant .plant-fpu-card .plant-duration {
+  font-size: 10.5px;
+}
+
+/* Date labels slightly stronger */
+#page-plant .plant-date-label {
+  font-weight: 650;
+}
+
+/* Neutral border for all FPU cards */
+#page-plant .plant-fpu-card,
+#page-plant .plant-fpu-card.plant-fpu-standby,
+#page-plant .plant-fpu-card.plant-fpu-custom,
+#page-plant .plant-fpu-card.plant-fpu-unknown {
+  border-left: 4px solid #cbd5e1;
+}
+
+/* Green border ONLY for Inline FPU cards */
+#page-plant .plant-fpu-card.plant-fpu-inline {
+  border-left: 4px solid #16a34a;
+}
+
+/* Dark mode — retain green Inline border */
+body.dark #page-plant .plant-fpu-card.plant-fpu-inline {
+  border-left-color: #22c55e;
+}
+
+/* Small mobile screens */
+@media (max-width: 360px) {
+  #page-plant .plant-major-card {
+    padding: 11px 12px;
+  }
+
+  #page-plant .plant-fpu-card {
+    padding: 9px 8px;
+    gap: 3px;
+    min-height: 0;
+  }
+
+  #page-plant .plant-fpu-card .plant-event-date,
+  #page-plant .plant-fpu-card .plant-duration {
+    font-size: 10px;
+  }
+}
+
+
+#page-plant .plant-custom-message {
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 700;
+  color: #2878c8;
+  overflow-wrap: anywhere;
+}
+
+body.dark #page-plant .plant-custom-message {
+  color: #60a5fa;
+}
+
+
+.plant-date-label {
+  display: block;
+}
