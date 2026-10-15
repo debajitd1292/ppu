@@ -102,6 +102,19 @@
 
 </div>
 
+
+<div class="app-page" id="page-plant">
+  <div class="card plant-page-card">
+    <h3 id="plantHeader">Major Equipment Status</h3>
+
+    <div id="plantMajorCards" class="plant-major-grid"></div>
+
+    <div id="plantFpuCards" class="plant-fpu-grid"></div>
+
+    <div id="plantDataNote" class="plant-data-note" role="status"></div>
+  </div>
+</div>
+
 <div class="app-page" id="page-production">
 <div class="info-card production-card">
 
@@ -218,6 +231,17 @@
     <span>Shifts</span>
   </button>
 
+  
+  <button type="button" class="nav-item" data-page="plant"
+          onclick="navigateToPage('plant')">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 21V5h8v16M6 5h12M10 2h4M5 21h14"/>
+      <path d="M10 9h4M10 13h4M10 17h4"/>
+      <path d="M16 8h3v5h-3"/>
+    </svg>
+    <span>Plant</span>
+  </button>
+
   <button type="button" class="nav-item" data-page="production"
           onclick="navigateToPage('production')">
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -286,6 +310,7 @@
 <script src="js/loader.js"></script>
 <script src="js/pwa.js"></script>
 <script src="js/app.js"></script>
+<script src="js/plant.js"></script>
 
 </body>
 </html>
