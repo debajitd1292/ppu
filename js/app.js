@@ -467,6 +467,7 @@ function navigateToPage(page, addHistory = true) {
     const validPages = [
         "home",
         "shifts",
+        "plant",
         "production",
         "training",
         "more",
@@ -606,6 +607,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const validPages = [
         "home",
         "shifts",
+        "plant",
         "production",
         "training",
         "ims",
@@ -621,5 +623,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "",
         "#" + initialPage
     );
+
 });
 
