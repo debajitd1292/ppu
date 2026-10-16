@@ -177,13 +177,18 @@ function renderProductionPlan(){
             ) + 1;
 
 
-        const isToday =
-            today >= fromDate &&
-            today <= toDate;
+        const todayDate = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate()
+        );
+
+       const isToday =
+            todayDate >= fromDate &&
+            todayDate <= toDate;
 
         const isPast =
-            toDate < today;
-
+            toDate < todayDate;
 
         const duration =
             fromParts[1] === toParts[1]
