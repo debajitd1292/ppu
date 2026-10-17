@@ -113,8 +113,75 @@ function renderIMSTargets() {
         "nearmissreporting": "Near Miss Reporting"
     };
 
-    const normalise = value =>
+        const normalise = value =>
         String(value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+    // Extract the numeric part of a target or actual value.
+    const numericValue = value => {
+        const match = String(value ?? "")
+            .replace(/,/g, "")
+            .match(/-?\d+(?:\.\d+)?/);
+
+        return match ? Number(match[0]) : NaN;
+    };
+
+    function getAchievementPercentage(row, sourceName) {
+        const objective = normalise(sourceName);
+        const target = numericValue(
+            targetIndex >= 0 ? row[targetIndex] : ""
+        );
+        const actual = numericValue(
+            tillDateIndex >= 0 ? row[tillDateIndex] : ""
+        );
+
+        if (!Number.isFinite(target) || !Number.isFinite(actual)) {
+            return null;
+        }
+
+        // Financial year: April to March.
+        const fiscalMonths = {
+            apr: 1, may: 2, jun: 3, jul: 4,
+            aug: 5, sep: 6, oct: 7, nov: 8,
+            dec: 9, jan: 10, feb: 11, mar: 12
+        };
+
+        const monthsElapsed = fiscalMonths[latestMonth.month];
+
+        const isCumulative =
+            objective === normalise("Production Target") ||
+            objective === normalise("Near Miss Reporting");
+
+        // Zero-downtime target: compliance score.
+        const isDowntime =
+            objective === normalise("Downtime due to Process Reasons") ||
+            objective === normalise("Plant Downtime due to Process Reason");
+
+        if (isDowntime) {
+            return actual <= 0 ? 100 : 0;
+        }
+
+        // Compare cumulative actual against the target up to the latest
+        // month containing data.
+        if (isCumulative) {
+            return target > 0
+                ? (actual / target) * 100
+                : null;
+        }
+
+        // Lower consumption is better.
+        const isLowerBetter =
+            objective === normalise("Specific Energy Consumption") ||
+            objective === normalise("Specific Monomer Consumption");
+
+        if (isLowerBetter) {
+            return actual > 0
+                ? (target / actual) * 100
+                : (target >= 0 ? 100 : null);
+        }
+
+        // Higher values are better for the remaining objectives.
+        return target > 0 ? (actual / target) * 100 : null;
+    }
 
     const headingAliases = {
         [normalise("Production Target")]: "Production Target",
@@ -140,9 +207,62 @@ function renderIMSTargets() {
         const section = document.createElement("div");
         section.className = "ims-section";
 
-        const heading = document.createElement("h4");
+                const heading = document.createElement("h4");
         heading.className = "ims-section-title";
-        heading.textContent = headingText;
+        heading.style.display = "flex";
+        heading.style.alignItems = "center";
+        heading.style.justifyContent = "space-between";
+        heading.style.gap = "10px";
+
+        const headingLabel = document.createElement("span");
+        headingLabel.textContent = headingText;
+
+        const achievement = getAchievementPercentage(row, sourceName);
+
+        const percentageLabel = document.createElement("span");
+        percentageLabel.className = "ims-achievement-percentage";
+        percentageLabel.textContent = achievement === null
+            ? "—"
+            : achievement.toFixed(2) + "%";
+
+                let colourAchievement = achievement;
+
+        const objective = normalise(sourceName);
+        const isCumulativeObjective =
+            objective === normalise("Production Target") ||
+            objective === normalise("Near Miss Reporting");
+
+        if (isCumulativeObjective && achievement !== null) {
+            const target = numericValue(
+                targetIndex >= 0 ? row[targetIndex] : ""
+            );
+            const actual = numericValue(
+                tillDateIndex >= 0 ? row[tillDateIndex] : ""
+            );
+
+            const fiscalMonths = {
+                apr: 1, may: 2, jun: 3, jul: 4,
+                aug: 5, sep: 6, oct: 7, nov: 8,
+                dec: 9, jan: 10, feb: 11, mar: 12
+            };
+
+            const cumulativeTarget =
+                target * (fiscalMonths[latestMonth.month] / 12);
+
+            colourAchievement = cumulativeTarget > 0
+                ? (actual / cumulativeTarget) * 100
+                : null;
+        }
+
+        percentageLabel.style.color =
+            colourAchievement !== null && colourAchievement >= 100
+                ? "green"
+                : "orange";
+
+        percentageLabel.style.whiteSpace = "nowrap";
+        percentageLabel.style.fontSize = "0.85em";
+
+        heading.append(headingLabel, percentageLabel);
 
         const values = document.createElement("div");
         values.className = "ims-values";
