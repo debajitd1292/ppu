@@ -10,7 +10,7 @@
   "use strict";
 
   const CSV_URL =
-    "https://raw.githubusercontent.com/debajitd1292/ppu/main/updates/plant_status.csv";
+    "https://raw.githubusercontent.com/debajitd1292/ddd/main/updates/plant_status.csv";
 
   const REFRESH_INTERVAL = 2 * 60 * 1000;
 
@@ -363,12 +363,25 @@ function fpuCard(row, name, pairStatus = null) {
       return;
     }
 
-    majorContainer.innerHTML = [
-      majorCard(getRow(rows, "major", "Reactor"), "Reactor"),
-      majorCard(getRow(rows, "major", "Extruder"), "Extruder")
-    ].join("");
+      majorContainer.innerHTML = [
+        majorCard(getRow(rows, "major", "Reactor"), "Reactor"),
+        majorCard(getRow(rows, "major", "Extruder"), "Extruder")
+      ].join("");
 
-    
+    // Hide Current Production Grade when Reactor is Shutdown.
+    const reactorStatus = majorContainer
+      .querySelector(".plant-major-card .plant-status-text");
+
+    const productionGradeCard =
+      document.querySelector(".production-grade-card");
+
+    if (productionGradeCard && reactorStatus) {
+      productionGradeCard.style.display =
+        reactorStatus.textContent.trim() === "Shutdown"
+          ? "none"
+          : "";
+    }
+
     const fpuPairs = [
       ["Dryer-A", "Dryer-B"],
       ["Treater-A", "Treater-B"],
