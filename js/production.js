@@ -13,11 +13,14 @@ function loadProductionData(productionPlanText, productionTargetText){
             return {
                 from: r[0]?.trim(),
                 to: r[1]?.trim(),
-                grade: r[2]?.trim()
+                grade: r[2]?.trim(),
+                currentGradeSince: r[3]?.trim() || ""
             };
 
         })
         .filter(r => r.from && r.to && r.grade);
+
+    renderCurrentProductionGrade();
 
 
     const productionTargetRows = parseCSV(productionTargetText);
@@ -36,6 +39,89 @@ function loadProductionData(productionPlanText, productionTargetText){
         .filter(r => r.month && r.grade && r.quantity);
 }
 
+function renderCurrentProductionGrade(){
+
+    const gradeBox = document.getElementById("currentProductionGrade");
+    const dateBox = document.getElementById("productionGradeSince");
+
+    if(!gradeBox || !dateBox) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    function parsePlanDate(value){
+        const p = String(value || "").trim().split("-").map(Number);
+
+        if(p.length !== 3) return null;
+
+        const d = new Date(p[2], p[1] - 1, p[0]);
+        d.setHours(0, 0, 0, 0);
+
+        return d.getFullYear() === p[2] &&
+               d.getMonth() === p[1] - 1 &&
+               d.getDate() === p[0] ? d : null;
+    }
+
+    function parseOverrideDate(value){
+    const p = String(value || "").trim().split("-").map(Number);
+
+    if(p.length !== 3) return null;
+
+    const day = p[0];
+    const month = p[1];
+    const year = p[2];
+
+    const d = new Date(year, month - 1, day);
+    d.setHours(0, 0, 0, 0);
+
+    return d.getFullYear() === year &&
+           d.getMonth() === month - 1 &&
+           d.getDate() === day ? d : null;
+    }
+
+    function formatDate(date){
+        return date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        }).replace(/ /g, "-");
+    }
+
+    const overrides = productionPlans
+        .map(r => ({
+            grade: r.grade,
+            date: parseOverrideDate(r.currentGradeSince)
+        }))
+        .filter(r => r.grade && r.date && r.date <= today)
+        .sort((a, b) => b.date - a.date);
+
+    let grade = "";
+    let since = null;
+
+    if(overrides.length){
+        grade = overrides[0].grade;
+        since = overrides[0].date;
+    } else {
+        const currentPlan = productionPlans.find(r => {
+            const from = parsePlanDate(r.from);
+            const to = parsePlanDate(r.to);
+
+            return from && to && today >= from && today <= to;
+        });
+
+        if(currentPlan){
+            grade = currentPlan.grade;
+            since = parsePlanDate(currentPlan.from);
+        }
+    }
+
+    gradeBox.textContent = grade || "Loading...";
+    dateBox.innerHTML = grade && since
+    ? "Since: " + formatDate(since) +
+      "<br>Days in Current Grade: " +
+      Math.floor((today - since) / 86400000)
+    : "";
+}
 
 function renderProductionPlan(){
 
@@ -46,6 +132,8 @@ function renderProductionPlan(){
     if(!title || !targetBox || !body){
         return;
     }
+
+    renderCurrentProductionGrade();
 
     const today = new Date();
 
