@@ -143,11 +143,15 @@ function refresh(){
 
     const [headerDay, headerMonth, headerYear] = calendarToday.split("-");
 
-    
-    document.getElementById("todayTitle").innerText =
-        `Operational Shift for ${monthNames[parseInt(headerMonth, 10) - 1]} ${parseInt(headerDay, 10)}, ${headerYear}`;
+    const operationalDate = new Date();
 
-    
+    if (operationalDate.getHours() < 6) {
+        operationalDate.setDate(operationalDate.getDate() - 1);
+    }
+
+    document.getElementById("todayTitle").innerText =
+        `Operational Shift for ${monthNames[operationalDate.getMonth()]} ${operationalDate.getDate()}, ${operationalDate.getFullYear()}`;
+
     let badge = document.getElementById("todayShiftBadge");
 
         if(!selectedName){
