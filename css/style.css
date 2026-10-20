@@ -873,17 +873,31 @@ body.dark .section-header {
     box-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
-body.dark .exec-header {
-    color: #90caf9;
-    background: linear-gradient(135deg, rgba(30,64,255,0.25), rgba(30,64,255,0.1));
-    border: 1px solid rgba(144,202,249,0.4);
+
+/* DARK MODE — EXECUTIVE / NON-EXECUTIVE HEADERS */
+
+/* Executive — Blue */
+body.dark .section-header.exec-header {
+    color: #90caf9 !important;
+    background: linear-gradient(
+        135deg,
+        rgba(30, 64, 255, 0.25),
+        rgba(30, 64, 255, 0.10)
+    ) !important;
+    border: 1px solid rgba(144, 202, 249, 0.4) !important;
 }
 
-body.dark .nonexec-header {
-    color: #ef9a9a;
-    background: linear-gradient(135deg, rgba(183,28,28,0.3), rgba(183,28,28,0.1));
-    border: 1px solid rgba(239,154,154,0.4);
+/* Non-Executive — Red/Pink */
+body.dark .section-header.nonexec-header {
+    color: #ef9a9a !important;
+    background: linear-gradient(
+        135deg,
+        rgba(183, 28, 28, 0.30),
+        rgba(183, 28, 28, 0.10)
+    ) !important;
+    border: 1px solid rgba(239, 154, 154, 0.4) !important;
 }
+
 
 body.dark .notice-alert {
     color: #ffb4b4;
