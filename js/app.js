@@ -143,8 +143,10 @@ function refresh(){
 
     const [headerDay, headerMonth, headerYear] = calendarToday.split("-");
 
+    
     document.getElementById("todayTitle").innerText =
-        `Today's Shift (${monthNames[parseInt(headerMonth, 10) - 1]} ${parseInt(headerDay, 10)}, ${headerYear})`;
+        `Operational Shift for ${monthNames[parseInt(headerMonth, 10) - 1]} ${parseInt(headerDay, 10)}, ${headerYear}`;
+
     
     let badge = document.getElementById("todayShiftBadge");
 
@@ -154,25 +156,27 @@ function refresh(){
     badge.innerText = "Today's Shift: " + headerShift;
     }
 
+    
     badge.className = "badge";
 
     if (!selectedName) {
         badge.classList.add("no-name-selected");
     }
 
-    if(shift && shift !== "-" && shift !== "Select Name"){
+    if (headerShift && headerShift !== "-" && headerShift !== "Select Name") {
 
     let primary;
 
-        if(shift.includes("C")) primary = "C";
-        else if(shift.includes("B")) primary = "B";
-        else if(shift.includes("A")) primary = "A";
-        else primary = shift;
+        if (headerShift.includes("C")) primary = "C";
+        else if (headerShift.includes("B")) primary = "B";
+        else if (headerShift.includes("A")) primary = "A";
+        else primary = headerShift;
 
-    if(primary === "O") primary = "OFF";
+        if (primary === "O") primary = "OFF";
 
-    badge.classList.add(primary);
+        badge.classList.add(primary);
     }
+
 
     render("today", today);
 
