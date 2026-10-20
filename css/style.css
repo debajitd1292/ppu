@@ -1631,8 +1631,10 @@ body:not(.dark) #page-ims .ims-card > h3 {
 }
 
 /* 22. SHIFT HEADINGS */
+
 #page-shifts #shiftCalendarHeading,
-#page-shifts #selectedTitle {
+#page-shifts #selectedTitle,
+#todayTitle {
     background: linear-gradient(135deg, #1f4e79, #2563a6);
     color: #ffffff;
     padding: 14px 12px;
@@ -1643,25 +1645,31 @@ body:not(.dark) #page-ims .ims-card > h3 {
     font-size: 17px;
     font-weight: 700;
     line-height: 1.4;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
     box-sizing: border-box;
 }
 
+
 body.dark #page-shifts #shiftCalendarHeading,
-body.dark #page-shifts #selectedTitle {
+body.dark #page-shifts #selectedTitle,
+body.dark #todayTitle {
     background: linear-gradient(135deg, #1e3a5f, #263b59);
     color: #e2e8f0;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
+
+
 
 @media (max-width: 360px) {
     #page-shifts #shiftCalendarHeading,
-    #page-shifts #selectedTitle {
+    #page-shifts #selectedTitle,
+    #todayTitle {
         padding: 12px 9px;
         font-size: 15px;
     }
 }
+
 
 #page-production .production-card > h3,
 #page-training .card > h3,
@@ -3340,4 +3348,20 @@ body.dark #bottomNav,
 body.dark .bottom-nav {
     border-color: #64748b !important;
     box-shadow: 0 -3px 14px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* DARK MODE — EXECUTIVE / NON-EXECUTIVE BADGES */
+
+/* Executive — Blue */
+body.dark .executive-badge {
+    background: rgba(59, 130, 246, 0.16) !important;
+    color: #bfdbfe !important;
+    border-color: rgba(96, 165, 250, 0.55) !important;
+}
+
+/* Non-Executive — Red/Pink */
+body.dark .non-executive-badge {
+    background: rgba(244, 63, 94, 0.13) !important;
+    color: #fecdd3 !important;
+    border-color: rgba(251, 113, 133, 0.55) !important;
 }
