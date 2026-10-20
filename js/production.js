@@ -39,6 +39,7 @@ function loadProductionData(productionPlanText, productionTargetText){
         .filter(r => r.month && r.grade && r.quantity);
 }
 
+
 function renderCurrentProductionGrade(){
 
     const gradeBox = document.getElementById("currentProductionGrade");
@@ -60,9 +61,10 @@ function renderCurrentProductionGrade(){
         return d.getFullYear() === p[2] &&
                d.getMonth() === p[1] - 1 &&
                d.getDate() === p[0] ? d : null;
-    }
+}
 
-    function parseOverrideDate(value){
+
+function parseOverrideDate(value){
     const p = String(value || "").trim().split("-").map(Number);
 
     if(p.length !== 3) return null;
@@ -79,12 +81,13 @@ function renderCurrentProductionGrade(){
            d.getDate() === day ? d : null;
     }
 
-    function formatDate(date){
-        return date.toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "short",
-            year: "numeric"
-        }).replace(/ /g, "-");
+
+function formatDate(date){
+    return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    }).replace(/ /g, "-");
     }
 
     const overrides = productionPlans
@@ -123,6 +126,7 @@ function renderCurrentProductionGrade(){
     : "";
 }
 
+
 function renderProductionPlan(){
 
     const title = document.getElementById("productionPlanMonth");
@@ -150,11 +154,9 @@ function renderProductionPlan(){
     const currentMonthKey =
         currentMonth + "-" + currentYear;
 
-
     /* MONTH TITLE */
 
     title.innerText = monthName + " " + currentYear;
-
 
     /* =========================
        PRODUCTION TARGETS
@@ -213,7 +215,6 @@ function renderProductionPlan(){
 
     body.innerHTML = "";
 
-
     if(!plans.length){
 
         document.getElementById("productionEmpty").style.display = "block";
@@ -231,7 +232,6 @@ function renderProductionPlan(){
 
     document.getElementById("productionEmpty").style.display = "none";
     document.getElementById("productionTableWrap").style.display = "block";
-
 
     plans.forEach(plan => {
 

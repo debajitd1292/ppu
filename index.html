@@ -16,25 +16,32 @@
 </head>
 
 <body>
-<div class="app-page active" id="page-home">
-<div class="header">
-    <img src="https://raw.githubusercontent.com/debajitd1292/ppu/main/logo.png" 
-     class="logo" 
-     onload="this.style.opacity=1; this.style.transform='scale(1)'"> 
 
-    <h3>PPU OPERATIONS DASHBOARD</h3> 
-    <div id="todayDate"></div> 
 
-    <div id="todayNote" style="margin-top:5px;font-weight:bold;"></div> 
+<div class="home-top-section">
+    <div class="header">
+        <div class="header-brand">
+            <div class="header-banner">
+                <img src="images/banner.jpg" alt="Polypropylene Plant"
+                     onerror="this.parentElement.style.display='none'">
+            </div>
 
-    <div class="badge" id="todayShiftBadge">Loading...</div> 
+            <img src="images/logo.png"
+                 class="logo"
+                 alt="BCPL Logo"
+                 onload="this.style.opacity=1; this.style.transform='scale(1)'">
 
-    <div class="holiday-text"> 
-        Next GH: <span id="nextGH"></span> • 
-        Next RH: <span id="nextRH"></span> 
-    </div> 
-
+            <div class="header-titles">
+                <h3>OPERATIONS DASHBOARD</h3>
+                <div class="header-subtitle">Polypropylene Unit • BCPL</div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="app-page active" id="page-home">
+    <div id="todayNote" class="today-message"></div>
+
 
 <div class="info-bar">
 
@@ -57,8 +64,55 @@
 
 <div id="alertSection" style="margin:10px;"></div>
 
-<div class="card">
 
+<div class="today-weather-row">
+    
+<div class="today-weather-summary">
+    <h4>TODAY</h4>
+    <div id="todayDate"></div>
+    <div id="todayReason" style="margin-top:3px;font-size:10px;font-weight:normal;"></div>
+    <div class="badge" id="todayShiftBadge">Loading...</div>
+</div>
+
+<div class="weather-card" id="weatherCard">
+    <h4>DIBRUGARH</h4>
+
+    <div class="weather-main">
+        <span id="weatherIcon">🌤️</span>
+
+    <div class="weather-temperature-group">
+        <span id="weatherTemperature">--°C</span>
+        <span id="weatherMaxMin">--–--°C</span>
+    </div>
+
+    <span id="weatherCondition">Loading weather...</span>
+</div>
+
+<div class="weather-details">
+    <span>Feels like: <strong id="weatherFeelsLike">--°C</strong></span>
+    <span class="weather-detail-separator">•</span>
+    <span>Humidity: <strong id="weatherHumidity">--%</strong></span>
+</div>
+
+</div>
+
+</div> 
+
+
+<div class="holiday-cards">
+    <div class="holiday-card">
+        <div class="holiday-title">Next GH</div>
+        <div id="nextGH" class="holiday-date">—</div>
+    </div>
+
+    <div class="holiday-card">
+        <div class="holiday-title">Next RH</div>
+        <div id="nextRH" class="holiday-date">—</div>
+    </div>
+</div>
+
+
+<div class="card">
     <div class="row">
     <div class="field">
         <label>Select Category:</label>
@@ -67,7 +121,7 @@
             <option value="exec">Executive</option>
             <option value="nonexec">Non-Executive</option>
         </select>
-    </div>
+</div>
 
     <div class="field">
         <label>Select Name:</label>
@@ -115,6 +169,7 @@
   </div>
 </div>
 
+
 <div class="app-page" id="page-production">
 
 <div class="card production-grade-card">
@@ -122,6 +177,7 @@
     <div id="currentProductionGrade">Loading...</div>
     <div id="productionGradeSince" class="production-grade-since"></div>
 </div>
+
 
 <div class="info-card production-card">
 
@@ -133,6 +189,7 @@
     <div id="productionEmpty" class="production-empty">
     Production plan not received yet
 </div>
+
 
 <div class="production-table-wrap" id="productionTableWrap">
 
@@ -157,12 +214,14 @@
 
 </div>
 
+
 <div class="app-page" id="page-training">
 <div class="card"><h3 id="trainingHeader">Training Schedule</h3>
     <div id="trainingSection">Loading...</div>
 </div>
 
 </div>
+
 
 <div class="app-page" id="page-more">
   <div class="card">
@@ -208,6 +267,7 @@
     </div>
   </div>
 </div>
+
 
 <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation">
 
@@ -300,6 +360,7 @@
     <div id="lastUpdated"></div>
 </div>
 
+
 <script src="js/config.js"></script>
 <script src="js/data.js"></script>
 <script src="js/alerts.js"></script>
@@ -318,6 +379,7 @@
 <script src="js/pwa.js"></script>
 <script src="js/app.js"></script>
 <script src="js/plant.js"></script>
+<script src="js/weather.js"></script>
 
 </body>
 </html>

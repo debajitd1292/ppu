@@ -38,6 +38,7 @@ function loadSeniority(execText, nonExecText){
     console.log("Non-Executive seniority loaded:", nonExecSeniorityOrder);
 }
 
+
 function sortBySeniority(list){
     return list.sort((a,b)=>{
         let ia = seniorityOrder.indexOf(a.trim());
@@ -47,6 +48,7 @@ function sortBySeniority(list){
         return ia - ib;
     });
 }
+
 
 function updatePresentShiftIncharge(){
 
@@ -106,7 +108,7 @@ function init(){
     refresh();
     renderNext7Days();
 
-}, 0);
+    }, 0);
 
     document.getElementById("todayNote").innerHTML = getTodayNote(); 
    
@@ -116,54 +118,69 @@ function init(){
     renderTraining();
 
     calcHoliday(); 
+    updateTodayReason();
     refresh(); 
 }
 
 function refresh(){
+    // Header capsule: follows calendar date, changing at midnight
     let calendarToday = formatDate(new Date());
 
+    // Operational shift section: retains the 06:00–05:59 boundary
     const currentShiftInfo = getCurrentShiftInfo();
     let today = currentShiftInfo ? currentShiftInfo.date : calendarToday;
 
-    let shift = selectedName ? (getShift(today, selectedName) || "-") : "Select Name";
+    let headerShift = selectedName
+        ? (getShift(calendarToday, selectedName) || "-")
+        : "Select Name";
 
+    let shift = selectedName
+        ? (getShift(today, selectedName) || "-")
+        : "Select Name";
     const [day, month, year] = today.split("-");
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+    const [headerDay, headerMonth, headerYear] = calendarToday.split("-");
+
     document.getElementById("todayTitle").innerText =
-    `Today's Shift (${monthNames[parseInt(month, 10) - 1]} ${parseInt(day, 10)}, ${year})`;
+        `Today's Shift (${monthNames[parseInt(headerMonth, 10) - 1]} ${parseInt(headerDay, 10)}, ${headerYear})`;
+    
+    let badge = document.getElementById("todayShiftBadge");
 
-let badge = document.getElementById("todayShiftBadge");
-
-if(!selectedName){
+        if(!selectedName){
     badge.innerText = "Select a name to view shift";
-}else{
-    badge.innerText = "Today's Shift: " + shift;
-}
+        }else{
+    badge.innerText = "Today's Shift: " + headerShift;
+    }
 
-badge.className = "badge";
+    badge.className = "badge";
 
-if(shift && shift !== "-" && shift !== "Select Name"){
+    if (!selectedName) {
+        badge.classList.add("no-name-selected");
+    }
+
+    if(shift && shift !== "-" && shift !== "Select Name"){
 
     let primary;
 
-    if(shift.includes("C")) primary = "C";
-    else if(shift.includes("B")) primary = "B";
-    else if(shift.includes("A")) primary = "A";
-    else primary = shift;
+        if(shift.includes("C")) primary = "C";
+        else if(shift.includes("B")) primary = "B";
+        else if(shift.includes("A")) primary = "A";
+        else primary = shift;
 
     if(primary === "O") primary = "OFF";
 
     badge.classList.add(primary);
+    }
+
+    render("today", today);
+
+    updatePresentShiftIncharge();
+
+    renderProductionPlan();
 }
 
-render("today", today);
-
-updatePresentShiftIncharge();
-
-renderProductionPlan();
-}
 
 function render(id,date){
 
@@ -171,95 +188,95 @@ function render(id,date){
     let box=document.getElementById(id);
     box.innerHTML="";
 
-let shifts = (header.indexOf(date) === -1) ? {} : getData(date);
+    let shifts = (header.indexOf(date) === -1) ? {} : getData(date);
 
-if(Object.keys(shifts).length === 0){
+    if(Object.keys(shifts).length === 0){
 
     let msg = (id === "today")
         ? "Shift schedule is not available for today"
         : "Shift schedule is not available for selected date";
 
     box.innerHTML += `<div style="color:#777;font-weight:bold; margin-bottom:10px;">
-    ${msg}
-    </div>`;
-}
+        ${msg}
+        </div>`;
+    }
 
-let hasExec = Object.values(shifts).some(arr => arr.length > 0);
+    let hasExec = Object.values(shifts).some(arr => arr.length > 0);
 
-if(hasExec){
+    if(hasExec){
     box.innerHTML += `<div class="section-header exec-header">Executive</div>`;
-}
+    }
 
-/* MAIN */
-["A","B","C","G","OFF","L","T"].forEach(s=>{
+    /* MAIN */
+    ["A","B","C","G","OFF","L","T"].forEach(s=>{
 
-let list=shifts[s]||[];
-if(list.length === 0) return;
+    let list=shifts[s]||[];
+    if(list.length === 0) return;
 
-list = sortBySeniority(list.map(x=>x.name))
+    list = sortBySeniority(list.map(x=>x.name))
        .map(n => list.find(x=>x.name===n));
 
-let alert=(["A","B","C"].includes(s)&&list.length<=2)?" ❗":"";
+    let alert=(["A","B","C"].includes(s)&&list.length<=2)?" ❗":"";
 
-let chips=list.map(obj=>{
-let sel=(selectedName && obj.name===selectedName)?"selected":"";
-let multi=obj.multi?" ❕":"";
-let active = "";
-let current = getCurrentShiftInfo();
+    let chips=list.map(obj=>{
+    let sel=(selectedName && obj.name===selectedName)?"selected":"";
+    let multi=obj.multi?" ❕":"";
+    let active = "";
+    let current = getCurrentShiftInfo();
 
-if(current && s === current.shift && date === current.date){
-    active = "active-shift";
-}
+    if(current && s === current.shift && date === current.date){
+        active = "active-shift";
+    }
 
-return `<span class="chip ${s} ${sel} ${active}">${getFirstName(obj.name)}${multi}</span>`;
-}).join("");
+    return `<span class="chip ${s} ${sel} ${active}">${getFirstName(obj.name)}${multi}</span>`;
+        }).join("");
 
-let activeClass = "";
-let current = getCurrentShiftInfo();
+    let activeClass = "";
+    let current = getCurrentShiftInfo();
 
-if(current && s === current.shift && date === current.date){
-    activeClass = "shift-active-box";
-}
+    if(current && s === current.shift && date === current.date){
+        activeClass = "shift-active-box";
+    }
 
-box.innerHTML += `
-<div class="${activeClass}">
-    <div class="shift-title">${shiftLabels[s]} (${list.length})${alert}</div>
-    ${chips || "-"}
-</div>`;
-});
+    box.innerHTML += `
+        <div class="${activeClass}">
+        <div class="shift-title">${shiftLabels[s]} (${list.length})${alert}</div>
+        ${chips || "-"}
+    </div>`;
+    });
 
-/* D N */
-["D","N"].forEach(s=>{
+    /* D N */
+    ["D","N"].forEach(s=>{
 
-let list=shifts[s]||[];
-if(list.length===0) return;
+    let list=shifts[s]||[];
+        if(list.length===0) return;
 
-list = sortBySeniority(list.map(x=>x.name))
+    list = sortBySeniority(list.map(x=>x.name))
        .map(n => list.find(x=>x.name===n));
 
-let chips=list.map(obj=>{
-let sel=(selectedName && obj.name===selectedName)?"selected":"";
-let multi=obj.multi?" ❕":"";
-let active = "";
-let current = getCurrentShiftInfo();
+    let chips=list.map(obj=>{
+    let sel=(selectedName && obj.name===selectedName)?"selected":"";
+    let multi=obj.multi?" ❕":"";
+    let active = "";
+    let current = getCurrentShiftInfo();
 
-if(current && s === current.shift && date === current.date){
-    active = "active-shift";
-}
+    if(current && s === current.shift && date === current.date){
+        active = "active-shift";
+    }
 
-return `<span class="chip ${s} ${sel} ${active}">${getFirstName(obj.name)}${multi}</span>`;
-}).join("");
+    return `<span class="chip ${s} ${sel} ${active}">${getFirstName(obj.name)}${multi}</span>`;
+        }).join("");
 
-box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})</div>${chips}`;
-});
+    box.innerHTML+=`<div class="shift-title">${shiftLabels[s]} (${list.length})</div>${chips}`;
+    });
 
-// ================= NON-EXEC (FIXED - SINGLE RENDER) =================
+    // ================= NON-EXEC (FIXED - SINGLE RENDER) =================
 
-let nonExecShifts = (nonExecHeader.indexOf(date) === -1) ? {} : getNonExecData(date);
+    let nonExecShifts = (nonExecHeader.indexOf(date) === -1) ? {} : getNonExecData(date);
 
-let hasNonExec = Object.values(nonExecShifts).some(arr => arr.length > 0);
+    let hasNonExec = Object.values(nonExecShifts).some(arr => arr.length > 0);
 
-if(hasNonExec){
+    if(hasNonExec){
 
     box.innerHTML += `<hr><div class="section-header nonexec-header">Non-Executive</div>`;
 
@@ -284,19 +301,19 @@ if(hasNonExec){
         }).join("");
 
         let activeClass = "";
-let current = getCurrentShiftInfo();
+    let current = getCurrentShiftInfo();
 
-if(current && s === current.shift && date === current.date){
+    if(current && s === current.shift && date === current.date){
     activeClass = "shift-active-box";
-}
+    }
 
-box.innerHTML += `
-<div class="${activeClass}">
+    box.innerHTML += `
+    <div class="${activeClass}">
     <div class="shift-title">${shiftLabels[s]} (${list.length})${alert}</div>
     ${chips}
-</div>`;
-    });
-}
+    </div>`;
+        });
+    }
 }
 
 function autoRefreshData(){
@@ -366,7 +383,7 @@ if(alertsText !== undefined){
             r.text
         );
 
-}
+    }
 
 
         const dataCurrent = parseCSV(shiftTextCurrent);
@@ -423,6 +440,7 @@ if(alertsText !== undefined){
         }
 
         calcHoliday();
+        updateTodayReason();
 
         console.log("✅ Data refreshed successfully");
 
@@ -544,6 +562,7 @@ function updateNavArrows() {
         canScroll && scroller.scrollLeft < maxScroll - 2
     );
 }
+
 
 function revealActiveNavItem() {
     const scroller = document.getElementById("navScroll");

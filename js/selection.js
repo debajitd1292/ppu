@@ -1,7 +1,3 @@
-// ===============================
-// NAME & CATEGORY SELECTION
-// ===============================
-
 function populateNames(){
 
     let sel = document.getElementById("nameSelector");
@@ -28,7 +24,10 @@ function populateNames(){
 
             let n = nonExecData[i][0]?.trim();
 
-            if(n) names.push(n);
+            // Hide employees whose surname is DMBI
+            if(n && !/\bDMBI$/i.test(n)) {
+                names.push(n);
+            }
         }
 
         names = names.sort((a,b)=>{

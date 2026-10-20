@@ -1,6 +1,5 @@
 let notes = [];
 
-
 function loadNotesData(notesText){
 
     if(!notesText){
@@ -49,13 +48,20 @@ function getTodayNote(){
         }
 
 
-        if(n.type === "REPUBLIC DAY"){
-            return `${n.message} 🇮🇳`;
-        }
+        if (n.type === "REPUBLIC DAY" || n.type === "INDEPENDENCE DAY") {
+            const flag = `<svg xmlns="http://www.w3.org/2000/svg"
+                width="24" height="16" viewBox="0 0 24 16"
+                style="vertical-align:middle;margin-left:5px"
+                aria-label="Indian flag" role="img">
+                <rect width="24" height="5.33" fill="#FF9933"/>
+                <rect y="5.33" width="24" height="5.34" fill="#FFFFFF"/>
+                <rect y="10.67" width="24" height="5.33" fill="#138808"/>
+                <circle cx="12" cy="8" r="2.1"
+                    fill="none" stroke="#000080" stroke-width="0.55"/>
+                <circle cx="12" cy="8" r="0.35" fill="#000080"/>
+            </svg>`;
 
-
-        if(n.type === "INDEPENDENCE DAY"){
-            return `${n.message} 🇮🇳`;
+            return `${(n.message || "").replace(/\*\*/g, "")} ${flag}`;
         }
 
 

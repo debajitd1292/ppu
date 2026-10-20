@@ -1,4 +1,5 @@
 function initTheme() {
+    
     const displayMode = document.getElementById("displayMode");
 
     if (!displayMode) return;

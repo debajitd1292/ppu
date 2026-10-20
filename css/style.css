@@ -1,30 +1,46 @@
-/*
-===============================================================================
-PPU OPERATIONS DASHBOARD — CSS INDEX
-===============================================================================
-01. Global & base
-02. Header, logo & date
-03. HOD / Area in-charge
-04. Layout & form controls
-05. Alerts & animations
-06. Executive / non-executive headers
-07. Shift cards, chips & shift colours
-08. Footer & last-updated text
-09. Monthly shift calendar
-10. Training
-11. Theme toggle
-12. Dark-mode overrides
-13. Production plan
-14. App pages & general responsive rules
-15. IMS targets
-16. Training / Production / Settings / Shift headings
-17. Today's shift glass highlight
-18. Bottom navigation (single source of truth)
-===============================================================================
-*/
+/* =========================================================
+   CSS INDEX — PPU OPERATIONS DASHBOARD
+   01. Global & base styles
+   02. Header, logo & branding
+   03. HOD / area-in-charge information bar
+   04. Layout & form controls
+   05. Alerts
+   06. Animations
+   07. Responsive layout rules
+   08. Executive / non-executive headers
+   09. Shift display, chips & colours
+   10. Footer & last-updated text
+   11. Full-month shift calendar
+   12. Training items
+   13. Theme toggle
+   14. Dark-mode overrides
+   15. Production plan
+   16. App page navigation
+   17. IMS targets
+   18. IMS card design
+   19. Shared section headers
+   20. Settings / display options
+   21. Settings header
+   22. Shift headings
+   23. Current-shift highlight
+   24. Bottom navigation — base layout
+   25. Plant page layout
+   26. Plant page compact layout
+   27. Header banner image
+   28. GH / RH holiday cards
+   29. GH / RH dates and holiday names
+   30. Today, weather & holiday layout
+   31. Unified dark-blue theme
+   32. Training / IMS / production / plant item borders
+   33. Bottom navigation — rounded styling
+   34. Settings — App Information separator
+   35. Light-mode item border refinements
+   NOTE: Some later rules intentionally override earlier rules.
+   Their order has been preserved to protect the current appearance.
+   ========================================================= */
 
-/* ==================== 01. GLOBAL & BASE ==================== */
 
+/* 01. GLOBAL & BASE */
 body { 
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -35,49 +51,68 @@ body {
     overflow-x: hidden;
 }
 
-/* ==================== 02. HEADER & LOGO ==================== */
-
-.header {
+/* 02. HEADER & LOGO */
+/* FIXED BRANDING HEADER */
+.home-top-section {
     position: sticky;
     top: 0;
     z-index: 1000;
+}
 
-    padding: 18px 12px;
-
-    /* Premium gradient */
-    background: linear-gradient(135deg, #0f172a, #1e3a8a);
-
-    /* Glass effect */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    /* Subtle border */
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-
-    /* Depth shadow */
+.header {
+    position: relative;
+    padding: 0;
+    background: #163a5f;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
     box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-
     text-align: center;
     color: #e2e8f0;
-
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 #todayDate {
-    font-size: 15px;
+    margin-bottom: 6px;
+    line-height: 1.25;
+}
+
+.header-weekday {
+    font-size: 13px;
     font-weight: 500;
     opacity: 0.9;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+}
+
+.header-date {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: inherit;
 }
 
 .header h3 {
-    margin: 6px 0 4px;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-
-    /* subtle glow */
+    margin: 6px 0 2px;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    line-height: 1.25;
     text-shadow: 0 0 8px rgba(255,255,255,0.15);
+}
+
+.header-subtitle {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    color: #cbd5e1;
+}
+
+.header .logo {
+    position: absolute;
+    left: 20px;
+    top: 12px;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
 }
 
 h1 {
@@ -131,8 +166,7 @@ h1 {
     border: 1px solid rgba(255,255,255,0.15);
 }
 
-/* ==================== 03. HOD / AREA IN-CHARGE ==================== */
-
+/* 03. HOD / AREA IN-CHARGE */
 .info-bar {
     background: linear-gradient(135deg, #1f4e79, #163a5f);
     color: white;
@@ -140,9 +174,9 @@ h1 {
     padding: 10px 14px;
     border-radius: 12px;
 
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
 
     box-shadow:
         0 3px 10px rgba(0,0,0,0.18),
@@ -151,30 +185,67 @@ h1 {
 
 .info-row {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0;
+    min-height: 36px;
+    padding: 2px 8px;
+    text-align: center;
+}
 
-    min-height: 25px;
-    padding: 1px 2px;
+.info-row + .info-row {
+    border-left: 1px solid rgba(255,255,255,0.28);
 }
 
 .info-label {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     opacity: 0.9;
-    white-space: nowrap;
+    white-space: normal;
+    line-height: 1.3;
 }
 
 .info-name {
     font-size: 13px;
     font-weight: 500;
-    text-align: right;
-    white-space: nowrap;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.35;
 }
 
-/* ==================== 04. LAYOUT & FORM CONTROLS ==================== */
+@media (max-width: 600px) {
+    .info-bar {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+    }
 
+    .info-row {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+        padding: 5px 2px;
+        gap: 8px;
+    }
+
+    .info-row + .info-row {
+        border-left: none;
+        border-top: 1px solid rgba(255,255,255,0.28);
+    }
+
+    .info-label {
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .info-name {
+        text-align: right;
+    }
+}
+
+/* 04. LAYOUT & FORM CONTROLS */
 .row {
     display: flex;
     gap: 10px;
@@ -185,26 +256,16 @@ h1 {
     min-width: 0;
 }
 
-/* ==================== 05. ALERTS ==================== */
-
+/* 05. ALERTS */
 #alertSection {
     margin: 10px;
     animation: fadeIn 0.3s ease;
 }
 
-/* Thin accent on left */
 .notice-alert::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: #d99a24;
-    border-radius: 12px 0 0 12px;
+    display: none;
 }
 
-/* Individual alert */
 .alert-item {
     position: relative;
     margin-bottom: 0;
@@ -228,8 +289,7 @@ h1 {
     display: none;
 }
 
-/* ==================== 15. ANIMATIONS ==================== */
-
+/* 06. ANIMATIONS */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -285,10 +345,7 @@ select:focus, input:focus {
     z-index: 1;
 }
 
-/* ===== Mobile Optimization ===== */
-
-/* ==================== 14. RESPONSIVE DESIGN ==================== */
-
+/* 07. RESPONSIVE DESIGN */
 @media (max-width: 600px) {
     .row {
         flex-direction: row;
@@ -305,8 +362,7 @@ select:focus, input:focus {
     }
 }
 
-/* ==================== 06. EXECUTIVE / NON-EXECUTIVE HEADERS ==================== */
-
+/* 08. EXECUTIVE / NON-EXECUTIVE HEADERS */
 .section-header {
     display: inline-block;
     padding: 6px 14px;
@@ -317,7 +373,7 @@ select:focus, input:focus {
     letter-spacing: 0.5px;
     text-transform: uppercase;
 
-    border-radius: 999px; /* pill shape */
+    border-radius: 999px; 
 
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
@@ -339,8 +395,7 @@ select:focus, input:focus {
     border: 1px solid rgba(183,28,28,0.3);
 }
 
-/* ==================== 07. SHIFT DISPLAY & COLORS ==================== */
-
+/* 09. SHIFT DISPLAY & COLORS */
 .card {
     background:white;
     margin:10px;
@@ -363,7 +418,6 @@ select:focus, input:focus {
 
 .selected { border:2px solid gold; }
 
-/* COLORS */
 .A { 
     background: linear-gradient(135deg, #9333ea, #6b21a8);
     box-shadow: 0 2px 6px rgba(147,51,234,0.4);
@@ -386,7 +440,6 @@ select:focus, input:focus {
 .L { background:#ffd600; color:black; }
 .T { background:#00acc1; color:black; }
 
-/* Badge dynamic colors */
 .badge.A { 
     background: linear-gradient(135deg, #9333ea, #6b21a8);
     box-shadow: 0 0 10px rgba(147,51,234,0.5);
@@ -418,7 +471,6 @@ body.dark .badge.N { background:#9ca3af; color:black; }
     transform: scale(1.05);
 }
 
-/* Smooth hover effect */
 .chip {
     transition: all 0.2s ease;
 }
@@ -428,8 +480,7 @@ body.dark .badge.N { background:#9ca3af; color:black; }
     box-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
 
-/* ==================== 08. FOOTER & LAST UPDATED ==================== */
-
+/* 10. FOOTER & LAST UPDATED */
 .footer {
     text-align:center;
     padding:15px;
@@ -476,7 +527,7 @@ body.dark .badge.N { background:#9ca3af; color:black; }
         0 0 12px rgba(183, 28, 28, 0.25),
         0 0 22px rgba(183, 28, 28, 0.15);
 
-    overflow: hidden;
+    overflow: visible;
 
     animation: pulseGlow 2s infinite;
 }
@@ -487,14 +538,54 @@ body.dark .badge.N { background:#9ca3af; color:black; }
     100% { box-shadow: 0 0 6px rgba(183,28,28,0.15); }
 }
 
-@keyframes blink {
-    0% { opacity:1; }
-    50% { opacity:0; }
-    100% { opacity:1; }
+/* PREMIUM ANIMATED RAINBOW BORDER — ALERT CARD */
+
+.notice-alert {
+    isolation: isolate;
+    z-index: 0;
 }
 
-/* ===== FULL MONTH SHIFT CALENDAR ===== */
+.notice-alert::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    padding: 2px;
+    background: linear-gradient(
+        120deg,
+        #ff3b3b,
+        #ff9f1c,
+        #ffe600,
+        #35d05b,
+        #00cfff,
+        #635bff,
+        #d946ef,
+        #ff3b3b
+    );
+    background-size: 300% 300%;
+    animation: alertRainbowBorder 5s linear infinite;
 
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes alertRainbowBorder {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 300% 50%;
+    }
+}
+
+
+/* 11. FULL MONTH SHIFT CALENDAR */
 .next7-container {
     display: block;
     padding: 8px 0;
@@ -581,7 +672,6 @@ body.dark .badge.N { background:#9ca3af; color:black; }
     color: #1d4ed8;
 }
 
-/* Dark mode */
 body.dark .calendar-month {
     color: #93c5fd;
 }
@@ -604,7 +694,6 @@ body.dark .calendar-today .calendar-date {
     color: #bfdbfe;
 }
 
-/* Compact calendar on small screens */
 @media (max-width: 380px) {
     .calendar-grid {
         gap: 2px;
@@ -631,8 +720,7 @@ body.dark .calendar-today .calendar-date {
     }
 }
 
-/* ==================== 10. TRAINING ==================== */
-
+/* 12. TRAINING */
 .training-item {
     background: linear-gradient(135deg, #ffffff, #f1f5f9);
     border-left: 5px solid #1f4e79;
@@ -664,25 +752,19 @@ body.dark .calendar-today .calendar-date {
     color:#555;
 }
 
-/* Training Status */
-
-/* Past */
 .past-training {
     opacity: 0.5;
 }
 
-/* Today */
 .today-training {
     border-left: 5px solid #22c55e !important;
     background: linear-gradient(135deg, #ecfdf5, #d1fae5);
 }
 
-/* Upcoming */
 .upcoming-training {
     border-left: 5px solid #f59e0b;
 }
 
-/* Dark Mode Status */
 body.dark .today-training {
     background: linear-gradient(135deg, #064e3b, #022c22);
     border-left: 5px solid #22c55e;
@@ -692,9 +774,7 @@ body.dark .upcoming-training {
     border-left: 5px solid #fbbf24;
 }
 
-/* ==================== 11. THEME TOGGLE ==================== */
-
-/* Theme toggle switch */
+/* 13. THEME TOGGLE */
 .theme-switch {
     position:absolute;
     top:12px;
@@ -746,12 +826,12 @@ body.dark .upcoming-training {
     transform: scale(1.05);
 }
 
-/* ==================== 12. DARK MODE OVERRIDES ==================== */
-
+/* 14. DARK MODE OVERRIDES */
 body.dark .training-item {
-    background: linear-gradient(135deg, #1e293b, #111827);
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    color: #e2eaf5;
+    border: 1px solid #496789;    
     border-left: 5px solid #60a5fa;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
 body.dark .training-name {
@@ -763,8 +843,8 @@ body.dark .training-type {
 }
 
 body.dark {
-    background:#0f172a;
-    color:#e2e8f0;
+    background: #263445;
+    color: #e2e8f0;
 }
 
 body.dark .header {
@@ -772,9 +852,10 @@ body.dark .header {
 }
 
 body.dark .info-bar {
-    background: linear-gradient(135deg, #0f172a, #020617);
+    background: linear-gradient(135deg, #1e3a5f, #1e40af);
     color: #e2e8f0;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(147,197,253,0.22);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
 body.dark .slider {
@@ -845,7 +926,6 @@ body.dark #lastUpdated {
     color: #94a3b8;
 }
 
-/* Keep shift colors intact */
 body.dark .chip {
     opacity:0.95;
 }
@@ -854,8 +934,7 @@ body.dark .badge {
     box-shadow:0 0 6px rgba(255,255,255,0.1);
 }
 
-/* ==================== 13. PRODUCTION PLAN ==================== */
-
+/* 15. PRODUCTION PLAN */
 .production-card{
     margin-top:18px;
     padding:16px 14px 14px;
@@ -866,7 +945,6 @@ body.dark .badge {
     box-shadow:0 3px 10px rgba(0,0,0,0.08);
 }
 
-/* Production heading */
 .production-card .section-title{
     font-size:16px;
     font-weight:700;
@@ -878,7 +956,6 @@ body.dark .badge {
     margin-bottom:10px;
 }
 
-/* Target capsules */
 .production-targets{
     display:flex;
     justify-content:center;
@@ -920,7 +997,6 @@ body.dark .badge {
     font-size: 10px;
 }
 
-/* Production schedule */
 .production-table{
     width:100%;
     border-collapse:separate;
@@ -933,16 +1009,16 @@ body.dark .badge {
     text-align:left;
     font-size:11px;
     font-weight:700;
-    text-transform:uppercase;
+    text-transform:none;
     letter-spacing:.5px;
     opacity:.55;
 }
 
-.production-table td{
-    padding:12px 10px;
-    background:linear-gradient(135deg,#ffffff,#f1f5f9);
-    border-top:1px solid rgba(128,128,128,.08);
-    border-bottom:1px solid rgba(128,128,128,.08);
+.production-table td {
+    padding: 12px 10px;
+    background: linear-gradient(135deg, #ffffff, #f1f5f9);
+    border-top: none;
+    border-bottom: none;
 }
 
 .production-table td:first-child{
@@ -994,8 +1070,10 @@ body.dark .production-past{
 }
 
 body.dark .production-card{
-    background:#111827;
-    box-shadow:0 4px 12px rgba(0,0,0,.5);
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    color: #e2eaf5;
+    border: 1px solid #496789;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
 body.dark .production-card .section-title{
@@ -1029,7 +1107,6 @@ body.dark .production-today td{
     border: 1px solid #c17a3c;
 }
 
-/* Upcoming Production Plan */
 .production-table tbody tr:not(.production-today):not(.production-past) td:first-child{
     border-left-color:#f59e0b;
 }
@@ -1072,7 +1149,6 @@ body.dark .production-table tbody tr:not(.production-today):not(.production-past
 
 }
 
-/* Fix date selector overflow on iPhones */
 input[type="date"] {
     display: block;
     width: 100%;
@@ -1089,8 +1165,19 @@ input[type="date"] {
     box-sizing: border-box;
 }
 
-/* ===== APP PAGE NAVIGATION ===== */
+.production-table {
+    width: 100%;
+    table-layout: fixed;
+}
 
+.production-table th,
+.production-table td {
+    width: 33.333%;
+    border-left: none;
+    border-right: none;
+}
+
+/* 16. APP PAGE NAVIGATION */
 .app-page {
   display: none;
 }
@@ -1099,12 +1186,9 @@ input[type="date"] {
   display: block;
 }
 
-/* Reserve space for the fixed bottom navigation */
 body {
   padding-bottom: 90px;
 }
-
-/* Bottom navigation layout is consolidated in the final section. */
 
 .nav-item {
   min-width: 0;
@@ -1145,7 +1229,6 @@ body {
   outline-offset: -2px;
 }
 
-/* More-page menu buttons */
 .more-menu {
   display: grid;
   gap: 12px;
@@ -1175,8 +1258,7 @@ body.dark .more-menu button {
   border-color: #414752;
 }
 
-/* ===== IMS TARGETS PAGE ===== */
-
+/* 17. IMS TARGETS */
 .ims-card > h3 {
   text-align: center;
   margin-bottom: 14px;
@@ -1240,8 +1322,7 @@ body.dark .ims-section {
   }
 }
 
-/* ===== IMS TARGETS: MODERN CARD DESIGN ===== */
-
+/* 18. IMS CARD DESIGN */
 .ims-card {
     background: transparent;
     box-shadow: none;
@@ -1314,7 +1395,6 @@ body.dark .ims-section {
     overflow-wrap: anywhere;
 }
 
-/* Dark mode */
 body.dark .ims-card > h3 {
     background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
 }
@@ -1341,7 +1421,6 @@ body.dark .ims-value-number {
     color: #e2e8f0;
 }
 
-/* Compact mobile layout */
 @media (max-width: 360px) {
     .ims-section {
         padding: 11px 9px;
@@ -1368,8 +1447,7 @@ body.dark .ims-value-number {
     }
 }
 
-/* ===== MATCHING PRODUCTION & TRAINING HEADERS ===== */
-
+/* 19. SHARED SECTION HEADERS */
 #trainingHeader,
 #productionPlanHeader {
     margin: 8px 0 16px;
@@ -1384,25 +1462,22 @@ body.dark .ims-value-number {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
 }
 
-/* Keep the production month text consistent with the header */
 #productionPlanMonth {
     color: #ffffff;
     font-weight: 700;
 }
 
-/* Dark mode */
 body.dark #trainingHeader,
 body.dark #productionPlanHeader {
     background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
 body.dark #productionPlanMonth {
     color: #ffffff;
 }
 
-/* Smaller phones */
 @media (max-width: 360px) {
     #trainingHeader,
     #productionPlanHeader {
@@ -1411,7 +1486,7 @@ body.dark #productionPlanMonth {
     }
 }
 
-/* ===== SETTINGS / DISPLAY OPTIONS ===== */
+/* 20. SETTINGS / DISPLAY OPTIONS */
 .settings-card > h3 {
     margin: 4px 0 16px;
     text-align: center;
@@ -1469,7 +1544,7 @@ body.dark .settings-details p span:first-child {
     color: #9ca3af;
 }
 
-/* ===== SETTINGS HEADER — MATCH IMS DESIGN ===== */
+/* 21. SETTINGS HEADER */
 #settingsHeader {
     margin: 8px 0 16px;
     padding: 14px 12px;
@@ -1486,7 +1561,7 @@ body.dark .settings-details p span:first-child {
 body.dark #settingsHeader {
     background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
 @media (max-width: 360px) {
@@ -1496,21 +1571,20 @@ body.dark #settingsHeader {
     }
 }
 
-/* Match section headers to HOD/AIC colours in dark mode */
 body.dark #page-production .production-card > h3,
 body.dark #page-training .card > h3,
 body.dark #page-ims .ims-card > h3,
 body.dark #page-others .settings-card > h3 {
-    background: linear-gradient(135deg, #0f172a, #020617);
+    background: linear-gradient(135deg, #1e3a5f, #263b59);
     color: #e2e8f0;
     padding: 12px 14px;
     margin: 0 0 14px;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
-/* Match IMS heading spacing with Training in dark mode */
 body.dark #page-ims .ims-card {
     padding: 17px 12px 14px;
 }
@@ -1520,7 +1594,6 @@ body.dark #page-ims .ims-card > h3 {
     border-radius: 10px;
 }
 
-/* Match IMS heading spacing in light mode */
 body:not(.dark) #page-ims .ims-card {
     padding: 17px 12px 14px;
 }
@@ -1530,7 +1603,6 @@ body:not(.dark) #page-ims .ims-card > h3 {
     border-radius: 10px;
 }
 
-/* IMS outer card background in light mode */
 body:not(.dark) #page-ims .ims-card {
     background: #ffffff;
     border-radius: 14px;
@@ -1539,16 +1611,12 @@ body:not(.dark) #page-ims .ims-card {
     overflow: hidden;
 }
 
-/* Keep the IMS heading rounded on all four corners */
 body:not(.dark) #page-ims .ims-card > h3 {
     border-radius: 10px;
     margin: 0 0 14px;
 }
 
-/* Match Shift section headings with other dashboard sections */
-
-/* ===== SHIFT HEADINGS — MATCH OTHER DASHBOARD SECTIONS ===== */
-
+/* 22. SHIFT HEADINGS */
 #page-shifts #shiftCalendarHeading,
 #page-shifts #selectedTitle {
     background: linear-gradient(135deg, #1f4e79, #2563a6);
@@ -1561,20 +1629,17 @@ body:not(.dark) #page-ims .ims-card > h3 {
     font-size: 17px;
     font-weight: 700;
     line-height: 1.4;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     box-sizing: border-box;
 }
 
-/* Dark mode */
-
 body.dark #page-shifts #shiftCalendarHeading,
 body.dark #page-shifts #selectedTitle {
-    background: linear-gradient(135deg, #0f172a, #020617);
+    background: linear-gradient(135deg, #1e3a5f, #263b59);
     color: #e2e8f0;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
-
 
 @media (max-width: 360px) {
     #page-shifts #shiftCalendarHeading,
@@ -1584,9 +1649,6 @@ body.dark #page-shifts #selectedTitle {
     }
 }
 
-
-
-/* Left-align Production, Training, IMS and Settings headings */
 #page-production .production-card > h3,
 #page-training .card > h3,
 #page-ims .ims-card > h3,
@@ -1594,16 +1656,12 @@ body.dark #page-shifts #selectedTitle {
     text-align: left;
 }
 
-
-/* Modern, clean shift calendar */
 .calendar-day {
     border: 1px solid transparent;
     background: transparent;
     border-radius: 8px;
     box-shadow: none;
 }
-
-/* Highlight only today's date */
 
 .calendar-day.calendar-today {
     border: 1.5px solid rgba(37, 99, 235, 0.55);
@@ -1615,13 +1673,10 @@ body.dark #page-shifts #selectedTitle {
         0 3px 10px rgba(37, 99, 235, 0.08);
 }
 
-
-/* Dark mode */
 body.dark .calendar-day {
     border-color: transparent;
     background: transparent;
 }
-
 
 body.dark .calendar-day.calendar-today {
     border: 1.5px solid rgba(147, 197, 253, 0.48);
@@ -1633,8 +1688,7 @@ body.dark .calendar-day.calendar-today {
         0 3px 12px rgba(0, 0, 0, 0.12);
 }
 
-/* ===== TODAY'S SHIFT: GLASS HIGHLIGHT ===== */
-
+/* 23. CURRENT SHIFT HIGHLIGHT */
 #next7Days .active-shift,
 #next7Days .shift-active-box {
     background: rgba(120, 170, 220, 0.12);
@@ -1647,14 +1701,12 @@ body.dark .calendar-day.calendar-today {
     transition: background 0.25s ease, border-color 0.25s ease;
 }
 
-/* Light mode glass */
 body:not(.dark) #next7Days .active-shift,
 body:not(.dark) #next7Days .shift-active-box {
     background: rgba(59, 130, 246, 0.09);
     border-color: rgba(59, 130, 246, 0.28);
 }
 
-/* Dark mode glass */
 body.dark #next7Days .active-shift,
 body.dark #next7Days .shift-active-box {
     background: rgba(148, 190, 255, 0.10);
@@ -1664,14 +1716,7 @@ body.dark #next7Days .shift-active-box {
         0 4px 16px rgba(0, 0, 0, 0.16);
 }
 
-
-/* =============================================================================
-   18. BOTTOM NAVIGATION — CONSOLIDATED
-   Mobile: swipe/scroll horizontally through fixed-width tabs.
-   Desktop: show all six tabs evenly across a centred navigation track.
-   Keep all bottom-navigation rules in this section only.
-   ============================================================================= */
-
+/* 24. BOTTOM NAVIGATION */
 .bottom-nav {
     position: fixed;
     left: 0;
@@ -1690,7 +1735,6 @@ body.dark #next7Days .shift-active-box {
     overflow: hidden;
 }
 
-/* Scrollable row of navigation tabs */
 .bottom-nav .nav-scroll {
     display: flex;
     flex: 1 1 auto;
@@ -1713,7 +1757,6 @@ body.dark #next7Days .shift-active-box {
     display: none;
 }
 
-/* Fixed tab width makes horizontal scrolling possible on phones */
 .bottom-nav .nav-scroll .nav-item {
     flex: 0 0 76px;
     width: 76px;
@@ -1763,7 +1806,6 @@ body.dark #next7Days .shift-active-box {
     outline-offset: -2px;
 }
 
-/* Navigation arrows: JavaScript adds .is-visible when scrolling is available */
 .bottom-nav .nav-arrow {
     display: flex;
     flex: 0 0 24px;
@@ -1793,7 +1835,6 @@ body.dark #next7Days .shift-active-box {
     pointer-events: auto;
 }
 
-/* Dark theme navigation colours */
 body.dark {
     --nav-bg: #171a20;
     --nav-border: #343943;
@@ -1802,7 +1843,6 @@ body.dark {
     --nav-active-bg: #26364e;
 }
 
-/* Compact labels and icons on narrow phones */
 @media (max-width: 380px) {
     .bottom-nav {
         padding-left: 2px;
@@ -1833,7 +1873,6 @@ body.dark {
     }
 }
 
-/* Desktop: centre and distribute all six tabs; scrolling remains available if needed */
 @media (min-width: 768px) {
     .bottom-nav {
         justify-content: center;
@@ -1862,17 +1901,11 @@ body.dark {
     }
 }
 
-
-
-/* =====================================================
-   PLANT PAGE — CONSOLIDATED MODERN LAYOUT
-   ===================================================== */
-
+/* 25. PLANT PAGE LAYOUT */
 #page-plant {
   padding-bottom: 20px;
 }
 
-/* Page heading: retain the existing Training/IMS-style header */
 #page-plant #plantHeader {
   background: linear-gradient(135deg, #1f4e79, #2563a6);
   color: #fff;
@@ -1887,13 +1920,12 @@ body.dark {
 }
 
 body.dark #page-plant #plantHeader {
-  background: linear-gradient(135deg, #0f172a, #020617);
+  background: linear-gradient(135deg, #1e3a5f, #263b59);
   color: #e2e8f0;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
-/* Reactor and Extruder: one large card per row */
 #page-plant #plantMajorCards {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -1932,7 +1964,6 @@ body.dark #page-plant #plantHeader {
   border-left-color: #94a3b8;
 }
 
-/* Equipment names */
 #page-plant .plant-card-title {
   font-size: 16px;
   line-height: 1.4;
@@ -1940,7 +1971,6 @@ body.dark #page-plant #plantHeader {
   color: #1e293b;
 }
 
-/* Status text */
 #page-plant .plant-status-text {
   font-size: 13px;
   line-height: 1.4;
@@ -1961,7 +1991,6 @@ body.dark #page-plant #plantHeader {
   color: #64748b;
 }
 
-/* Event dates and duration */
 #page-plant .plant-event-date {
   font-size: 12px;
   line-height: 1.5;
@@ -1978,7 +2007,6 @@ body.dark #page-plant #plantHeader {
   overflow-wrap: anywhere;
 }
 
-/* FPU: two columns, six cards, three rows */
 #page-plant #plantFpuCards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1988,7 +2016,6 @@ body.dark #page-plant #plantHeader {
   align-items: stretch;
 }
 
-/* Compact, neutral FPU cards */
 #page-plant .plant-fpu-card {
   display: flex;
   flex-direction: column;
@@ -2008,7 +2035,6 @@ body.dark #page-plant #plantHeader {
   overflow-wrap: anywhere;
 }
 
-/* Keep all FPU cards neutral */
 #page-plant .plant-fpu-card.plant-fpu-inline,
 #page-plant .plant-fpu-card.plant-fpu-standby,
 #page-plant .plant-fpu-card.plant-fpu-custom,
@@ -2047,7 +2073,6 @@ body.dark #page-plant #plantHeader {
   font-weight: 500;
 }
 
-/* Data refresh message */
 #page-plant #plantDataNote {
   margin: 8px 2px;
   font-size: 11px;
@@ -2055,7 +2080,6 @@ body.dark #page-plant #plantHeader {
   color: #64748b;
 }
 
-/* Dark mode */
 body.dark #page-plant .plant-major-card,
 body.dark #page-plant .plant-fpu-card {
   background: #171a20;
@@ -2086,7 +2110,6 @@ body.dark #page-plant .plant-major-card.plant-shutdown {
   border-left-color: #dc2626;
 }
 
-/* Small mobile screens: retain two FPU columns */
 @media (max-width: 360px) {
   #page-plant #plantFpuCards {
     gap: 7px;
@@ -2111,31 +2134,23 @@ body.dark #page-plant .plant-major-card.plant-shutdown {
   }
 }
 
-
-/* =====================================================
-   PLANT — COMPACT CARDS & INLINE BORDER HIGHLIGHT
-   ===================================================== */
-
-/* Reduce spacing between major equipment cards */
+/* 26. PLANT PAGE COMPACT LAYOUT */
 #page-plant #plantMajorCards {
   gap: 9px;
   margin: 10px 0 13px;
 }
 
-/* More compact Reactor and Extruder */
 #page-plant .plant-major-card {
   padding: 12px 14px;
   gap: 3px;
   border-radius: 12px;
 }
 
-/* Reduce spacing between FPU cards */
 #page-plant #plantFpuCards {
   gap: 8px;
   margin: 8px 0 12px;
 }
 
-/* Compact FPU cards */
 #page-plant .plant-fpu-card {
   padding: 10px 11px;
   gap: 3px;
@@ -2143,7 +2158,6 @@ body.dark #page-plant .plant-major-card.plant-shutdown {
   border-radius: 11px;
 }
 
-/* Equipment names */
 #page-plant .plant-major-card .plant-card-title {
   font-size: 15px;
   line-height: 1.3;
@@ -2154,13 +2168,11 @@ body.dark #page-plant .plant-major-card.plant-shutdown {
   line-height: 1.3;
 }
 
-/* Compact status text */
 #page-plant .plant-status-text {
   font-size: 12px;
   line-height: 1.3;
 }
 
-/* Compact dates and duration */
 #page-plant .plant-event-date,
 #page-plant .plant-duration {
   margin: 0;
@@ -2177,12 +2189,10 @@ body.dark #page-plant .plant-major-card.plant-shutdown {
   font-size: 10.5px;
 }
 
-/* Date labels slightly stronger */
 #page-plant .plant-date-label {
   font-weight: 650;
 }
 
-/* Neutral border for all FPU cards */
 #page-plant .plant-fpu-card,
 #page-plant .plant-fpu-card.plant-fpu-standby,
 #page-plant .plant-fpu-card.plant-fpu-custom,
@@ -2190,17 +2200,14 @@ body.dark #page-plant .plant-major-card.plant-shutdown {
   border-left: 4px solid #cbd5e1;
 }
 
-/* Green border ONLY for Inline FPU cards */
 #page-plant .plant-fpu-card.plant-fpu-inline {
   border-left: 4px solid #16a34a;
 }
 
-/* Dark mode — retain green Inline border */
 body.dark #page-plant .plant-fpu-card.plant-fpu-inline {
   border-left-color: #22c55e;
 }
 
-/* Small mobile screens */
 @media (max-width: 360px) {
   #page-plant .plant-major-card {
     padding: 11px 12px;
@@ -2218,7 +2225,6 @@ body.dark #page-plant .plant-fpu-card.plant-fpu-inline {
   }
 }
 
-
 #page-plant .plant-custom-message {
   font-size: 12px;
   line-height: 1.35;
@@ -2231,14 +2237,12 @@ body.dark #page-plant .plant-custom-message {
   color: #60a5fa;
 }
 
-
 .plant-date-label {
   display: block;
 }
 
-/* ===== CURRENT PRODUCTION GRADE CARD ===== */
-
-#page-production .production-grade-card {
+#page-production /* 27. CURRENT PRODUCTION GRADE CARD */
+.production-grade-card {
     margin: 12px 10px 18px;
     padding: 15px 14px;
     background: linear-gradient(135deg, #ffffff, #f1f5f9);
@@ -2277,9 +2281,10 @@ body.dark #page-plant .plant-custom-message {
 }
 
 body.dark #page-production .production-grade-card {
-    background: linear-gradient(135deg, #1e293b, #111827);
-    border-left-color: #60a5fa;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    color: #e2eaf5;
+    border: 1px solid #496789;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
 body.dark #page-production .production-grade-card h3 {
@@ -2292,4 +2297,1033 @@ body.dark #currentProductionGrade {
 
 body.dark #productionGradeSince {
     color: #cbd5e1;
+}
+
+
+/* 27. HEADER BANNER IMAGE */
+
+/* HEADER BRAND BANNER */
+
+.header-brand {
+    position: relative;
+    width: 100%;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #163a5f;
+}
+
+
+.header-brand .header-banner {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    box-shadow: none;
+    z-index: 0;
+}
+
+.header-brand .header-banner img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.header-brand .header-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(8, 24, 48, 0.78),
+        rgba(8, 24, 48, 0.28)
+    );
+}
+
+
+.header-brand .logo {
+    position: absolute;
+    left: 14px;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+
+    z-index: 2;
+}
+
+
+.header-brand .header-titles {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 0 12px 0 80px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.header-brand .header-titles h3 {
+    margin: 0 0 4px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    line-height: 1.3;
+    color: #ffffff;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.65);
+}
+
+.header-brand .header-subtitle {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    line-height: 1.3;
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 600px) {
+    .header-brand {
+        height: 85px;
+        border-radius: 8px;
+    }
+
+    .header-brand .logo {
+        left: 9px;
+        width: 44px;
+        height: 44px;
+    }
+
+    .header-brand .header-titles {
+        padding-left: 60px;
+        padding-right: 6px;
+        text-align: left;
+    }
+
+    .header-brand .header-titles h3 {
+        font-size: 16px;
+        letter-spacing: 0.3px;
+    }
+
+    .header-brand .header-subtitle {
+        font-size: 11px;
+    }
+}
+
+
+/* 28. GH / RH HOLIDAY CARDS */
+.holiday-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: auto;
+    max-width: none;
+    margin: 10px;
+    box-sizing: border-box;
+}
+
+.holiday-card {
+    min-width: 0;
+    padding: 9px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    box-sizing: border-box;
+}
+
+.holiday-title {
+    margin-bottom: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    text-transform: uppercase;
+    color: #bfdbfe;
+}
+
+.holiday-date {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    color: #ffffff;
+}
+
+@media (max-width: 380px) {
+    .holiday-cards {
+        gap: 7px;
+    }
+
+    .holiday-card {
+        padding: 8px 5px;
+    }
+
+    .holiday-date {
+        font-size: 12px;
+    }
+}
+
+/* 29. GH / RH DATE AND HOLIDAY NAME */
+.holiday-date-main {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 3px;
+}
+
+.holiday-name {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    opacity: 0.85;
+    overflow-wrap: anywhere;
+}
+
+
+/* 30. TODAY, WEATHER & HOLIDAY LAYOUT */
+.today-weather-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+    align-items: stretch;
+    margin: 10px;
+    text-align: left;
+}
+
+.today-weather-summary,
+.weather-card {
+    min-width: 0;
+    box-sizing: border-box;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.today-weather-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #EAF3FC;
+    color: #173B65;
+    border: 1px solid #C7DDF4;
+    box-shadow: 0 3px 10px rgba(23, 59, 101, 0.08);
+    text-align: center;
+}
+
+.weather-card {
+    background: #EAF3FC;
+    color: #173B65;
+    border: 1px solid #C7DDF4;
+    box-shadow: 0 3px 10px rgba(23, 59, 101, 0.08);
+    text-align: center;
+}
+
+.weather-card h4 {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    text-transform: uppercase;
+}
+
+.weather-main {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    margin-bottom: 5px;
+}
+
+#weatherIcon {
+    font-size: 25px;
+    line-height: 1;
+}
+
+#weatherTemperature {
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.weather-temperature-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-shrink: 0;
+}
+
+#weatherMaxMin {
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+#weatherCondition {
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 0;
+    min-width: 0;
+}
+
+.weather-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.weather-details strong {
+    display: block;
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+@media (max-width: 380px) {
+    .today-weather-row {
+        gap: 6px;
+    }
+
+    .today-weather-summary,
+    .weather-card {
+        padding: 9px 6px;
+    }
+
+    #weatherTemperature {
+        font-size: 20px;
+    }
+
+    #weatherIcon {
+        font-size: 21px;
+    }
+
+    .weather-card h4 {
+        font-size: 10px;
+    }
+
+    .weather-details {
+        font-size: 10px;
+        gap: 3px;
+    }
+}
+
+/* WEATHER CARD — DARK THEME */
+body.dark .weather-card {
+    background: linear-gradient(135deg, #1e3a5f, #172554);
+    color: #e2e8f0;
+    border-color: #38577d;
+}
+
+body.dark .today-weather-summary {
+    background: rgba(148, 163, 184, 0.08);
+    border-color: rgba(148, 163, 184, 0.2);
+}
+
+
+/* COMPACT TOP DASHBOARD SECTIONS */
+.today-weather-row {
+    gap: 7px;
+    margin: 7px 0;
+    text-align: left;
+}
+
+.today-weather-summary,
+.weather-card {
+    padding: 8px;
+    border-radius: 9px;
+    box-shadow: none;
+    text-align: left;
+    align-items: flex-start;
+}
+
+/* LIGHT MODE */
+.today-weather-summary,
+.weather-card,
+.holiday-card {
+    background: #F4F8FD;
+    color: #173B65;
+    border: 1px solid #D5E3F2;
+    padding: 7px;
+    border-radius: 9px;
+}
+
+.holiday-cards {
+    gap: 7px;
+    margin: 7px 10px;
+}
+
+.holiday-title {
+    color: #315781;
+    margin-bottom: 3px;
+    font-size: 11px;
+}
+
+.holiday-date,
+.holiday-date-main {
+    color: #1e3a5f;
+    font-size: 12px;
+}
+
+/* DARK MODE */
+body.dark .today-weather-summary,
+body.dark .weather-card,
+body.dark .holiday-card {
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    color: #e2eaf5;
+    border: 1px solid #496789;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+body.dark .holiday-title,
+body.dark .holiday-date,
+body.dark .holiday-date-main,
+body.dark .holiday-name {
+    color: #dbeafe;
+}
+
+/* COMPACT WEATHER DETAILS */
+.weather-card h4 {
+    margin-bottom: 5px;
+}
+
+.weather-main {
+    justify-content: flex-start;
+    gap: 5px;
+    margin-bottom: 3px;
+}
+
+#weatherTemperature {
+    font-size: 21px;
+}
+
+#weatherCondition {
+    margin-bottom: 5px;
+    font-size: 11px;
+}
+
+.weather-details {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 4px;
+    font-size: 9px;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.weather-details strong {
+    display: inline;
+    font-size: 10px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.weather-detail-separator {
+    opacity: 0.65;
+}
+
+#todayDate {
+    text-align: left;
+    margin-bottom: 3px;
+}
+
+#todayNote {
+    text-align: left;
+    font-size: 10px;
+    line-height: 1.3;
+}
+
+#todayShiftBadge {
+    margin: 5px 0 0;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: #ffffff;
+}
+
+
+/* FIX: KEEP TODAY + WEATHER WITHIN THE SAME WIDTH */
+.today-weather-row {
+    width: auto;
+    max-width: none;
+    margin: 7px 10px;
+    box-sizing: border-box;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+
+/* MATCH TODAY HEADING WITH WEATHER HEADING */
+.today-weather-summary h4 {
+    font-size: 11px;
+    font-weight: 700;
+    margin: 0 0 5px;
+    line-height: 1.3;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.weather-card .weather-details {
+    display: grid !important;
+    grid-template-columns: max-content max-content !important;
+    justify-content: start;
+    column-gap: 12px;
+    row-gap: 4px;
+}
+
+.weather-card .weather-details span:nth-child(1) {
+    grid-area: 1 / 1;
+}
+
+.weather-card .weather-details span:nth-child(3) {
+    grid-area: 1 / 2;
+}
+
+.weather-card .weather-details span:nth-child(2) {
+    grid-area: 2 / 1 / 3 / 3;
+    justify-self: start;
+}
+
+/* BIRTHDAY / ANNIVERSARY MESSAGE CARD */
+.today-message {
+    margin: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1f4e79, #163a5f);
+    color: #ffffff;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.8;
+    box-sizing: border-box;
+}
+
+.today-message:empty {
+    display: none;
+}
+
+/* Add spacing between multiple messages */
+.today-message br {
+    display: block;
+    content: "";
+    margin-top: 8px;
+}
+
+/* Dark mode */
+body.dark .today-message {
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    color: #e2eaf5;
+    border: 1px solid #496789;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+/* FORCE BIRTHDAY / ANNIVERSARY TEXT STYLING */
+#todayNote.today-message {
+    font-size: 16px !important;
+    text-align: center !important;
+    line-height: 1.6 !important;
+    padding: 14px !important;
+}
+
+#todayNote.today-message br {
+    display: block !important;
+    content: "";
+    margin-bottom: 10px !important;
+}
+
+
+/* Keep weather details and separator on one line */
+.weather-card .weather-details {
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.weather-card .weather-details > span {
+    display: inline !important;
+    width: auto !important;
+    margin: 0 !important;
+}
+
+.weather-card .weather-detail-separator {
+    flex: 0 0 auto;
+    display: inline !important;
+    opacity: 0.65;
+}
+
+
+/* 31. UNIFIED DARK BLUE THEME — ALL PAGES AND SECTIONS */
+body.dark {
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    color: #e2eaf5;
+}
+
+body.dark .card,
+body.dark .info-card,
+body.dark .info-bar,
+body.dark .section-header,
+body.dark .production-grade-card,
+body.dark .plant-page-card,
+body.dark .settings-card,
+body.dark .ims-card,
+body.dark .today-weather-summary,
+body.dark .weather-card,
+body.dark .holiday-card {
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    color: #e2eaf5;
+    border-color: #496789;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea {
+    background: #1e3350;
+    color: #e2eaf5;
+    border-color: #496789;
+}
+
+body.dark .card h3,
+body.dark .card h4,
+body.dark .info-card h3,
+body.dark .section-header,
+body.dark .holiday-title,
+body.dark .holiday-date,
+body.dark .holiday-date-main,
+body.dark .holiday-name {
+    color: #e2eaf5;
+}
+
+
+/* 32. CARD ITEM BACKGROUNDS & BORDERS — BOTH THEMES
+   =========================================================
+   Training, IMS, Production and Plant pages
+   ========================================================= */
+
+/* 1. TRAINING ITEMS — LIGHT MODE */
+.training-item {
+    border: 1px solid #dbe3ec;
+    border-left: 5px solid #1f4e79;
+}
+
+/* 2. IMS ITEMS — LIGHT MODE */
+.ims-section {
+    border: 1px solid #dbe3ec;
+    border-left: 5px solid #1f4e79;
+}
+
+.ims-value {
+    border: 1px solid #e2e8f0;
+}
+
+/* 3. PRODUCTION TABLE ITEMS — LIGHT MODE */
+.production-table td {
+    border-top: 1px solid #dbe3ec;
+    border-bottom: 1px solid #dbe3ec;
+}
+
+.production-table td:first-child {
+    border-left: 5px solid #1f4e79;
+}
+
+.production-table td:last-child {
+    border-right: 1px solid #dbe3ec;
+}
+
+/* Today's production row retains its green accent */
+.production-today td:first-child {
+    border-left-color: #22c55e;
+}
+
+/* 4. PLANT PAGE ITEMS — LIGHT MODE */
+#page-plant .plant-major-card,
+#page-plant .plant-fpu-card {
+    border-top-color: #dbe3ec;
+    border-right-color: #dbe3ec;
+    border-bottom-color: #dbe3ec;
+}
+
+/* =========================================================
+   DARK MODE — MATCH TRAINING CARD BACKGROUND
+   ========================================================= */
+
+/* 5. TRAINING ITEMS */
+body.dark .training-item {
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    color: #e2eaf5;
+    border: 1px solid #496789;
+    border-left: 5px solid #60a5fa;
+}
+
+body.dark .training-name {
+    color: #e2eaf5;
+}
+
+body.dark .training-type {
+    color: #b5c5da;
+}
+
+/* 6. IMS ITEMS */
+body.dark .ims-section {
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    border: 1px solid #496789;
+    border-left: 5px solid #60a5fa;
+    color: #e2eaf5;
+}
+
+body.dark .ims-section-title {
+    color: #bfdbfe;
+}
+
+body.dark .ims-value {
+    background: rgba(148, 163, 184, 0.12);
+    border: 1px solid #496789;
+}
+
+body.dark .ims-value-label {
+    color: #b5c5da;
+}
+
+body.dark .ims-value-number {
+    color: #e2eaf5;
+}
+
+/* 7. PRODUCTION TABLE ITEMS */
+body.dark .production-table td {
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    border-top: 1px solid #496789;
+    border-bottom: 1px solid #496789;
+}
+
+body.dark .production-table td:first-child {
+    border-left: 5px solid #fbbf24;
+}
+
+body.dark .production-table td:last-child {
+    border-right: 1px solid #496789;
+}
+
+/* Preserve today's green production highlight */
+body.dark .production-today td {
+    background: linear-gradient(135deg, #064e3b, #022c22);
+}
+
+body.dark .production-today td:first-child {
+    border-left-color: #22c55e;
+}
+
+/* 8. PLANT PAGE ITEMS */
+body.dark #page-plant .plant-major-card,
+body.dark #page-plant .plant-fpu-card {
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    color: #e2eaf5;
+    border-top-color: #496789;
+    border-right-color: #496789;
+    border-bottom-color: #496789;
+}
+
+body.dark #page-plant .plant-card-title {
+    color: #e2eaf5;
+}
+
+body.dark #page-plant .plant-event-date {
+    color: #b5c5da;
+}
+
+body.dark #page-plant .plant-duration {
+    color: #d0dbea;
+}
+
+/* Retain Plant status colours */
+body.dark #page-plant .plant-major-card.plant-running {
+    border-left-color: #22c55e;
+}
+
+body.dark #page-plant .plant-major-card.plant-shutdown {
+    border-left-color: #ef4444;
+}
+
+body.dark #page-plant .plant-fpu-card.plant-fpu-inline {
+    border-left-color: #22c55e;
+}
+
+
+/* 33. BOTTOM NAVIGATION — ROUNDED PREMIUM STYLE
+   =========================================
+   ========================================= */
+
+.bottom-nav {
+    border-radius: 999px;
+    overflow: hidden;
+    padding: 8px;
+    background: rgba(35, 35, 39, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.22),
+        inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Navigation items */
+.bottom-nav .nav-item {
+    border-radius: 999px;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease;
+}
+
+/* Active navigation item */
+.bottom-nav .nav-item.active {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+/* Light mode */
+body:not(.dark) .bottom-nav {
+    background: rgba(255, 255, 255, 0.97);
+    border-color: #e2e8f0;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+body:not(.dark) .bottom-nav .nav-item.active {
+    background: #e9edf3;
+    border-radius: 999px;
+}
+
+
+
+/* 34. SETTINGS — APP INFORMATION SEPARATOR */
+body.dark #page-others .settings-card hr {
+    border: 0;
+    border-top: 1px solid #c3cedb;
+    opacity: 1;
+}
+
+
+/* 35. LIGHT-MODE BORDER REFINEMENTS — PRESERVE STATUS ACCENTS
+   ==========================================================
+   Only outer borders are refined here. Left borders remain available
+   for running/shutdown, training-date and production-date status colours.
+   ========================================================== */
+
+body:not(.dark) .ims-section {
+    border-top-color: #b8c5d4;
+    border-right-color: #b8c5d4;
+    border-bottom-color: #b8c5d4;
+}
+
+body:not(.dark) .ims-value {
+    border-color: #c3cedb;
+}
+
+body:not(.dark) .training-item {
+    border-top-color: #b8c5d4;
+    border-right-color: #b8c5d4;
+    border-bottom-color: #b8c5d4;
+}
+
+body:not(.dark) .production-table td {
+    border-top-color: #b8c5d4;
+    border-bottom-color: #b8c5d4;
+}
+
+body:not(.dark) .production-table td:last-child {
+    border-right-color: #b8c5d4;
+}
+
+body:not(.dark) #page-plant .plant-major-card,
+body:not(.dark) #page-plant .plant-fpu-card {
+    border-top-color: #b8c5d4;
+    border-right-color: #b8c5d4;
+    border-bottom-color: #b8c5d4;
+}
+
+/* TRAINING — PAST / TODAY / UPCOMING DATE TEXT */
+.past-training .training-date {
+    color: #9ca3af;
+}
+
+.today-training .training-date {
+    color: #15803d;
+}
+
+.upcoming-training .training-date {
+    color: #b45309;
+}
+
+body.dark .past-training .training-date {
+    color: #9ca3af;
+}
+
+body.dark .today-training .training-date {
+    color: #86efac;
+}
+
+body.dark .upcoming-training .training-date {
+    color: #fbbf24;
+}
+
+/* Keep status accents from being overwritten by the generic dark card rule. */
+body.dark .training-item.today-training {
+    border-left: 5px solid #22c55e !important;
+}
+
+body.dark .training-item.upcoming-training {
+    border-left: 5px solid #fbbf24 !important;
+}
+
+/* PRODUCTION — PAST / TODAY / UPCOMING DATE TEXT */
+.production-past .production-duration {
+    color: #9ca3af;
+}
+
+.production-today .production-duration {
+    color: #15803d;
+}
+
+.production-table tbody tr:not(.production-today):not(.production-past) .production-duration {
+    color: #b45309;
+}
+
+body.dark .production-past .production-duration {
+    color: #9ca3af;
+}
+
+.production-table tbody tr.production-past td:first-child {
+    border-left-color: #9ca3af;
+}
+
+body.dark .production-table tbody tr.production-past td:first-child {
+    border-left-color: #64748b;
+}
+
+body.dark .production-today .production-duration {
+    color: #86efac;
+}
+
+body.dark .production-table tbody tr:not(.production-today):not(.production-past) .production-duration {
+    color: #fbbf24;
+}
+
+/* =========================================================
+   PLANT STATUS COLOURS — MAJOR EQUIPMENT & FPU
+   Major: Running = Green | Shutdown = Red
+   FPU: Running = Green | Standby = Grey
+   ========================================================= */
+
+/* MAJOR EQUIPMENT — STATUS TEXT */
+#page-plant .plant-major-card.plant-running .plant-status-text {
+    color: #15803d !important;
+}
+
+#page-plant .plant-major-card.plant-shutdown .plant-status-text {
+    color: #dc2626 !important;
+}
+
+#page-plant .plant-major-card.plant-unknown .plant-status-text {
+    color: #64748b !important;
+}
+
+/* FPU — STATUS TEXT */
+#page-plant .plant-fpu-card.plant-fpu-inline .plant-status-text {
+    color: #15803d !important;
+}
+
+#page-plant .plant-fpu-card.plant-fpu-standby .plant-status-text,
+#page-plant .plant-fpu-card.plant-fpu-unknown .plant-status-text {
+    color: #64748b !important;
+}
+
+/* FPU — LEFT BORDER ACCENTS */
+#page-plant .plant-fpu-card.plant-fpu-inline {
+    border-left-color: #16a34a !important;
+}
+
+#page-plant .plant-fpu-card.plant-fpu-standby,
+#page-plant .plant-fpu-card.plant-fpu-unknown {
+    border-left-color: #94a3b8 !important;
+}
+
+/* DARK MODE — MAJOR EQUIPMENT STATUS TEXT */
+body.dark #page-plant .plant-major-card.plant-running .plant-status-text {
+    color: #4ade80 !important;
+}
+
+body.dark #page-plant .plant-major-card.plant-shutdown .plant-status-text {
+    color: #f87171 !important;
+}
+
+body.dark #page-plant .plant-major-card.plant-unknown .plant-status-text {
+    color: #cbd5e1 !important;
+}
+
+/* DARK MODE — FPU STATUS TEXT */
+body.dark #page-plant .plant-fpu-card.plant-fpu-inline .plant-status-text {
+    color: #4ade80 !important;
+}
+
+body.dark #page-plant .plant-fpu-card.plant-fpu-standby .plant-status-text,
+body.dark #page-plant .plant-fpu-card.plant-fpu-unknown .plant-status-text {
+    color: #cbd5e1 !important;
+}
+
+/* DARK MODE — FPU LEFT BORDER ACCENTS */
+body.dark #page-plant .plant-fpu-card.plant-fpu-inline {
+    border-left-color: #22c55e !important;
+}
+
+body.dark #page-plant .plant-fpu-card.plant-fpu-standby,
+body.dark #page-plant .plant-fpu-card.plant-fpu-unknown {
+    border-left-color: #94a3b8 !important;
+}
+
+/* FIX: Upcoming Training — Orange in Light Mode */
+body:not(.dark) .training-item.upcoming-training {
+    border-left: 5px solid #f59e0b !important;
+}
+
+/* No name selected — neutral dark-grey badge */
+#todayShiftBadge.no-name-selected {
+    background: #4b5563 !important;
+    color: #ffffff !important;
+    border: 1px solid #6b7280 !important;
+    box-shadow: none !important;
+}
+
+body.dark #todayShiftBadge.no-name-selected {
+    background: #374151 !important;
+    color: #ffffff !important;
+    border-color: #6b7280 !important;
+}
+
+/* Bottom Navigation — Border & Subtle Shadow */
+#bottomNav,
+.bottom-nav {
+    border: 1px solid #94a3b8 !important;
+    box-shadow: 0 -3px 12px rgba(15, 23, 42, 0.16) !important;
+}
+
+/* Dark Mode */
+body.dark #bottomNav,
+body.dark .bottom-nav {
+    border-color: #64748b !important;
+    box-shadow: 0 -3px 14px rgba(0, 0, 0, 0.35) !important;
 }

@@ -1,7 +1,3 @@
-// ===============================
-// SHIFT DATA ACCESS
-// ===============================
-
 function getShift(date,name){
 
     let category =

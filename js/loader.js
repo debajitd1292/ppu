@@ -1,7 +1,3 @@
-// ===============================
-// INITIAL DATA LOADER
-// ===============================
-
 updateShiftUrls();
 
 Promise.all([

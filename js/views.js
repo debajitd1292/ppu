@@ -1,7 +1,3 @@
-// ===============================
-// DATE & UPCOMING SHIFT VIEWS
-// ===============================
-
 async function renderSelected(){
 
     let val = document.getElementById("datePicker").value;

@@ -1,26 +1,19 @@
-
-/* =========================================================
-   PLANT STATUS MODULE
-   File: js/plant.js
-   CSV: updates/plant_status.csv
-   Refresh: Every 2 minutes + when tab becomes visible
-   ========================================================= */
-
 (function () {
   "use strict";
 
-  const CSV_URL =
-    "https://raw.githubusercontent.com/debajitd1292/ppu/main/updates/plant_status.csv";
+    const CSV_URL =
+      "https://raw.githubusercontent.com/debajitd1292/ppu/main/updates/plant_status.csv";
 
-  const REFRESH_INTERVAL = 2 * 60 * 1000;
+    const REFRESH_INTERVAL = 2 * 60 * 1000;
 
-  let lastGoodRows = [];
-  let refreshTimer = null;
-  let isRefreshing = false;
+    let lastGoodRows = [];
+    let refreshTimer = null;
+    let isRefreshing = false;
 
-  const $ = (id) => document.getElementById(id);
+    const $ = (id) => document.getElementById(id);
 
-  function parseCSV(text) {
+
+function parseCSV(text) {
     const rows = [];
     let row = [];
     let field = "";
@@ -80,10 +73,11 @@
       });
 
       return obj;
-    });
-  }
+  });
+}
 
-  function parseDate(value) {
+
+function parseDate(value) {
     if (!value) return null;
 
     // Expected CSV format: YYYY-MM-DD
@@ -108,9 +102,10 @@
 
     date.setHours(0, 0, 0, 0);
     return date;
-  }
+}
 
-  function formatDate(value) {
+
+function formatDate(value) {
     const date = parseDate(value);
     if (!date) return "";
 
@@ -121,9 +116,10 @@
     ][date.getMonth()];
 
     return `${day}-${month}-${date.getFullYear()}`;
-  }
+}
 
-  function daysBetween(startDate, endDate = new Date()) {
+
+function daysBetween(startDate, endDate = new Date()) {
     if (!startDate) return null;
 
     const start = new Date(startDate);
@@ -135,23 +131,26 @@
     return Math.max(
       0,
       Math.floor((end.getTime() - start.getTime()) / 86400000)
-    );
-  }
+  );
+}
 
-  function shiftText(shift) {
+
+function shiftText(shift) {
     if (!shift) return "";
 
     const cleaned = shift.trim().replace(/\s*shift$/i, "");
     return ` (${cleaned} Shift)`;
   }
 
-  function eventDateText(date, shift) {
+
+function eventDateText(date, shift) {
     if (!date) return "Date not available";
 
     return formatDate(date) + shiftText(shift);
-  }
+}
 
-  function escapeHTML(value) {
+
+function escapeHTML(value) {
     return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
       "&": "&amp;",
       "<": "&lt;",
@@ -159,9 +158,10 @@
       '"': "&quot;",
       "'": "&#39;"
     })[ch]);
-  }
+}
 
-  function getRow(rows, type, name) {
+
+function getRow(rows, type, name) {
     return rows.find((row) =>
       (row.equipment_type || "").toLowerCase() === type.toLowerCase() &&
       (row.equipment_name || "").toLowerCase() === name.toLowerCase()
@@ -245,46 +245,44 @@ function majorCard(row, name) {
 }
 
 
- 
-
 function fpuCard(row, name, pairStatus = null) {
-  row = row || {};
+    row = row || {};
 
-  const inlineDate = parseDate(row.last_taken_inline_date);
-  const regenDate = parseDate(row.last_regeneration_date);
-  const customStatus = (row.custom_status || "").trim();
+    const inlineDate = parseDate(row.last_taken_inline_date);
+    const regenDate = parseDate(row.last_regeneration_date);
+    const customStatus = (row.custom_status || "").trim();
 
-  let status = "Undetermined";
-  let statusClass = "plant-fpu-unknown";
-  let eventLabel = "";
-  let eventDate = "";
+    let status = "Undetermined";
+    let statusClass = "plant-fpu-unknown";
+    let eventLabel = "";
+    let eventDate = "";
 
-  // Use pair-wise status when supplied; otherwise retain existing date logic.
-  if (pairStatus) {
-    status = pairStatus;
-  } else if (
-    inlineDate &&
-    regenDate &&
-    inlineDate.getTime() !== regenDate.getTime()
-  ) {
-    status = inlineDate > regenDate ? "Inline" : "Standby";
-  } else if (inlineDate && !regenDate) {
-    status = "Inline";
-  } else if (regenDate && !inlineDate) {
-    status = "Standby";
-  }
-
-  if (status === "Inline") {
-    statusClass = "plant-fpu-inline";
-    if (inlineDate) {
-      eventLabel = "Last Taken Inline";
-      eventDate = eventDateText(
-        row.last_taken_inline_date,
-        row.last_inline_shift
-      );
+    // Use pair-wise status when supplied; otherwise retain existing date logic.
+    if (pairStatus) {
+      status = pairStatus;
+    } else if (
+      inlineDate &&
+      regenDate &&
+      inlineDate.getTime() !== regenDate.getTime()
+    ) {
+      status = inlineDate > regenDate ? "Inline" : "Standby";
+    } else if (inlineDate && !regenDate) {
+      status = "Inline";
+    } else if (regenDate && !inlineDate) {
+      status = "Standby";
     }
-  } else if (status === "Standby") {
-    statusClass = "plant-fpu-standby";
+
+    if (status === "Inline") {
+      statusClass = "plant-fpu-inline";
+      if (inlineDate) {
+        eventLabel = "Last Taken Inline";
+        eventDate = eventDateText(
+          row.last_taken_inline_date,
+          row.last_inline_shift
+        );
+    }
+    } else if (status === "Standby") {
+      statusClass = "plant-fpu-standby";
 
     // Prefer regeneration date for Standby; fall back to inline date.
     if (regenDate) {
@@ -355,7 +353,8 @@ function fpuCard(row, name, pairStatus = null) {
   `;
 }
 
-  function render(rows) {
+
+function render(rows) {
     const majorContainer = $("plantMajorCards");
     const fpuContainer = $("plantFpuCards");
 
@@ -457,7 +456,7 @@ function fpuCard(row, name, pairStatus = null) {
     }
   }
 
-  function startPlantStatus() {
+function startPlantStatus() {
     refreshPlantStatus();
 
     if (refreshTimer) {

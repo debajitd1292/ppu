@@ -1,6 +1,4 @@
 
-/* ===== IMS TARGETS ===== */
-
 let imsRows = [];
 let imsHeaders = [];
 
@@ -125,7 +123,7 @@ function renderIMSTargets() {
         return match ? Number(match[0]) : NaN;
     };
 
-    function getAchievementPercentage(row, sourceName) {
+function getAchievementPercentage(row, sourceName) {
         const objective = normalise(sourceName);
         const target = numericValue(
             targetIndex >= 0 ? row[targetIndex] : ""
@@ -267,21 +265,21 @@ function renderIMSTargets() {
         const values = document.createElement("div");
         values.className = "ims-values";
 
-        function addValue(label, value) {
-            const item = document.createElement("div");
-            item.className = "ims-value";
+function addValue(label, value) {
+        const item = document.createElement("div");
+        item.className = "ims-value";
 
-            const labelElement = document.createElement("span");
-            labelElement.className = "ims-value-label";
-            labelElement.textContent = label;
+        const labelElement = document.createElement("span");
+        labelElement.className = "ims-value-label";
+        labelElement.textContent = label;
 
-            const valueElement = document.createElement("span");
-            valueElement.className = "ims-value-number";
-            valueElement.textContent =
-                value !== undefined && value !== "" ? value : "—";
+        const valueElement = document.createElement("span");
+        valueElement.className = "ims-value-number";
+        valueElement.textContent =
+            value !== undefined && value !== "" ? value : "—";
 
-            item.append(labelElement, valueElement);
-            values.appendChild(item);
+        item.append(labelElement, valueElement);
+        values.appendChild(item);
         }
 
         addValue("Target", targetIndex >= 0 ? row[targetIndex] : "");

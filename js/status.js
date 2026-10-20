@@ -5,15 +5,31 @@ function updateHeaderDate(){
 
     let now = new Date();
 
-    dateElem.innerText = now.toDateString();
+    const weekday = now.toLocaleDateString("en-GB", {
+        weekday: "short"
+    });
 
-    if(isSpecialDay()){
-        dateElem.style.color = "#ffd600";
-        dateElem.style.fontWeight = "600";
+    const formattedDate = now.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+
+dateElem.innerHTML = `
+    <div class="header-date">${weekday}, ${formattedDate}</div>
+    `;
+
+    const dateText = dateElem.querySelector(".header-date");
+
+    if (dateText) {
+    if (isSpecialDay()) {
+        dateText.style.color = document.body.classList.contains("dark")
+            ? "#FBBF24"
+            : "#B45309";
     } else {
-        dateElem.style.color = "";
-        dateElem.style.fontWeight = "";
+        dateText.style.color = "";
     }
+  }
 }
 
 

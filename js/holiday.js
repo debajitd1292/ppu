@@ -1,6 +1,5 @@
 let holidays = [];
 
-
 function loadHolidayData(holidayText){
 
     if(!holidayText){
@@ -25,24 +24,14 @@ function loadHolidayData(holidayText){
 
 function formatHolidayDate(dateStr){
 
-    let [d,m,y] = dateStr.split("-");
-    let day = parseInt(d);
-
-    let suffix = "th";
-
-    if(day === 1 || day === 21 || day === 31)
-        suffix = "st";
-    else if(day === 2 || day === 22)
-        suffix = "nd";
-    else if(day === 3 || day === 23)
-        suffix = "rd";
+    let [d, m, y] = dateStr.split("-");
 
     const months = [
-        "Jan","Feb","Mar","Apr","May","Jun",
-        "Jul","Aug","Sep","Oct","Nov","Dec"
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
 
-    return day + suffix + " " + months[parseInt(m) - 1];
+    return d + "-" + months[parseInt(m, 10) - 1] + "-" + y;
 }
 
 
@@ -52,7 +41,6 @@ function isSpecialDay(){
 
     let day = today.getDay(); // 0=Sun, 6=Sat
     let date = today.getDate();
-
 
     /* Sunday */
 
@@ -69,7 +57,6 @@ function isSpecialDay(){
         if(week === 2 || week === 4)
             return true;
     }
-
 
     /* GH check */
 
@@ -94,6 +81,37 @@ function isSpecialDay(){
 
 
     return false;
+}
+
+function updateTodayReason(){
+    const reasonElem = document.getElementById("todayReason");
+    if(!reasonElem) return;
+
+    const today = new Date();
+    const day = today.getDay();
+    const date = today.getDate();
+    const todayStr = formatDate(today);
+
+    let reason = "";
+
+    // Check GH/RH holiday first
+    const holiday = holidays.find(h => h.date === todayStr);
+
+    if(holiday && holiday.type === "GH"){
+        reason = `GH - ${holiday.name}`;
+    } else if(holiday && holiday.type === "RH"){
+        reason = `RH - ${holiday.name}`;
+    } else if(day === 6){
+        const week = Math.ceil(date / 7);
+
+        if(week === 2){
+            reason = "2nd Saturday";
+        } else if(week === 4){
+            reason = "4th Saturday";
+        }
+    }
+
+    reasonElem.textContent = reason ? `(${reason})` : "";
 }
 
 
@@ -174,23 +192,17 @@ function calcHoliday(){
 
     if(ghElem){
 
-    ghElem.innerText =
-        nextGH
-            ? formatHolidayDate(nextGH.date) +
-              (nextGH.name ? " (" + nextGH.name + ")" : "")
-            : "—";
-
+    ghElem.innerHTML = nextGH
+        ? `<div class="holiday-date-main">${formatHolidayDate(nextGH.date)}</div>
+           <div class="holiday-name">${nextGH.name || ""}</div>`
+        : "—";
     }
-
 
     if(rhElem){
 
-    rhElem.innerText =
-        nextRH
-            ? formatHolidayDate(nextRH.date) +
-              (nextRH.name ? " (" + nextRH.name + ")" : "")
-            : "—";
-
+    rhElem.innerHTML = nextRH
+    ? `<div class="holiday-date-main">${formatHolidayDate(nextRH.date)}</div>
+       <div class="holiday-name">${nextRH.name || ""}</div>`
+    : "—";
     }
-
 }
