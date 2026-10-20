@@ -3341,19 +3341,3 @@ body.dark .bottom-nav {
     border-color: #64748b !important;
     box-shadow: 0 -3px 14px rgba(0, 0, 0, 0.35) !important;
 }
-
-/* DARK MODE — EXECUTIVE / NON-EXECUTIVE BADGES */
-
-/* Executive — Blue */
-body.dark .executive-badge {
-    background: rgba(59, 130, 246, 0.16) !important;
-    color: #bfdbfe !important;
-    border-color: rgba(96, 165, 250, 0.55) !important;
-}
-
-/* Non-Executive — Red/Pink */
-body.dark .non-executive-badge {
-    background: rgba(244, 63, 94, 0.13) !important;
-    color: #fecdd3 !important;
-    border-color: rgba(251, 113, 133, 0.55) !important;
-}
