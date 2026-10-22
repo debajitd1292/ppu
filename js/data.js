@@ -34,113 +34,105 @@ function parseCSV(text){
         });
 }
 
-function mergeShiftData(previous, current, next) {
 
-    const months = [
-        previous,
-        current,
-        next
-    ].filter(month =>
-        month && month.length
-    );
-
-    if(!months.length){
-        return [];
+function normalizeShiftMonthHeaders(monthData, monthDate) {
+    if (!monthData || !monthData.length || !monthData[0]) {
+        return monthData;
     }
 
-    /*
-       Find the first available month as the base.
-       This ensures the app still works even if
-       previous or next month CSV is unavailable.
-    */
+    if (!monthDate) {
+        return monthData;
+    }
+
+    const year = monthDate.getFullYear();
+    const month = monthDate.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const normalizedHeader = monthData[0].map((value, index) => {
+        const header = String(value ?? "").trim();
+
+        // Preserve the employee-name column.
+        if (index === 0) return value;
+
+        // Preserve existing full-date headers.
+        if (/^\d{2}-\d{2}-\d{4}$/.test(header)) return header;
+
+        // Convert day-only headers such as 1, 2, 03, or 31.
+        if (/^\d{1,2}$/.test(header)) {
+            const day = Number(header);
+
+            if (day >= 1 && day <= daysInMonth) {
+                const date = new Date(year, month, day);
+
+                return (
+                    String(date.getDate()).padStart(2, "0") + "-" +
+                    String(date.getMonth() + 1).padStart(2, "0") + "-" +
+                    date.getFullYear()
+                );
+            }
+        }
+
+        return header;
+    });
+
+    return [normalizedHeader, ...monthData.slice(1)];
+}
+
+
+function mergeShiftData(previous, current, next, monthDates = []) {
+    const inputs = [
+        { data: previous, date: monthDates[0] },
+        { data: current,  date: monthDates[1] },
+        { data: next,     date: monthDates[2] }
+    ];
+
+    const months = inputs
+        .filter(item => item.data && item.data.length)
+        .map(item => normalizeShiftMonthHeaders(item.data, item.date));
+
+    if (!months.length) return [];
 
     const base = months[0];
-
     const merged = [];
-
-    /* ===============================
-       HEADER
-       =============================== */
 
     const header = [base[0][0]];
 
-    for(const month of months){
-
-        header.push(
-            ...month[0].slice(1)
-        );
-
+    for (const month of months) {
+        header.push(...month[0].slice(1));
     }
 
     merged.push(header);
 
-
-    /* ===============================
-       COLLECT ALL EMPLOYEE NAMES
-       =============================== */
-
     const employeeNames = new Set();
 
-    for(const month of months){
-
-        for(let i = 1; i < month.length; i++){
-
-            const name =
-                month[i]?.[0]?.trim();
-
-            if(name){
-                employeeNames.add(name);
-            }
-
+    for (const month of months) {
+        for (let i = 1; i < month.length; i++) {
+            const name = month[i]?.[0]?.trim();
+            if (name) employeeNames.add(name);
         }
-
     }
 
-
-    /* ===============================
-       BUILD EMPLOYEE ROWS
-       =============================== */
-
-    for(const name of employeeNames){
-
+    for (const name of employeeNames) {
         const row = [name];
 
-        for(const month of months){
+        for (const month of months) {
+            const monthRow = month.find(
+                r => r?.[0]?.trim() === name
+            );
 
-            const monthRow =
-                month.find(r =>
-                    r?.[0]?.trim() === name
-                );
-
-            if(monthRow){
-
-                row.push(
-                    ...monthRow.slice(1)
-                );
-
-            }else{
-
-                /*
-                   Employee not present in this
-                   month's schedule.
-                */
-
-                row.push(
-                    ...new Array(
-                        month[0].length - 1
-                    ).fill("")
-                );
-
+            if (monthRow) {
+                row.push(...monthRow.slice(1));
+            } else {
+                row.push(...new Array(month[0].length - 1).fill(""));
             }
-
         }
 
         merged.push(row);
-
     }
 
     return merged;
 }
+
 
 function fetchCSV(url, optional = false){
 

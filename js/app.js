@@ -397,7 +397,22 @@ if(alertsText !== undefined){
         const dataCurrent = parseCSV(shiftTextCurrent);
         const dataNext = parseCSV(shiftTextNext);
 
-        data = mergeShiftData(dataCurrent, dataNext);
+        const currentMonthDate = new Date();
+        currentMonthDate.setDate(1);
+        currentMonthDate.setHours(0, 0, 0, 0);
+
+        const nextMonthDate = new Date(
+            currentMonthDate.getFullYear(),
+            currentMonthDate.getMonth() + 1,
+            1
+        );
+
+        data = mergeShiftData(
+            dataCurrent,
+            dataNext,
+            null,
+            [currentMonthDate, nextMonthDate]
+        );
 
         header = data[0]?.map(x => x.trim()) || [];
 
@@ -425,7 +440,9 @@ if(alertsText !== undefined){
 
         nonExecData = mergeShiftData(
             nonExecCurrent,
-            nonExecNext
+            nonExecNext,
+            null,
+            [currentMonthDate, nextMonthDate]
         );
 
         nonExecHeader =

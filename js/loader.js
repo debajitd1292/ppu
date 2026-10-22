@@ -60,10 +60,31 @@ Promise.all([
     const dataCurrent = parseCSV(shiftTextCurrent);
     const dataNext = parseCSV(shiftTextNext);
 
+    const now = new Date();
+
+    const prevMonthDate = new Date(
+        now.getFullYear(),
+        now.getMonth() - 1,
+        1
+    );
+
+    const currentMonthDate = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        1
+    );
+
+    const nextMonthDate = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        1
+    );
+
     data = mergeShiftData(
         dataPrev,
         dataCurrent,
-        dataNext
+        dataNext,
+        [prevMonthDate, currentMonthDate, nextMonthDate]
     );
 
     header = data[0].map(x => x.trim());
@@ -75,7 +96,8 @@ Promise.all([
     nonExecData = mergeShiftData(
         nonExecPrev,
         nonExecCurrent,
-        nonExecNext
+        nonExecNext,
+        [prevMonthDate, currentMonthDate, nextMonthDate]
     );
 
     nonExecHeader =
