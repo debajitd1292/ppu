@@ -15,8 +15,8 @@
 
 </head>
 
-<body>
 
+<body>
 
 <div class="home-top-section">
     <div class="header">
@@ -42,7 +42,6 @@
 <div class="app-page active" id="page-home">
     <div id="todayNote" class="today-message"></div>
 
-
 <div class="info-bar">
 
     <div class="info-row">
@@ -64,8 +63,8 @@
 
 <div id="alertSection" style="margin:10px;"></div>
 
-
 <div class="today-weather-row">
+
     
 <div class="today-weather-summary">
     <h4>TODAY</h4>
@@ -73,6 +72,7 @@
     <div id="todayReason" style="margin-top:3px;font-size:10px;font-weight:normal;"></div>
     <div class="badge" id="todayShiftBadge">Loading...</div>
 </div>
+
 
 <div class="weather-card" id="weatherCard">
     <h4>DIBRUGARH</h4>
@@ -98,21 +98,20 @@
 
 </div> 
 
+    <div class="holiday-cards">
+        <div class="holiday-card">
+            <div class="holiday-title">Next GH</div>
+            <div id="nextGH" class="holiday-date">—</div>
+        </div>
 
-<div class="holiday-cards">
-    <div class="holiday-card">
-        <div class="holiday-title">Next GH</div>
-        <div id="nextGH" class="holiday-date">—</div>
+        <div class="holiday-card">
+            <div class="holiday-title">Next RH</div>
+            <div id="nextRH" class="holiday-date">—</div>
+        </div>
     </div>
-
-    <div class="holiday-card">
-        <div class="holiday-title">Next RH</div>
-        <div id="nextRH" class="holiday-date">—</div>
-    </div>
-</div>
-
 
 <div class="card">
+
     <div class="row">
     <div class="field">
         <label>Select Category:</label>
@@ -121,7 +120,7 @@
             <option value="exec">Executive</option>
             <option value="nonexec">Non-Executive</option>
         </select>
-</div>
+    </div>
 
     <div class="field">
         <label>Select Name:</label>
@@ -144,6 +143,8 @@
   <div class="card">
       <h3 id="shiftCalendarHeading">My Shift Schedule</h3>
       <div id="next7Days" class="next7-container"></div>
+      <div id="offDayCounter" class="off-day-counter" aria-live="polite"></div>
+      <div id="ecoLeaveCounter" class="eco-leave-counter" aria-live="polite"></div>
   </div>
 
   <!-- Select Date & View Shift -->
@@ -169,7 +170,6 @@
   </div>
 </div>
 
-
 <div class="app-page" id="page-production">
 
 <div class="card production-grade-card">
@@ -177,7 +177,6 @@
     <div id="currentProductionGrade">Loading...</div>
     <div id="productionGradeSince" class="production-grade-since"></div>
 </div>
-
 
 <div class="info-card production-card">
 
@@ -189,7 +188,6 @@
     <div id="productionEmpty" class="production-empty">
     Production plan not received yet
 </div>
-
 
 <div class="production-table-wrap" id="productionTableWrap">
 
@@ -214,14 +212,12 @@
 
 </div>
 
-
 <div class="app-page" id="page-training">
 <div class="card"><h3 id="trainingHeader">Training Schedule</h3>
     <div id="trainingSection">Loading...</div>
 </div>
 
 </div>
-
 
 <div class="app-page" id="page-more">
   <div class="card">
@@ -267,7 +263,6 @@
     </div>
   </div>
 </div>
-
 
 <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation">
 
@@ -359,7 +354,6 @@
 <div class="footer">
     <div id="lastUpdated"></div>
 </div>
-
 
 <script src="js/config.js"></script>
 <script src="js/data.js"></script>
