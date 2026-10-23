@@ -154,7 +154,7 @@ let ecoLeaveRenderToken = 0;
 
 function renderEcoLeaveCounterMarkup() {
     return `
-        <div class="eco-leave-heading">ECO &amp; Leaves till date</div>
+        <div class="eco-leave-heading">ECO &amp; Leaves till this month:</div>
         <div class="eco-leave-grid">
             <div class="eco-leave-item eco-card">
                 <span class="eco-leave-label">Total ECO</span>
@@ -585,7 +585,7 @@ function renderOffDayCounterMarkup() {
     `).join("");
 
     return `
-        <div class="off-day-counter-heading">Rest / OFF Counter</div>
+        <div class="off-day-counter-heading">Rest / OFF Counter:</div>
         <div class="off-day-counter-grid">${itemMarkup}</div>
         <div class="off-day-warning" id="offDayGapWarning" hidden>
             ⚠️ More than 10 working days between OFF days in the current month
