@@ -154,7 +154,7 @@ let ecoLeaveRenderToken = 0;
 
 function renderEcoLeaveCounterMarkup() {
     return `
-        <div class="eco-leave-heading">ECO &amp; Leaves till this month:</div>
+        <div class="eco-leave-heading">ECO &amp; Leaves Counter:</div>
         <div class="eco-leave-grid">
             <div class="eco-leave-item eco-card">
                 <span class="eco-leave-label">Total ECO</span>
