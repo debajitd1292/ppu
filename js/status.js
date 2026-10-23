@@ -1,35 +1,38 @@
-function updateHeaderDate(){
+function updateHeaderDate() {
+    
+    const dateElem = document.getElementById("todayDate");
+    if (!dateElem) return;
 
-    let dateElem = document.getElementById("todayDate");
-    if(!dateElem) return;
-
-    let now = new Date();
+    const now = new Date();
 
     const weekday = now.toLocaleDateString("en-GB", {
-        weekday: "short"
+        weekday: "long"
     });
 
-    const formattedDate = now.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
+    const day = now.getDate();
+    const suffix = (day % 100 >= 11 && day % 100 <= 13)
+        ? "th"
+        : ({ 1: "st", 2: "nd", 3: "rd" }[day % 10] || "th");
+
+    const month = now.toLocaleDateString("en-GB", {
+        month: "long"
     });
 
-dateElem.innerHTML = `
-    <div class="header-date">${weekday}, ${formattedDate}</div>
+    const year = now.getFullYear();
+
+    dateElem.innerHTML = `
+        <div class="header-date">${weekday}, ${day}${suffix} ${month} ${year}</div>
     `;
 
     const dateText = dateElem.querySelector(".header-date");
 
     if (dateText) {
-    if (isSpecialDay()) {
-        dateText.style.color = document.body.classList.contains("dark")
-            ? "#FBBF24"
-            : "#B45309";
-    } else {
-        dateText.style.color = "";
+        if (isSpecialDay()) {
+            dateText.style.color = "#ffd600";
+        } else {
+            dateText.style.color = "";
+        }
     }
-  }
 }
 
 
