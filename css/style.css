@@ -3413,17 +3413,20 @@ body.dark #page-shifts .eco-leave-heading {
     border: 1px solid #315f89;
     border-radius: 10px;
     color: #ffffff;
+    text-align: center;
 }
 
 /* Holiday card text colours */
 .holiday-title {
     color: #bfdbfe;
+    text-align: center;
 }
 
 .holiday-date,
 .holiday-date-main,
 .holiday-name {
     color: #ffffff;
+    text-align: center;
 }
 
 /* Keep the compact layout */
