@@ -40,7 +40,26 @@
 </div>
 
 <div class="app-page active" id="page-home">
-    <div id="todayNote" class="today-message"></div>
+
+<div class="today-weather-row">
+    <div class="today-weather-summary">
+        <div id="todayDate"></div>
+        <div id="todayReason" style="margin-top:1px;font-size:10px;font-weight:normal;"></div>
+        <div class="badge" id="todayShiftBadge">Loading...</div>
+    </div>
+</div>
+
+<div class="holiday-cards">
+    <div class="holiday-card">
+        <div class="holiday-title">Next GH</div>
+        <div id="nextGH" class="holiday-date">—</div>
+    </div>
+
+    <div class="holiday-card">
+        <div class="holiday-title">Next RH</div>
+        <div id="nextRH" class="holiday-date">—</div>
+    </div>
+</div>
 
 <div class="info-bar">
 
@@ -61,25 +80,8 @@
 
 </div>
 
-<div class="today-weather-row">
-    <div class="today-weather-summary">
-        <div id="todayDate"></div>
-        <div id="todayReason" style="margin-top:1px;font-size:10px;font-weight:normal;"></div>
-        <div class="badge" id="todayShiftBadge">Loading...</div>
-    </div>
-</div>
 
-    <div class="holiday-cards">
-        <div class="holiday-card">
-            <div class="holiday-title">Next GH</div>
-            <div id="nextGH" class="holiday-date">—</div>
-        </div>
-
-        <div class="holiday-card">
-            <div class="holiday-title">Next RH</div>
-            <div id="nextRH" class="holiday-date">—</div>
-        </div>
-    </div>
+<div id="todayNote" class="today-message"></div>
 
 <div id="alertSection" style="margin:10px;"></div>
 
