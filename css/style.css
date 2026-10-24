@@ -345,6 +345,33 @@ select:focus, input:focus {
     z-index: 1;
 }
 
+
+/* =========================================================
+   DATA PLACEHOLDER → LOADED VALUE ANIMATION
+   ========================================================= */
+
+@keyframes dataFlipIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.data-flip-in {
+    animation: dataFlipIn 0.45s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .data-flip-in {
+        animation: none !important;
+    }
+}
+
+
 /* 07. RESPONSIVE DESIGN */
 @media (max-width: 600px) {
     .row {
