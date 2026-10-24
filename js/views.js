@@ -675,10 +675,25 @@ async function renderOffDayCounter() {
     let anyOverLimit = false;
 
     for (const period of periods) {
-        const monthData = period.months.map(month => employeeMonths[month - 1]);
-        const complete = monthData.every(item => item && item.complete);
+        const availableMonths = period.months
+            .map(month => employeeMonths[month - 1]);
+
+        // Stop at the first unavailable month.
+        const consecutiveMonths = [];
+
+        for (const monthData of availableMonths) {
+            if (!monthData || !monthData.complete) break;
+            consecutiveMonths.push(monthData);
+        }
+
+        // Current Month must have its own month's data.
+        // Cumulative periods show totals through the latest consecutive available month.
+        const complete = period.id === "current"
+            ? consecutiveMonths.length === 1
+            : consecutiveMonths.length > 0;
+
         const count = complete
-            ? monthData.reduce((total, item) => total + item.offCount, 0)
+            ? consecutiveMonths.reduce((total, item) => total + item.offCount, 0)
             : null;
 
         setOffDayCounterValue(period.id, count, period.limit, complete);
