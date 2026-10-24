@@ -157,13 +157,12 @@ function refresh(){
 
     let badge = document.getElementById("todayShiftBadge");
 
-        if(!selectedName){
-    badge.innerText = "Select a name to view shift";
-        }else{
-    badge.innerText = "Today's Shift: " + headerShift;
+    if (!selectedName) {
+        badge.innerText = "—";
+    } else {
+        badge.innerText = headerShift;
     }
 
-    
     badge.className = "badge";
 
     if (!selectedName) {
