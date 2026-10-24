@@ -212,9 +212,8 @@ async function renderEcoLeaveCounter() {
     for (let monthIndex = 0; monthIndex < currentMonth; monthIndex++) {
         const monthData = monthlyData[monthIndex];
 
-        if (!monthData || !monthData.complete) {
-            complete = false;
-            break;
+        if (!monthData || !monthData.rows || monthData.rows.length < 2) {
+            continue;
         }
 
         const employeeRow = monthData.rows.slice(1).find(row =>
@@ -222,8 +221,7 @@ async function renderEcoLeaveCounter() {
         );
 
         if (!employeeRow) {
-            complete = false;
-            break;
+            continue;
         }
 
         const month = monthIndex + 1;
@@ -233,6 +231,11 @@ async function renderEcoLeaveCounter() {
 
         for (let day = 1; day <= daysToCount; day++) {
             const column = monthData.dayColumns[day - 1];
+
+            if (column == null || column < 0) {
+                 continue;
+            }
+
             const rawShift = String(employeeRow[column] || "")
                 .trim()
                 .toUpperCase();
@@ -297,22 +300,27 @@ async function renderEcoLeaveCounter() {
     const ecoElement = document.getElementById("totalEcoValue");
     const leaveElement = document.getElementById("totalLeaveValue");
 
-    if (!complete) {
-        if (ecoElement) ecoElement.textContent = "— / 26";
-        if (leaveElement) leaveElement.textContent = "—";
-        return;
-    }
-
+    
     if (ecoElement) {
         ecoElement.textContent = `${ecoTotal} / 26`;
         ecoElement.classList.toggle("eco-over-limit", ecoTotal > 26);
+
+        animateDataOnFirstLoad(
+            ecoElement,
+            `eco-${employee}-${category}-${year}`
+        );
     }
 
     if (leaveElement) {
         leaveElement.textContent = String(leaveTotal);
-    }
-}
 
+    animateDataOnFirstLoad(
+        leaveElement,
+        `leave-${employee}-${category}-${year}`
+        );
+    }
+
+}
 
 
 function renderNext7Days(){
@@ -611,8 +619,17 @@ function setOffDayCounterValue(id, count, limit, complete) {
         return;
     }
 
+    
     element.textContent = `${count} / ${limit}`;
-    element.classList.add(count > limit ? "is-over-limit" : "is-within-limit");
+    element.classList.add(
+        count > limit ? "is-over-limit" : "is-within-limit"
+    );
+
+    animateDataOnFirstLoad(
+        element,
+        `off-${selectedName}-${document.getElementById("categorySelector")?.value || ""}-${new Date().getFullYear()}-${id}`
+    );
+
 }
 
 async function renderOffDayCounter() {

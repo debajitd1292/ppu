@@ -8,6 +8,20 @@ let seniorityOrder = [];
 let nonExecSeniorityOrder = [];
 
 
+/* Animate loaded values only once per employee and value */
+const animatedDataKeys = new Set();
+
+function animateDataOnFirstLoad(element, key) {
+    if (!element || animatedDataKeys.has(key)) return;
+
+    animatedDataKeys.add(key);
+
+    element.classList.remove("data-flip-in");
+    void element.offsetWidth;
+    element.classList.add("data-flip-in");
+}
+
+
 const shiftLabels = {
 "A":"A Shift","B":"B Shift","C":"C Shift",
 "G":"General","OFF":"Rest / Off",
@@ -81,7 +95,19 @@ function updatePresentShiftIncharge(){
         list.map(x => x.name)
     )[0];
 
-    element.innerText = firstExecutive || "—";
+    
+    const newName = firstExecutive || "—";
+    const previousName = element.innerText.trim();
+
+    element.innerText = newName;
+
+    if (
+        newName !== "—" &&
+        previousName === "—"
+    ) {
+        animateDataOnFirstLoad(element, "sic-present");
+    }
+
 }
 
 
