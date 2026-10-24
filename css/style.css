@@ -3594,3 +3594,29 @@ body.dark #todayReason {
 #todayReason:empty {
     display: none !important;
 }
+
+/* Highlight important OFF Counter values */
+.off-day-count-value {
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    line-height: 1.3;
+}
+
+/* Make OFF Counter period labels clearer */
+.off-day-count-label {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+/* Highlight ECO & Leave values */
+.eco-leave-value {
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    line-height: 1.3;
+}
+
+/* Make ECO & Leave labels more prominent */
+.eco-leave-label {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+}
