@@ -2596,7 +2596,7 @@ body.dark #productionGradeSince {
     line-height: 1.4;
     opacity: 0.85;
     overflow-wrap: anywhere;
-    text-align: center;
+    text-align: left;
     margin-top: 1px;
 }
 
@@ -3454,6 +3454,7 @@ body.dark #page-shifts .eco-leave-heading {
 .holiday-name {
     color: #ffffff;
     text-align: center;
+    font-size: 12px;
 }
 
 /* Keep the compact layout */
@@ -3518,16 +3519,22 @@ body.dark #page-shifts .eco-leave-heading {
 }
 
 /* Holiday / special-day name */
+
 #todayReason {
-    display: none;
-    margin: 5px 0 0;
+    display: block;
+    margin: 1px 0 0;
     text-align: left;
     font-family: inherit;
     font-size: 12px;
     font-weight: 500;
-    line-height: 1.3;
+    line-height: 1.2;
     color: #d6e8f5;
 }
+
+#todayReason:empty {
+    display: none;
+}
+
 
 /* Dark mode */
 body.dark #todayReason {
@@ -3571,4 +3578,19 @@ body.dark #todayReason {
 .today-date-shift-row #todayShiftBadge {
     flex: 0 0 auto !important;
     margin-left: auto !important;
+}
+
+
+#todayReason {
+    display: block !important;
+    width: 100% !important;
+    text-align: left !important;
+    margin: 1px 0 0 0 !important;
+    padding: 0 !important;
+    align-self: flex-start !important;
+    box-sizing: border-box;
+}
+
+#todayReason:empty {
+    display: none !important;
 }
