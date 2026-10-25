@@ -152,28 +152,48 @@ async function renderSelected(){
 
 let ecoLeaveRenderToken = 0;
 
+
 function renderEcoLeaveCounterMarkup() {
     return `
-        <div class="eco-leave-heading">ECO &amp; Leaves Counter:</div>
-        <div class="eco-leave-grid">
-            <div class="eco-leave-item eco-card">
-                <span class="eco-leave-label">Total ECO</span>
-                <span class="eco-leave-value" id="totalEcoValue">— / 26</span>
+        <div class="combined-counter-section">
+            <h3 class="combined-counter-heading">Double Shift &amp; ECO Counter</h3>
+            <div class="eco-leave-grid">
+                <div class="eco-leave-item double-shift-item">
+                    <span class="eco-leave-label">Double Shift</span>
+                    <span class="eco-leave-value double-shift-value" id="doubleShiftCount">—</span>
+                </div>
+
+                <div class="eco-leave-item eco-card">
+                    <span class="eco-leave-label">Total ECO</span>
+                    <span class="eco-leave-value" id="totalEcoValue">— / 26</span>
+                </div>
             </div>
-            <div class="eco-leave-item leave-card">
-                <span class="eco-leave-label">Total Leaves</span>
-                <span class="eco-leave-value" id="totalLeaveValue">—</span>
+        </div>
+
+        <div class="combined-counter-section">
+            <h3 class="combined-counter-heading">Training / Tour &amp; Leave Counter</h3>
+            <div class="eco-leave-grid">
+                <div class="eco-leave-item training-tour-item">
+                    <span class="eco-leave-label">Training / Tour</span>
+                    <span class="eco-leave-value training-tour-value" id="trainingTourCount">—</span>
+                </div>
+
+                <div class="eco-leave-item leave-card">
+                    <span class="eco-leave-label">Total Leaves</span>
+                    <span class="eco-leave-value" id="totalLeaveValue">—</span>
+                </div>
             </div>
         </div>
     `;
 }
 
+
 async function renderEcoLeaveCounter() {
     const box = document.getElementById("ecoLeaveCounter");
     if (!box) return;
 
-    const employee = String(selectedName || "").trim();
-    const category = document.getElementById("categorySelector")?.value || "";
+    const employee = String(countersSelectedName || "").trim();
+    const category = countersSelectedCategory || "";
     const token = ++ecoLeaveRenderToken;
 
     if (!employee || !category) {
@@ -197,7 +217,10 @@ async function renderEcoLeaveCounter() {
     );
 
     if (token !== ecoLeaveRenderToken) return;
-    if (String(selectedName || "").trim() !== employee) return;
+    if (
+        String(countersSelectedName || "").trim() !== employee ||
+        countersSelectedCategory !== category
+    ) return;
 
     let ecoTotal = 0;
     let leaveTotal = 0;
@@ -241,13 +264,14 @@ async function renderEcoLeaveCounter() {
                 .toUpperCase();
 
             const hasExtraEco = rawShift.includes("*");
-            const shift = rawShift.replace(/\*/g, "").trim();
+            const isHalfLeave = rawShift.includes("#");
+            const shift = rawShift.replace(/[*#]/g, "").trim();
 
             const dateKey =
                 `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
             if (shift === "L") {
-                leaveTotal++;
+                leaveTotal += isHalfLeave ? 0.5 : 1;
             }
 
             if (!shift || shift === "-" || shift === "L" || shift === "T") {
@@ -323,6 +347,37 @@ async function renderEcoLeaveCounter() {
 }
 
 
+
+function updateCounterSectionVisibility() {
+    const offCounter = document.getElementById("offDayCounter");
+    const ecoCounter = document.getElementById("ecoLeaveCounter");
+    const emptyMessage = document.getElementById("counterEmptyMessage");
+
+    const counterCards = [
+        offCounter?.closest(".card"),
+        ecoCounter?.closest(".card"),
+        document.querySelector("#page-counters .double-training-counter")
+    ].filter(Boolean);
+
+    const hasName = Boolean(
+        String(
+            (typeof countersSelectedName !== "undefined" && countersSelectedName) ||
+            (typeof selectedName !== "undefined" && selectedName) ||
+            ""
+        ).trim()
+    );
+
+    counterCards.forEach(card => {
+        card.hidden = !hasName;
+    });
+
+    if (emptyMessage) {
+        emptyMessage.hidden = hasName;
+    }
+}
+
+
+
 function renderNext7Days(){
 
     const box = document.getElementById("next7Days");
@@ -332,6 +387,7 @@ function renderNext7Days(){
     const offCounter = document.getElementById("offDayCounter");
     const ecoCounter = document.getElementById("ecoLeaveCounter");
 
+    
     if (!selectedName) {
         if (offCounter) {
             offCounter.style.display = "none";
@@ -344,16 +400,21 @@ function renderNext7Days(){
         }
 
         box.innerHTML =
-            "<div style='color:#777;'>Select name to view shifts</div>";
+            "<div style='color:#777;font-weight:bold;'>Select name to view shifts</div>";
 
+        updateCounterSectionVisibility();
         return;
     }
+
 
     if (offCounter) offCounter.style.display = "";
     if (ecoCounter) ecoCounter.style.display = "";
 
     renderOffDayCounter();
     renderEcoLeaveCounter();
+    renderDoubleShiftAndTrainingCounter();
+
+    updateCounterSectionVisibility();
 
     if (!header || header.length === 0 || !data || data.length === 0) {
         box.innerHTML =
@@ -410,7 +471,7 @@ function renderNext7Days(){
         const dateStr = `${dd}-${mm}-${year}`;
 
         const rawShift = getShift(dateStr, selectedName) || "-";
-        const displayShift = rawShift.replace(/\*/g, "");
+        const displayShift = rawShift.replace(/[*#]/g, "");
 
         let shiftClass;
 
@@ -593,16 +654,12 @@ function renderOffDayCounterMarkup() {
     `).join("");
 
     return `
-        <div class="off-day-counter-heading">Rest / OFF Counter:</div>
         <div class="off-day-counter-grid">${itemMarkup}</div>
         <div class="off-day-warning" id="offDayGapWarning" hidden>
             ⚠️ More than 10 working days between OFF days in the current month
         </div>
         <div class="off-day-warning" id="offDayLimitWarning" hidden>
             ⚠️ Your Rest / OFF count exceeds the prescribed limit, please contact AIC for necessary guidance
-        </div>
-        <div class="off-day-rotational-note">
-            *Applicable only to employees working in Rotational shifts
         </div>
     `;
 }
@@ -627,7 +684,7 @@ function setOffDayCounterValue(id, count, limit, complete) {
 
     animateDataOnFirstLoad(
         element,
-        `off-${selectedName}-${document.getElementById("categorySelector")?.value || ""}-${new Date().getFullYear()}-${id}`
+        `off-${countersSelectedName}-${countersSelectedCategory}-${new Date().getFullYear()}-${id}`
     );
 
 }
@@ -638,8 +695,8 @@ async function renderOffDayCounter() {
 
     box.innerHTML = renderOffDayCounterMarkup();
 
-    const selectedEmployee = String(selectedName || "").trim();
-    const category = document.getElementById("categorySelector")?.value || "";
+    const selectedEmployee = String(countersSelectedName || "").trim();
+    const category = countersSelectedCategory || "";
     const now = new Date();
     const year = now.getFullYear();
     const currentMonth = now.getMonth() + 1;
@@ -716,6 +773,110 @@ async function renderOffDayCounter() {
     if (limitWarning) {
         limitWarning.hidden = !anyOverLimit;
     }
+}
+
+
+
+/* =========================================================
+   DOUBLE SHIFT & TRAINING / TOUR COUNTERS
+   AB, BC, AC = double shift; T = training/tour
+   ========================================================= */
+let extraCountersRenderToken = 0;
+
+async function renderDoubleShiftAndTrainingCounter() {
+    const doubleElement = document.getElementById("doubleShiftCount");
+    const trainingElement = document.getElementById("trainingTourCount");
+
+    if (!doubleElement || !trainingElement) return;
+
+    const employee = String(countersSelectedName || "").trim();
+    const category = countersSelectedCategory || "";
+    const token = ++extraCountersRenderToken;
+
+    doubleElement.textContent = "—";
+    trainingElement.textContent = "—";
+
+    if (!employee || !category) return;
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+    const today = now.getDate();
+
+    const monthlyData = await Promise.all(
+        Array.from({ length: currentMonth }, (_, index) =>
+            getOffDayMonthSchedule(category, year, index + 1)
+        )
+    );
+
+    if (token !== extraCountersRenderToken) return;
+    if (
+        String(countersSelectedName || "").trim() !== employee ||
+        countersSelectedCategory !== category
+    ) return;
+
+    let doubleTotal = 0;
+    let trainingTotal = 0;
+    let complete = true;
+
+    for (let monthIndex = 0; monthIndex < currentMonth; monthIndex++) {
+        const monthData = monthlyData[monthIndex];
+
+        if (
+            !monthData ||
+            !monthData.complete ||
+            !monthData.rows ||
+            !monthData.dayColumns
+        ) {
+            complete = false;
+            continue;
+        }
+
+        const employeeRow = monthData.rows.slice(1).find(row =>
+            String(row?.[0] || "").trim() === employee
+        );
+
+        if (!employeeRow) {
+            complete = false;
+            continue;
+        }
+
+        const month = monthIndex + 1;
+        const daysToCount = month === currentMonth
+            ? today
+            : new Date(year, month, 0).getDate();
+
+        for (let day = 1; day <= daysToCount; day++) {
+            const column = monthData.dayColumns[day - 1];
+
+            if (column == null || column < 0) continue;
+
+            const shift = String(employeeRow[column] || "")
+                .trim()
+                .toUpperCase()
+                .replace(/[*#]/g, "")
+                .trim();
+
+            if (["AB", "BC", "AC"].includes(shift)) doubleTotal++;
+            if (shift === "T") trainingTotal++;
+        }
+    }
+
+    if (token !== extraCountersRenderToken) return;
+
+    doubleElement.textContent = String(doubleTotal);
+    trainingElement.textContent = String(trainingTotal);
+
+    animateDataOnFirstLoad(
+        doubleElement,
+        `double-shift-${employee}-${category}-${year}`
+    );
+
+    animateDataOnFirstLoad(
+        trainingElement,
+        `training-tour-${employee}-${category}-${year}`
+    );
+
 }
 
 
