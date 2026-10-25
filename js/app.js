@@ -1,5 +1,7 @@
 let data = [];
 let selectedName = "";
+let countersSelectedName = "";
+let countersSelectedCategory = "";
 let header = [];
 let nonExecData = [];
 let nonExecHeader = [];
@@ -135,6 +137,8 @@ function init(){
     
     refresh();
     renderNext7Days();
+    syncCounterSelectors();
+    renderCounterPageData();
 
     }, 0);
 
@@ -533,12 +537,107 @@ if(alertsText !== undefined){
 }
 
 
+
+/* ===== INDEPENDENT COUNTERS PAGE SELECTORS ===== */
+
+function syncCounterSelectors() {
+    const mainCategory = document.getElementById("categorySelector");
+    const mainName = document.getElementById("nameSelector");
+    const counterCategory = document.getElementById("countersCategorySelector");
+    const counterName = document.getElementById("countersNameSelector");
+
+    if (!mainCategory || !mainName || !counterCategory || !counterName) return;
+
+    // Home selection is the source when Home changes.
+    counterCategory.value = mainCategory.value;
+    counterName.innerHTML = mainName.innerHTML;
+    counterName.value = mainName.value;
+
+    countersSelectedCategory = counterCategory.value;
+    countersSelectedName = counterName.value;
+}
+
+function populateCounterNames() {
+    const category = document.getElementById("countersCategorySelector")?.value;
+    const sel = document.getElementById("countersNameSelector");
+
+    if (!sel) return;
+
+    sel.innerHTML = "";
+    sel.add(new Option("Select Name", ""));
+
+    if (!category) return;
+
+    let names = [];
+
+    if (category === "exec") {
+        for (let i = 1; i < data.length; i++) {
+            const name = data[i][0]?.trim();
+            if (name) names.push(name);
+        }
+
+        names = sortBySeniority(names);
+    } else {
+        for (let i = 1; i < nonExecData.length; i++) {
+            const name = nonExecData[i][0]?.trim();
+
+            if (name && !/\bDMBI$/i.test(name)) {
+                names.push(name);
+            }
+        }
+
+        names.sort((a, b) => {
+            let ia = nonExecSeniorityOrder.indexOf(a);
+            let ib = nonExecSeniorityOrder.indexOf(b);
+
+            if (ia === -1) ia = 999;
+            if (ib === -1) ib = 999;
+
+            return ia - ib;
+        });
+    }
+
+    names.forEach(name =>
+        sel.add(new Option(getFirstName(name), name))
+    );
+}
+
+function renderCounterPageData() {
+    renderOffDayCounter();
+    renderEcoLeaveCounter();
+    renderDoubleShiftAndTrainingCounter();
+}
+
+function onCountersCategoryChange() {
+    const category = document.getElementById("countersCategorySelector")?.value || "";
+
+    countersSelectedCategory = category;
+    countersSelectedName = "";
+
+    populateCounterNames();
+    renderCounterPageData();
+}
+
+function onCountersNameChange() {
+    const counterName = document.getElementById("countersNameSelector");
+
+    countersSelectedCategory =
+        document.getElementById("countersCategorySelector")?.value || "";
+
+    countersSelectedName = counterName?.value || "";
+
+    renderCounterPageData();
+}
+
+
+
 /* ===== DASHBOARD PAGE NAVIGATION ===== */
 
 function navigateToPage(page, addHistory = true) {
     const validPages = [
         "home",
         "shifts",
+        "counters",
         "plant",
         "production",
         "training",
@@ -680,6 +779,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const validPages = [
         "home",
         "shifts",
+        "counters",
         "plant",
         "production",
         "training",
@@ -691,6 +791,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const initialPage = validPages.includes(savedPage) ? savedPage : "home";
 
     navigateToPage(initialPage, false);
+    syncCounterSelectors();
+
+    const mainCategory = document.getElementById("categorySelector");
+    const mainName = document.getElementById("nameSelector");
+
+    mainCategory?.addEventListener("change", () => {
+        syncCounterSelectors();
+        renderCounterPageData();
+    });
+
+    mainName?.addEventListener("change", () => {
+        syncCounterSelectors();
+        renderCounterPageData();
+    });
+
     history.replaceState(
         { dashboardPage: initialPage },
         "",
@@ -698,4 +813,3 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 });
-
