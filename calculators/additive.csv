@@ -1,7 +1,7 @@
 ﻿category,additive_name,ppm,bag_weight_kg,default_batch_mt
-Raffia,AO 1010,450,20,135
-Raffia,IRGAPHOS 168,900,25,135
-Raffia,DHT 4A,300,20,135
+Raffia,AO 1010,450,20,270
+Raffia,IRGAPHOS 168,900,25,270
+Raffia,DHT 4A,300,20,270
 IM,AO 1010,450,20,220
 IM,IRGAPHOS 168,450,25,220
 IM,CAST,800,20,220
