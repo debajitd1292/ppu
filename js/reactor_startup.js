@@ -1,9 +1,3 @@
-
-/* Reactor Start Up Planner
-   Data source: calculators/reactor_startup.csv
-   Calculation logic based on Reactor_Startup_Calculator.xlsx
-*/
-
 (function () {
   "use strict";
 
@@ -13,9 +7,9 @@
 
   const DEFAULTS = {
     target_c3_stock: 600,
-    stock_latest: 456,
-    stock_previous: 414,
-    stock_earlier: 380
+    stock_latest: 300,
+    stock_previous: 280,
+    stock_earlier: 250
   };
 
   let config = { ...DEFAULTS };
