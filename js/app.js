@@ -643,6 +643,7 @@ function navigateToPage(page, addHistory = true) {
         "training",
         "more",
         "ims",
+        "calculator",
         "others"
     ];
 
@@ -784,6 +785,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "production",
         "training",
         "ims",
+        "calculator",
         "others"
     ];
 
@@ -812,4 +814,32 @@ document.addEventListener("DOMContentLoaded", function () {
         "#" + initialPage
     );
 
+});
+
+// Remember the selected calculator after refresh
+window.addEventListener("load", function () {
+    const calculatorType = document.getElementById("calculatorType");
+
+    if (!calculatorType) return;
+
+    const savedCalculator = localStorage.getItem("lastCalculatorType");
+
+    if (
+        savedCalculator &&
+        Array.from(calculatorType.options).some(
+            option => option.value === savedCalculator
+        )
+    ) {
+        calculatorType.value = savedCalculator;
+        calculatorType.dispatchEvent(
+            new Event("change", { bubbles: true })
+        );
+    }
+
+    calculatorType.addEventListener("change", function () {
+        localStorage.setItem(
+            "lastCalculatorType",
+            calculatorType.value
+        );
+    });
 });
