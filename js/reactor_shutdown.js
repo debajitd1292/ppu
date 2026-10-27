@@ -1,9 +1,3 @@
-
-/* Reactor Shutdown Calculator
-   Data source: calculators/reactor_shutdown.csv
-   Calculation logic based on Reactor_Shutdown_Calculator.xlsx
-*/
-
 (function () {
   "use strict";
 
@@ -13,9 +7,9 @@
 
   const DEFAULTS = {
     c3_to_be_consumed: 150,
-    stock_latest: 564,
-    stock_previous: 570,
-    stock_earlier: 583,
+    stock_latest: 600,
+    stock_previous: 630,
+    stock_earlier: 660,
     reactor_load: 7
   };
 
