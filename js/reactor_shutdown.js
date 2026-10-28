@@ -43,7 +43,7 @@
     );
 
     if (!response.ok) {
-      throw new Error("Unable to load reactor_shutdown.csv");
+      throw new Error("Unable to load");
     }
 
     const records = parseCSV(await response.text());
@@ -208,7 +208,7 @@
 
     if (!selector || !propylenePanel) {
       console.error(
-        "Reactor calculator: existing calculator elements not found."
+        "Existing calculator elements not found"
       );
       return;
     }
@@ -336,7 +336,7 @@
         if (!validInputs) {
           results.innerHTML = `
             <p class="reactor-error">
-              Please enter Reactor load and atleast 2 latest C3 stock reading
+              Please enter Reactor load and latest three C3 stock readings
             </p>
           `;
           return;
@@ -453,7 +453,7 @@
             </div>
             <div class="reactor-result-row">
               <span>Expected Shutdown On</span>
-              <strong>Unable to estimate — C3 stock is unchanged</strong>
+              <strong>C3 stock is unchanged</strong>
             </div>
           `;
         }
@@ -489,8 +489,7 @@
           ${
             changeRate === 0
               ? `<p class="reactor-warning">
-                   Stock change rate is zero. Shutdown timing cannot
-                   be estimated using the workbook formula.
+                   Stock change rate is Zero
                  </p>`
               : ""
           }
@@ -498,8 +497,7 @@
           ${
             changeRate === null
               ? `<p class="reactor-warning">
-                   Enter at least two valid stock readings to calculate
-                   the change rate.
+                   Please enter the latest three C3 stock readings
                  </p>`
               : ""
           }
@@ -536,8 +534,7 @@
           panel.hidden = false;
           panel.innerHTML = `
             <p class="reactor-error">
-              Unable to load calculators/reactor_shutdown.csv.
-              Check the file path and refresh the dashboard.
+              Unable to load Calculators
             </p>
           `;
         }
