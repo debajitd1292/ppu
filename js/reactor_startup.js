@@ -42,7 +42,7 @@
     );
 
     if (!response.ok) {
-      throw new Error("Unable to load reactor_startup.csv");
+      throw new Error("Unable to load");
     }
 
     const records = parseCSV(await response.text());
@@ -311,7 +311,7 @@
         ) {
           results.innerHTML = `
             <p class="startup-error">
-              Please enter atleast 2 latest C3 stock reading
+              Please enter the latest three C3 stock readings
             </p>
           `;
           return;
@@ -387,7 +387,7 @@
           `;
         
         } else if (changeRate === null) {
-          warning = "Enter at least two valid stock readings.";
+          warning = "Please enter the latest three C3 stock readings";
         } else if (changeRate < 0) {
           timeHTML = `
             <div class="startup-result-row">
@@ -402,7 +402,7 @@
             </div>
           `;
         } else if (changeRate === 0) {
-          warning = "C3 stock is unchanged. Startup time cannot be estimated.";
+          warning = "C3 stock is unchanged";
         } else if (remainingToTarget <= 0) {
           warning =
             "The target stock is estimated to have already been reached.";
@@ -425,7 +425,7 @@
               </div>
             `;
           } else {
-            warning = "Unable to calculate a valid startup estimate.";
+            warning = "Unable to calculate";
           }
         }
 
