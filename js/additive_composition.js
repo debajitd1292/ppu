@@ -12,9 +12,9 @@
   };
 
   const CATEGORY_LABELS = {
-    "Raffia": "WH034N Composition",
-    "IM": "IH120N Composition",
-    "TQ": "FH110N Composition"
+    "Raffia": "Additive Composition - Raffia",
+    "IM": "Additive Composition - Injection Moulding",
+    "TQ": "Additive Composition - TQ Film"
   };
 
   let additiveData = [];
@@ -326,7 +326,9 @@
         renderCalculator(category);
       } else {
         panel.hidden = true;
-        propylenePanel.style.display = "";
+
+        propylenePanel.style.display =
+          selected === "propylene-stock" ? "" : "none";
       }
     }
 
