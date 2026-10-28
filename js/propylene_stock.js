@@ -230,8 +230,8 @@ async function calculatePropyleneStock(
 
   if (!response.ok) {
     throw new Error(
-      "Could not load Propylene Stock CSV. " +
-      "Check its GitHub path."
+      "Could not load " +
+      "Check its path"
     );
   }
 
@@ -436,7 +436,7 @@ updateSphereLevelWarning();
       const stock = result.approxPumpableStockMT;
 
       if (!Number.isFinite(stock)) {
-        throw new Error("The calculated stock value is not valid.");
+        throw new Error("The calculated stock value is not valid");
       }
 
       resultBox.textContent =
@@ -450,7 +450,7 @@ updateSphereLevelWarning();
 
       resultBox.textContent = error && error.message
         ? error.message
-        : "Unable to calculate pumpable stock. Check the input levels and lookup CSV.";
+        : "Unable to calculate C3 pumpable stock";
 
       resultBox.classList.add("error");
 
