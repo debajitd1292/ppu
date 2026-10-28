@@ -14,7 +14,7 @@
 
   let config = { ...DEFAULTS };
 
-  function parseCSV(text) {
+function parseCSV(text) {
     const lines = text.trim().split(/\r?\n/);
     if (lines.length < 2) return [];
 
@@ -33,9 +33,9 @@
 
       return record;
     });
-  }
+}
 
-  async function loadDefaults() {
+async function loadDefaults() {
     const response = await fetch(
       CSV_URL + "?v=" + Date.now(),
       { cache: "no-store" }
@@ -58,20 +58,20 @@
         config[key] = value;
       }
     });
-  }
+}
 
-  function localDateKey(date) {
+function localDateKey(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
-  }
+}
 
-  function slotKey(date) {
+function slotKey(date) {
     return `${localDateKey(date)}_${String(date.getHours()).padStart(2, "0")}`;
-  }
+}
 
-  function getLatestReadingTime(now) {
+function getLatestReadingTime(now) {
     const latest = new Date(now);
     latest.setMinutes(0, 0, 0);
 
@@ -89,9 +89,9 @@
     }
 
     return latest;
-  }
+}
 
-  function getReadingTimes(now) {
+function getReadingTimes(now) {
     const latest = getLatestReadingTime(now);
 
     const previous = new Date(latest);
@@ -101,9 +101,9 @@
     earlier.setHours(earlier.getHours() - 16);
 
     return { latest, previous, earlier };
-  }
+}
 
-  function formatReadingTime(date) {
+function formatReadingTime(date) {
     const dateText = date.toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short"
@@ -120,9 +120,9 @@
       : timeText;
 
     return `${dateText}, ${displayTime}`;
-  }
+}
 
-  function formatDateTime(date) {
+function formatDateTime(date) {
       return date.toLocaleString("en-IN", {
         day: "2-digit",
         month: "short",
@@ -131,39 +131,39 @@
         minute: "2-digit",
         hour12: true
       }).replace(/\b(am|pm)\b/gi, match => match.toUpperCase());
-  }
+}
 
-  function formatCountdown(hours) {
+function formatCountdown(hours) {
     const totalMinutes = Math.max(0, Math.floor(hours * 60));
     const days = Math.floor(totalMinutes / 1440);
     const remainingHours = Math.floor((totalMinutes % 1440) / 60);
     const minutes = totalMinutes % 60;
 
     return `${days} D, ${remainingHours} H, ${minutes} M`;
-  }
+}
 
-  function formatOneDecimal(value) {
+function formatOneDecimal(value) {
     return Math.abs(value).toFixed(1);
-  }
+}
 
-  function readValue(key, defaultValue) {
+function readValue(key, defaultValue) {
     try {
       const saved = localStorage.getItem(STORAGE_PREFIX + key);
       return saved !== null ? saved : String(defaultValue);
     } catch (_) {
       return String(defaultValue);
     }
-  }
+}
 
-  function saveValue(key, value) {
+function saveValue(key, value) {
     try {
       localStorage.setItem(STORAGE_PREFIX + key, value);
     } catch (error) {
       console.warn("Could not save startup planner value:", error);
     }
-  }
+}
 
-  function readStock(date, defaultValue) {
+function readStock(date, defaultValue) {
     try {
       const saved = localStorage.getItem(
         STORAGE_PREFIX + "stock:" + slotKey(date)
@@ -172,9 +172,9 @@
     } catch (_) {
       return String(defaultValue);
     }
-  }
+}
 
-  function saveStock(date, value) {
+function saveStock(date, value) {
     try {
       localStorage.setItem(
         STORAGE_PREFIX + "stock:" + slotKey(date),
@@ -183,16 +183,14 @@
     } catch (error) {
       console.warn("Could not save stock reading:", error);
     }
-  }
+}
 
-  function numberFrom(input) {
+function numberFrom(input) {
     if (!input || input.value.trim() === "") return null;
 
     const value = Number(input.value);
     return Number.isFinite(value) ? value : null;
-  }
-
-  
+}
 
 function init() {
     const selector = document.getElementById("calculatorType");
@@ -230,7 +228,7 @@ function init() {
       ["propylene-stock", "Pumpable C3 Stock"],
       ["reactor-shutdown", "Reactor Shutdown Planner"],
       ["reactor-startup", "Reactor Startup Planner"],
-      ["additive-raffia", "WHO34N Composition"],
+      ["additive-raffia", "WH034N Composition"],
       ["additive-im", "IH120N Composition"],
       ["additive-tq", "FH110N Composition"]
     ];
@@ -450,7 +448,6 @@ function calculate() {
           }
         }
 
-
         results.innerHTML = `
           <div class="startup-status-card">
             <div class="startup-result-row">
@@ -470,7 +467,7 @@ function calculate() {
         .addEventListener("click", calculate);
 
       calculate();
-    }
+}
 
 function updateSelectedCalculator() {
       if (selector.value === CALCULATOR_KEY) {
