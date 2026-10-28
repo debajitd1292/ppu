@@ -194,7 +194,7 @@
 
   
 
-  function init() {
+function init() {
     const selector = document.getElementById("calculatorType");
     const propylenePanel = document.getElementById(
       "propyleneStockCalculator"
@@ -225,7 +225,30 @@
       selector.appendChild(option);
     }
 
-    function render() {
+    // Standardise calculator names and order
+    const calculatorOrder = [
+      ["propylene-stock", "Pumpable C3 Stock"],
+      ["reactor-shutdown", "Reactor Shutdown Planner"],
+      ["reactor-startup", "Reactor Startup Planner"],
+      ["additive-raffia", "WHO34N Composition"],
+      ["additive-im", "IH120N Composition"],
+      ["additive-tq", "FH110N Composition"]
+    ];
+
+    calculatorOrder.forEach(([value, label]) => {
+      const option = Array.from(selector.options).find(
+        item => item.value === value
+      );
+
+      if (option) {
+        option.textContent = label;
+        selector.appendChild(option);
+      }
+    });
+
+    addStyles();
+
+function render() {
       const now = new Date();
       const times = getReadingTimes(now);
 
@@ -294,7 +317,7 @@
         saveStock(times.earlier, earlierInput.value)
       );
 
-      function calculate() {
+function calculate() {
         const target = numberFrom(targetInput);
         const latest = numberFrom(latestInput);
         const previous = numberFrom(previousInput);
@@ -451,7 +474,7 @@
       calculate();
     }
 
-    function updateSelectedCalculator() {
+function updateSelectedCalculator() {
       if (selector.value === CALCULATOR_KEY) {
         propylenePanel.style.display = "none";
         panel.hidden = false;
