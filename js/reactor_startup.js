@@ -246,8 +246,6 @@ function init() {
       }
     });
 
-    addStyles();
-
 function render() {
       const now = new Date();
       const times = getReadingTimes(now);
