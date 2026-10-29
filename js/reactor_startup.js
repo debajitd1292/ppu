@@ -1,3 +1,4 @@
+
 (function () {
   "use strict";
 
@@ -14,7 +15,7 @@
 
   let config = { ...DEFAULTS };
 
-function parseCSV(text) {
+  function parseCSV(text) {
     const lines = text.trim().split(/\r?\n/);
     if (lines.length < 2) return [];
 
@@ -33,9 +34,9 @@ function parseCSV(text) {
 
       return record;
     });
-}
+  }
 
-async function loadDefaults() {
+  async function loadDefaults() {
     const response = await fetch(
       CSV_URL + "?v=" + Date.now(),
       { cache: "no-store" }
@@ -58,20 +59,20 @@ async function loadDefaults() {
         config[key] = value;
       }
     });
-}
+  }
 
-function localDateKey(date) {
+  function localDateKey(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
-}
+  }
 
-function slotKey(date) {
+  function slotKey(date) {
     return `${localDateKey(date)}_${String(date.getHours()).padStart(2, "0")}`;
-}
+  }
 
-function getLatestReadingTime(now) {
+  function getLatestReadingTime(now) {
     const latest = new Date(now);
     latest.setMinutes(0, 0, 0);
 
@@ -89,9 +90,9 @@ function getLatestReadingTime(now) {
     }
 
     return latest;
-}
+  }
 
-function getReadingTimes(now) {
+  function getReadingTimes(now) {
     const latest = getLatestReadingTime(now);
 
     const previous = new Date(latest);
@@ -101,9 +102,9 @@ function getReadingTimes(now) {
     earlier.setHours(earlier.getHours() - 16);
 
     return { latest, previous, earlier };
-}
+  }
 
-function formatReadingTime(date) {
+  function formatReadingTime(date) {
     const dateText = date.toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short"
@@ -120,50 +121,50 @@ function formatReadingTime(date) {
       : timeText;
 
     return `${dateText}, ${displayTime}`;
-}
+  }
 
-function formatDateTime(date) {
-      return date.toLocaleString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true
-      }).replace(/\b(am|pm)\b/gi, match => match.toUpperCase());
-}
+  function formatDateTime(date) {
+    return date.toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    }).replace(/\b(am|pm)\b/gi, match => match.toUpperCase());
+  }
 
-function formatCountdown(hours) {
+  function formatCountdown(hours) {
     const totalMinutes = Math.max(0, Math.floor(hours * 60));
     const days = Math.floor(totalMinutes / 1440);
     const remainingHours = Math.floor((totalMinutes % 1440) / 60);
     const minutes = totalMinutes % 60;
 
     return `${days} D, ${remainingHours} H, ${minutes} M`;
-}
+  }
 
-function formatOneDecimal(value) {
+  function formatOneDecimal(value) {
     return Math.abs(value).toFixed(1);
-}
+  }
 
-function readValue(key, defaultValue) {
+  function readValue(key, defaultValue) {
     try {
       const saved = localStorage.getItem(STORAGE_PREFIX + key);
       return saved !== null ? saved : String(defaultValue);
     } catch (_) {
       return String(defaultValue);
     }
-}
+  }
 
-function saveValue(key, value) {
+  function saveValue(key, value) {
     try {
       localStorage.setItem(STORAGE_PREFIX + key, value);
     } catch (error) {
       console.warn("Could not save startup planner value:", error);
     }
-}
+  }
 
-function readStock(date, defaultValue) {
+  function readStock(date, defaultValue) {
     try {
       const saved = localStorage.getItem(
         STORAGE_PREFIX + "stock:" + slotKey(date)
@@ -172,9 +173,9 @@ function readStock(date, defaultValue) {
     } catch (_) {
       return String(defaultValue);
     }
-}
+  }
 
-function saveStock(date, value) {
+  function saveStock(date, value) {
     try {
       localStorage.setItem(
         STORAGE_PREFIX + "stock:" + slotKey(date),
@@ -183,16 +184,16 @@ function saveStock(date, value) {
     } catch (error) {
       console.warn("Could not save stock reading:", error);
     }
-}
+  }
 
-function numberFrom(input) {
+  function numberFrom(input) {
     if (!input || input.value.trim() === "") return null;
 
     const value = Number(input.value);
     return Number.isFinite(value) ? value : null;
-}
+  }
 
-function init() {
+  function init() {
     const selector = document.getElementById("calculatorType");
     const propylenePanel = document.getElementById(
       "propyleneStockCalculator"
@@ -244,7 +245,7 @@ function init() {
       }
     });
 
-function render() {
+    function render() {
       const now = new Date();
       const times = getReadingTimes(now);
 
@@ -283,6 +284,15 @@ function render() {
           </label>
         </div>
 
+        <label class="startup-field">
+  <span class="stock-reading-label">Current Stock (Optional)</span>
+  <input id="startupCurrentStock" type="number"
+    min="0" step="any"
+    value="${readValue("currentStock", "")}"
+    placeholder="Enter current stock in MT">
+</label>
+
+
         <button type="button" id="calculateStartup"
           class="calculator-action startup-calculate-button">
           Calculate Startup
@@ -292,6 +302,7 @@ function render() {
       `;
 
       const targetInput = panel.querySelector("#startupTargetStock");
+      const currentInput = panel.querySelector("#startupCurrentStock");
       const latestInput = panel.querySelector("#startupStockLatest");
       const previousInput = panel.querySelector("#startupStockPrevious");
       const earlierInput = panel.querySelector("#startupStockEarlier");
@@ -300,6 +311,18 @@ function render() {
       targetInput.addEventListener("change", () =>
         saveValue("targetStock", targetInput.value)
       );
+
+      currentInput.addEventListener("change", () => {
+        saveValue("currentStock", currentInput.value);
+
+        if (currentInput.value.trim() === "") {
+          try {
+            localStorage.removeItem(
+              STORAGE_PREFIX + "currentStockTimestamp"
+            );
+          } catch (_) {}
+        }
+      });
 
       latestInput.addEventListener("change", () =>
         saveStock(times.latest, latestInput.value)
@@ -313,24 +336,66 @@ function render() {
         saveStock(times.earlier, earlierInput.value)
       );
 
-function calculate() {
+      function calculate() {
         const target = numberFrom(targetInput);
+        const currentStock = numberFrom(currentInput);
         const latest = numberFrom(latestInput);
         const previous = numberFrom(previousInput);
         const earlier = numberFrom(earlierInput);
 
         saveValue("targetStock", targetInput.value);
+        saveValue("currentStock", currentInput.value);
         saveStock(times.latest, latestInput.value);
         saveStock(times.previous, previousInput.value);
         saveStock(times.earlier, earlierInput.value);
 
-        if (
-          target === null || target < 0 ||
-          latest === null || latest < 0
-        ) {
+        const currentTime = new Date();
+
+        let currentStockTimestamp = null;
+
+        if (currentInput.value.trim() !== "" &&
+            currentStock !== null && currentStock >= 0) {
+          currentStockTimestamp = currentTime;
+
+          try {
+            localStorage.setItem(
+              STORAGE_PREFIX + "currentStockTimestamp",
+              String(currentStockTimestamp.getTime())
+            );
+          } catch (_) {}
+        } else {
+          try {
+            localStorage.removeItem(
+              STORAGE_PREFIX + "currentStockTimestamp"
+            );
+          } catch (_) {}
+        }
+
+        const currentTimestampValid =
+          currentStock !== null &&
+          currentStock >= 0 &&
+          currentStockTimestamp !== null;
+
+        const scheduledReadings = [
+          { stock: latest, time: times.latest },
+          { stock: previous, time: times.previous },
+          { stock: earlier, time: times.earlier }
+        ]
+          .filter(item => item.stock !== null && item.stock >= 0)
+          .sort((a, b) => b.time.getTime() - a.time.getTime());
+
+        const validInputs =
+          target !== null &&
+          target >= 0 &&
+          (
+            (currentTimestampValid && scheduledReadings.length >= 1) ||
+            (!currentTimestampValid && scheduledReadings.length >= 2)
+          );
+
+        if (!validInputs) {
           results.innerHTML = `
-            <p class="startup-error">
-              Please enter the latest three C3 stock readings
+            <p class="reactor-error">
+              Please enter Target C3 Stock and either Current Stock with at least one scheduled reading, or at least two scheduled stock readings
             </p>
           `;
           return;
@@ -338,45 +403,70 @@ function calculate() {
 
         let changeRate = null;
 
-        if (latest !== null && earlier !== null) {
-          changeRate = (latest - earlier) / 16;
-        } else if (latest !== null && previous !== null) {
-          changeRate = (latest - previous) / 8;
-        } else if (previous !== null && earlier !== null) {
-          changeRate = (previous - earlier) / 8;
+        if (currentTimestampValid) {
+          // Compare Current Stock with the most recent earlier scheduled reading.
+          for (const reading of scheduledReadings) {
+            const hours =
+              (currentStockTimestamp.getTime() -
+                reading.time.getTime()) / 3600000;
+
+            if (hours > 0) {
+              changeRate = (currentStock - reading.stock) / hours;
+              break;
+            }
+          }
+        } else {
+          // Retain the existing scheduled-reading priority.
+          if (latest !== null && latest >= 0 &&
+              earlier !== null && earlier >= 0) {
+            changeRate = (latest - earlier) / 16;
+          } else if (latest !== null && latest >= 0 &&
+                     previous !== null && previous >= 0) {
+            changeRate = (latest - previous) / 8;
+          } else if (previous !== null && previous >= 0 &&
+                     earlier !== null && earlier >= 0) {
+            changeRate = (previous - earlier) / 8;
+          }
         }
+
+        const anchorReading = currentTimestampValid
+          ? { stock: currentStock, time: currentStockTimestamp }
+          : scheduledReadings.length > 0
+            ? scheduledReadings[0]
+            : null;
+
+        const elapsedHours = anchorReading
+          ? Math.max(
+              0,
+              (currentTime.getTime() -
+                anchorReading.time.getTime()) / 3600000
+            )
+          : 0;
+
+        const stockNow =
+          anchorReading && changeRate !== null
+            ? anchorReading.stock + changeRate * elapsedHours
+            : anchorReading
+              ? anchorReading.stock
+              : null;
+
+        const remainingToTarget =
+          stockNow === null ? null : target - stockNow;
 
         let stockStatus = "Change rate unavailable";
         let stockClass = "";
 
-        if (changeRate < 0) {
+        if (changeRate !== null && changeRate < 0) {
           stockStatus =
             `Depleting at ${formatOneDecimal(changeRate)} MT/hr`;
           stockClass = "depleting";
-        } else if (changeRate > 0) {
+        } else if (changeRate !== null && changeRate > 0) {
           stockStatus =
             `Increasing at ${formatOneDecimal(changeRate)} MT/hr`;
           stockClass = "increasing";
         } else if (changeRate === 0) {
           stockStatus = "Unchanged at 0.0 MT/hr";
         }
-
-        const now = new Date();
-        const elapsedHours = Math.max(
-          0,
-          (now.getTime() - times.latest.getTime()) / 3600000
-        );
-
-        // Excel logic:
-        // Production since latest reading = elapsed hours × change rate.
-        // Remaining stock to target = target − latest stock − production.
-        const productionSinceReading =
-          changeRate === null ? null : elapsedHours * changeRate;
-
-        const remainingToTarget =
-          changeRate === null
-            ? null
-            : target - latest - productionSinceReading;
 
         let timeHTML = `
           <div class="startup-result-row">
@@ -391,9 +481,10 @@ function calculate() {
 
         let warning = "";
 
-        if (target <= latest) {
+        if (stockNow !== null && stockNow >= target) {
           warning =
-            "The latest C3 stock is already at or above the target stock";
+            "The latest estimated C3 stock is already at or above the target stock";
+
           timeHTML = `
             <div class="startup-result-row">
               <span>Expected Start Up In</span>
@@ -404,9 +495,9 @@ function calculate() {
               <strong>Not applicable</strong>
             </div>
           `;
-        
         } else if (changeRate === null) {
-          warning = "Please enter the latest three C3 stock readings";
+          warning =
+            "Unable to calculate C3 stock change rate from the available readings";
         } else if (changeRate < 0) {
           timeHTML = `
             <div class="startup-result-row">
@@ -430,7 +521,7 @@ function calculate() {
 
           if (Number.isFinite(hoursToStartup) && hoursToStartup >= 0) {
             const expectedStartup = new Date(
-              now.getTime() + hoursToStartup * 3600000
+              currentTime.getTime() + hoursToStartup * 3600000
             );
 
             timeHTML = `
@@ -467,9 +558,9 @@ function calculate() {
         .addEventListener("click", calculate);
 
       calculate();
-}
+    }
 
-function updateSelectedCalculator() {
+    function updateSelectedCalculator() {
       if (selector.value === CALCULATOR_KEY) {
         propylenePanel.style.display = "none";
         panel.hidden = false;
