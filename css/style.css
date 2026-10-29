@@ -138,12 +138,9 @@ h1 {
     height:60px; 
     border-radius:50%;
     object-fit:cover;
-
     box-shadow:0 2px 8px rgba(0,0,0,0.3);
-
     background:transparent;
     padding:0;
-
     opacity:0;                      
     transform:scale(0.8);           
     transition:all 0.4s ease;       
@@ -325,18 +322,14 @@ select:focus, input:focus {
 .shift-active-box::before {
     content: "";
     position: absolute;
-
-    top: -0px;
+    top: 0;
     left: -2px;
     right: -2px;
     bottom: -2px;
-
     border-radius: 12px;
-
     background: linear-gradient(90deg, transparent, #0d47a1, transparent);
     background-size: 200% 100%;
     animation: moveBorder 2s linear infinite;
-
     z-index: 0;
 }
 
@@ -394,19 +387,14 @@ select:focus, input:focus {
     display: inline-block;
     padding: 6px 14px;
     margin: 12px 0 8px 0;
-
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-
     border-radius: 999px; 
-
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-
     border: 1px solid rgba(255,255,255,0.2);
-
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
@@ -445,47 +433,23 @@ select:focus, input:focus {
 
 .selected { border:2px solid gold; }
 
-.A { 
-    background: linear-gradient(135deg, #9333ea, #6b21a8);
-    box-shadow: 0 2px 6px rgba(147,51,234,0.4);
-}
-
-.B { 
-    background: linear-gradient(135deg, #f59e0b, #b45309);
-    box-shadow: 0 2px 6px rgba(245,158,11,0.4);
-}
-
-.C { 
-    background: linear-gradient(135deg, #2563eb, #1e3a8a);
-    box-shadow: 0 2px 6px rgba(37,99,235,0.4);
-}
+.A { background: linear-gradient(135deg, #9333ea, #6b21a8); box-shadow: 0 2px 6px rgba(147,51,234,0.4); }
+.B { background: linear-gradient(135deg, #f59e0b, #b45309); box-shadow: 0 2px 6px rgba(245,158,11,0.4); }
+.C { background: linear-gradient(135deg, #2563eb, #1e3a8a); box-shadow: 0 2px 6px rgba(37,99,235,0.4); }
 .G { background:#e53935; }
 .OFF { background:#1b5e20; }
 .H { background:linear-gradient(135deg, #22c55e, #15803d); color:#ffffff; }
-
 .D { background:#43a047; }
 .N { background:#6b7280; color:white; }
 .L { background:#ffd600; color:black; }
 .T { background:#00acc1; color:black; }
 
-.badge.A { 
-    background: linear-gradient(135deg, #9333ea, #6b21a8);
-    box-shadow: 0 0 10px rgba(147,51,234,0.5);
-}
-
-.badge.B { 
-    background: linear-gradient(135deg, #f59e0b, #b45309);
-    box-shadow: 0 0 10px rgba(245,158,11,0.5);
-}
-
-.badge.C { 
-    background: linear-gradient(135deg, #2563eb, #1e3a8a);
-    box-shadow: 0 0 10px rgba(37,99,235,0.5);
-}
+.badge.A { background: linear-gradient(135deg, #9333ea, #6b21a8); box-shadow: 0 0 10px rgba(147,51,234,0.5); }
+.badge.B { background: linear-gradient(135deg, #f59e0b, #b45309); box-shadow: 0 0 10px rgba(245,158,11,0.5); }
+.badge.C { background: linear-gradient(135deg, #2563eb, #1e3a8a); box-shadow: 0 0 10px rgba(37,99,235,0.5); }
 .badge.G { background:#e53935; }
 .badge.OFF { background:#1b5e20; }
 .badge.H { background:linear-gradient(135deg, #22c55e, #15803d); color:#ffffff; }
-
 .badge.D { background:#43a047; }
 .badge.N { background:#6b7280; color:white; }
 
@@ -529,35 +493,26 @@ body.dark .badge.N { background:#9ca3af; color:black; }
 
 .notice-alert {
     position: relative;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
-
     padding: 10px 14px 10px 16px;
     margin-bottom: 12px;
-
     border-radius: 10px;
-
     font-size: 13px;
     font-weight: 600;
     text-align: center;
-
     color: #b71c1c;
-
     background: linear-gradient(135deg, #fff5f5, #ffe3e3);
-
     border: 1px solid rgba(183, 28, 28, 0.25);
-
     box-shadow:
         0 4px 10px rgba(183, 28, 28, 0.18),
         0 0 12px rgba(183, 28, 28, 0.25),
         0 0 22px rgba(183, 28, 28, 0.15);
 
     overflow: visible;
-
     animation: pulseGlow 2s infinite;
 }
 
@@ -599,7 +554,6 @@ body.dark .badge.N { background:#9ca3af; color:black; }
         linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-
     pointer-events: none;
     z-index: -1;
 }
@@ -803,57 +757,6 @@ body.dark .upcoming-training {
     border-left: 5px solid #fbbf24;
 }
 
-/* 13. THEME TOGGLE */
-.theme-switch {
-    position:absolute;
-    top:12px;
-    right:25px;
-    width:40px;
-    height:22px;
-    z-index:2000;
-}
-
-.theme-switch input {
-    opacity:0;
-    width:100%;
-    height:100%;
-    position:absolute;
-    top:0;
-    left:0;
-    cursor:pointer;
-    z-index:2;
-}
-
-.slider {
-    position:absolute;
-    cursor:pointer;
-    width:100%;
-    height:100%;
-    background:rgba(255,255,255,0.2);
-    border-radius:30px;
-    transition:0.3s;
-}
-
-.slider::before {
-    content:"";
-    position:absolute;
-    height:16px;
-    width:16px;
-    left:3px;
-    top:3px;
-    background:#90caf9;
-    border-radius:50%;
-    transition:0.3s;
-    box-shadow:0 0 8px rgba(144,202,249,0.6);
-}
-
-.theme-switch input:checked + .slider::before {
-    transform:translateX(18px);
-}
-
-.slider:hover {
-    transform: scale(1.05);
-}
 
 /* 14. DARK MODE OVERRIDES */
 body.dark .training-item {
@@ -2489,24 +2392,17 @@ body.dark #productionGradeSince {
 
 
 /* 28. GH / RH HOLIDAY CARDS */
+
 .holiday-cards {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 7px;
     width: auto;
     max-width: none;
-    margin: 10px;
+    margin: 7px 10px;
     box-sizing: border-box;
 }
 
-.holiday-card {
-    min-width: 0;
-    padding: 9px 8px;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.08);
-    box-sizing: border-box;
-}
 
 .holiday-title {
     margin-bottom: 5px;
@@ -2541,17 +2437,19 @@ body.dark #productionGradeSince {
 }
 
 /* 29. GH / RH DATE AND HOLIDAY NAME */
+
 .holiday-date-main {
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 700;
     line-height: 1.4;
     margin-bottom: 3px;
+    color: #1e3a5f;
 }
 
 .holiday-name {
     font-size: 12px;
     font-weight: 500;
-    line-height: 1.4;
+    line-height: 1.2;
     opacity: 0.85;
     overflow-wrap: anywhere;
 }
@@ -2622,24 +2520,8 @@ body.dark #productionGradeSince {
 }
 
 /* GH / RH HOLIDAY CARDS */
-.holiday-cards {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-    width: auto;
-    margin: 7px 10px;
-    box-sizing: border-box;
-}
 
-.holiday-card {
-    min-width: 0;
-    padding: 7px 8px;
-    border: 1px solid #D5E3F2;
-    border-radius: 9px;
-    background: #F4F8FD;
-    color: #173B65;
-    box-sizing: border-box;
-}
+
 
 .holiday-title {
     margin-bottom: 3px;
@@ -2654,23 +2536,9 @@ body.dark #productionGradeSince {
     color: #1e3a5f;
 }
 
-.holiday-date-main {
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 1.4;
-    margin-bottom: 3px;
-}
-
-.holiday-name {
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 1.4;
-    opacity: 0.85;
-    overflow-wrap: anywhere;
-}
 
 /* DARK MODE */
-body.dark .today-weather-summary,
+
 body.dark .holiday-card {
     background: linear-gradient(135deg, #263f60, #1e3350);
     color: #e2eaf5;
@@ -3454,6 +3322,9 @@ body.dark #page-counters .eco-leave-heading {
     border-radius: 10px;
     color: #ffffff;
     text-align: center;
+    padding: 5px 7px;
+    min-width: 0;
+    box-sizing: border-box; 
 }
 
 /* Holiday card text colours */
@@ -3471,9 +3342,7 @@ body.dark #page-counters .eco-leave-heading {
 }
 
 /* Keep the compact layout */
-.holiday-card {
-    padding: 5px 7px;
-}
+
 
 .holiday-title,
 .holiday-date,
@@ -4608,4 +4477,421 @@ body.dark #page-counters #countersNameSelector {
     background: #202938 !important;
     color: #e2e8f0 !important;
     border: 1px solid #405875;
+}
+
+
+/* ==========================================
+   REACTOR SHUTDOWN PLANNER
+   Layout, inputs, stock readings and results
+   ========================================== */
+
+/* Main calculator container */
+#reactorShutdownCalculator {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    color: inherit;
+}
+
+#reactorShutdownCalculator *,
+#reactorShutdownCalculator *::before,
+#reactorShutdownCalculator *::after {
+    box-sizing: border-box;
+}
+
+/* General input section */
+#reactorShutdownCalculator .reactor-input-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+/* Each label and input row */
+#reactorShutdownCalculator .reactor-field {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(100px, 42%);
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Field labels */
+#reactorShutdownCalculator .reactor-field > span {
+    display: block;
+    min-width: 0;
+    margin: 0;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+/* Input fields */
+#reactorShutdownCalculator .reactor-field input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    padding: 8px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1f2937;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    outline: none;
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#reactorShutdownCalculator .reactor-field input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.16);
+}
+
+#reactorShutdownCalculator .reactor-field input::placeholder {
+    color: #98a2b3;
+    opacity: 1;
+}
+
+/* ==========================================
+   C3 STOCK READINGS
+   Four separate vertical rows
+   ========================================== */
+
+#reactorShutdownCalculator .reactor-stock-heading {
+    margin: 16px 0 10px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+#reactorShutdownCalculator .reactor-stock-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 16px;
+}
+
+/* Stock labels: latest, previous, earlier and current */
+#reactorShutdownCalculator .reactor-stock-grid .reactor-field {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(100px, 42%);
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+#reactorShutdownCalculator .reactor-stock-grid .stock-reading-label {
+    display: block;
+    min-width: 0;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+/* Light mode */
+body:not(.dark) #reactorShutdownCalculator .reactor-stock-grid .stock-reading-label {
+    color: #344054 !important;
+}
+
+/* Dark mode */
+body.dark #reactorShutdownCalculator .reactor-stock-grid .stock-reading-label {
+    color: #ffffff !important;
+}
+
+/* Dark-mode inputs */
+body.dark #reactorShutdownCalculator .reactor-field input {
+    background: #243247;
+    color: #f1f5f9;
+    border-color: #475569;
+}
+
+body.dark #reactorShutdownCalculator .reactor-field input::placeholder {
+    color: #a8b4c5;
+}
+
+body.dark #reactorShutdownCalculator .reactor-field input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.18);
+}
+
+/* ==========================================
+   CALCULATE BUTTON
+   ========================================== */
+
+#reactorShutdownCalculator .reactor-calculate-button {
+    display: block;
+    width: 100%;
+    min-height: 42px;
+    margin: 6px 0 16px;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 9px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+#reactorShutdownCalculator .reactor-calculate-button:hover {
+    background: #1d4ed8;
+}
+
+#reactorShutdownCalculator .reactor-calculate-button:active {
+    transform: scale(0.99);
+}
+
+#reactorShutdownCalculator .reactor-calculate-button:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+/* ==========================================
+   RESULTS CARD
+   ========================================== */
+
+#reactorShutdownCalculator .reactor-status-card {
+    width: 100%;
+    min-width: 0;
+    margin: 12px 0;
+    padding: 12px;
+    border: 1px solid #dbe3ee;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #263449;
+}
+
+#reactorShutdownCalculator .reactor-result-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 9px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+#reactorShutdownCalculator .reactor-result-row:first-child {
+    padding-top: 0;
+}
+
+#reactorShutdownCalculator .reactor-result-row:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+#reactorShutdownCalculator .reactor-result-row > span {
+    flex: 1 1 45%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+#reactorShutdownCalculator .reactor-result-row > strong {
+    flex: 1 1 55%;
+    min-width: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+/* Dark-mode results */
+body.dark #reactorShutdownCalculator .reactor-status-card {
+    background: #202e42;
+    color: #e8eef7;
+    border-color: #3c4d64;
+}
+
+body.dark #reactorShutdownCalculator .reactor-result-row {
+    border-bottom-color: #3c4d64;
+}
+
+/* ==========================================
+   STATUS BADGES AND STOCK STATUS
+   ========================================== */
+
+#reactorShutdownCalculator .reactor-badge {
+    display: inline-block;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+#reactorShutdownCalculator .reactor-badge.running,
+#reactorShutdownCalculator .reactor-stock-status.increasing {
+    color: #15803d;
+}
+
+#reactorShutdownCalculator .reactor-badge.shutdown {
+    color: #b91c1c;
+}
+
+#reactorShutdownCalculator .reactor-stock-status.depleting {
+    color: #dc2626;
+}
+
+#reactorShutdownCalculator .reactor-stock-status.neutral {
+    color: #64748b;
+}
+
+body.dark #reactorShutdownCalculator .reactor-badge.running,
+body.dark #reactorShutdownCalculator .reactor-stock-status.increasing {
+    color: #86efac;
+}
+
+body.dark #reactorShutdownCalculator .reactor-badge.shutdown,
+body.dark #reactorShutdownCalculator .reactor-stock-status.depleting {
+    color: #fca5a5;
+}
+
+body.dark #reactorShutdownCalculator .reactor-stock-status.neutral {
+    color: #cbd5e1;
+}
+
+/* Running-status message */
+#reactorShutdownCalculator .reactor-result-row strong.running {
+    color: #15803d;
+}
+
+body.dark #reactorShutdownCalculator .reactor-result-row strong.running {
+    color: #86efac;
+}
+
+/* ==========================================
+   ERRORS, WARNINGS AND NOTES
+   ========================================== */
+
+#reactorShutdownCalculator .reactor-error,
+#reactorShutdownCalculator .reactor-warning,
+#reactorShutdownCalculator .reactor-note {
+    margin: 10px 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+#reactorShutdownCalculator .reactor-error {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+#reactorShutdownCalculator .reactor-warning {
+    border: 1px solid #fed7aa;
+    background: #fff7ed;
+    color: #9a3412;
+}
+
+#reactorShutdownCalculator .reactor-note {
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #1e40af;
+}
+
+body.dark #reactorShutdownCalculator .reactor-error {
+    border-color: #7f1d1d;
+    background: #3b2028;
+    color: #fecaca;
+}
+
+body.dark #reactorShutdownCalculator .reactor-warning {
+    border-color: #854d0e;
+    background: #3b3020;
+    color: #fed7aa;
+}
+
+body.dark #reactorShutdownCalculator .reactor-note {
+    border-color: #1e40af;
+    background: #1e304a;
+    color: #bfdbfe;
+}
+
+/* ==========================================
+   RESPONSIVE LAYOUT
+   ========================================== */
+
+@media (min-width: 520px) {
+    #reactorShutdownCalculator .reactor-input-grid {
+        gap: 12px;
+    }
+
+    #reactorShutdownCalculator .reactor-field,
+    #reactorShutdownCalculator .reactor-stock-grid .reactor-field {
+        grid-template-columns: minmax(0, 1fr) minmax(120px, 42%);
+        gap: 12px;
+    }
+
+    #reactorShutdownCalculator .reactor-stock-grid {
+        gap: 10px;
+    }
+
+    #reactorShutdownCalculator .reactor-field input {
+        min-height: 40px;
+    }
+}
+
+/* Small mobile screens */
+@media (max-width: 380px) {
+    #reactorShutdownCalculator .reactor-field,
+    #reactorShutdownCalculator .reactor-stock-grid .reactor-field {
+        grid-template-columns: minmax(0, 1fr) minmax(95px, 42%);
+        gap: 7px;
+        font-size: 12px;
+    }
+
+    #reactorShutdownCalculator .reactor-field input {
+        min-height: 36px;
+        padding: 7px;
+        font-size: 12px;
+    }
+
+    #reactorShutdownCalculator .reactor-stock-grid .stock-reading-label {
+        font-size: 12px;
+    }
+
+    #reactorShutdownCalculator .reactor-status-card {
+        padding: 10px;
+    }
+
+    #reactorShutdownCalculator .reactor-result-row {
+        gap: 8px;
+        font-size: 12px;
+    }
+}
+
+#reactorShutdownCalculator .reactor-instruction {
+    margin: 8px 0 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+body.dark #reactorShutdownCalculator .reactor-instruction {
+    color: #f87171;
 }
