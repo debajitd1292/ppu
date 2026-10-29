@@ -684,7 +684,7 @@ if (!validInputs) {
 
                   const differenceText =
                     Math.abs(difference) < 0.01
-                      ? "No material change"
+                      ? "No change detected"
                       : `${formatCountdown(Math.abs(difference))} ${
                           difference > 0 ? "earlier" : "later"
                         }`;
