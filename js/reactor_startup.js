@@ -395,7 +395,7 @@
         if (!validInputs) {
           results.innerHTML = `
             <p class="reactor-error">
-              Please enter Target C3 Stock and either Current Stock with at least one scheduled reading, or at least two scheduled stock readings
+              Please enter Target C3 stock and at least two C3 stock readings
             </p>
           `;
           return;
