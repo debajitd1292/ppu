@@ -170,11 +170,11 @@ function numberFrom(input) {
     return Number.isFinite(value) ? value : null;
 }
 
-  function formatOneDecimal(value) {
+function formatOneDecimal(value) {
     return Math.abs(value).toFixed(1);
-  }
+}
 
-  function formatCountdown(hours) {
+function formatCountdown(hours) {
     const totalMinutes = Math.max(0, Math.floor(hours * 60));
     const days = Math.floor(totalMinutes / 1440);
     const remainingHours = Math.floor(
@@ -183,9 +183,9 @@ function numberFrom(input) {
     const minutes = totalMinutes % 60;
 
     return `${days} D, ${remainingHours} H, ${minutes} M`;
-  }
+}
 
-  function formatDateTime(date) {
+function formatDateTime(date) {
     return date.toLocaleString("en-IN", {
       day: "2-digit",
       month: "short",
@@ -194,9 +194,9 @@ function numberFrom(input) {
       minute: "2-digit",
       hour12: true
     }).replace(/\b(am|pm)\b/gi, match => match.toUpperCase());
-  }
+}
 
-  function init() {
+function init() {
     const selector = document.getElementById("calculatorType");
     const propylenePanel = document.getElementById(
       "propyleneStockCalculator"
@@ -227,10 +227,10 @@ function numberFrom(input) {
       option.value = CALCULATOR_KEY;
       option.textContent = "Reactor Shutdown Planner";
       selector.appendChild(option);
-    }
+  }
 
 
-    function render() {
+  function render() {
       const now = new Date();
       const times = getReadingTimes(now);
 
@@ -365,14 +365,14 @@ function numberFrom(input) {
         saveStock(times.earlier, earlierInput.value)
       );
 
-          function calculate() {
-        const c3Consumed = numberFrom(consumedInput);
-        const reactorLoad = numberFrom(loadInput);
-        const stockLatest = numberFrom(latestInput);
-        const stockPrevious = numberFrom(previousInput);
-        const stockEarlier = numberFrom(earlierInput);
-        const stockCurrent = numberFrom(currentStockInput);
-        const whatIfLoad = numberFrom(whatIfLoadInput);
+function calculate() {
+     const c3Consumed = numberFrom(consumedInput);
+     const reactorLoad = numberFrom(loadInput);
+     const stockLatest = numberFrom(latestInput);
+     const stockPrevious = numberFrom(previousInput);
+     const stockEarlier = numberFrom(earlierInput);
+     const stockCurrent = numberFrom(currentStockInput);
+     const whatIfLoad = numberFrom(whatIfLoadInput);
 
         saveInput("c3Consumed", consumedInput.value);
         saveInput("reactorLoad", loadInput.value);
@@ -383,22 +383,22 @@ function numberFrom(input) {
         saveStock(times.previous, previousInput.value);
         saveStock(times.earlier, earlierInput.value);
 
-const scheduledReadingsAvailable = [
-  stockLatest,
-  stockPrevious,
-  stockEarlier
-].filter(value => value !== null && value >= 0).length;
+    const scheduledReadingsAvailable = [
+        stockLatest,
+        stockPrevious,
+        stockEarlier
+    ].filter(value => value !== null && value >= 0).length;
 
-const currentStockAvailable =
-  stockCurrent !== null && stockCurrent >= 0;
+    const currentStockAvailable =
+        stockCurrent !== null && stockCurrent >= 0;
 
-const validInputs =
-  c3Consumed !== null && c3Consumed >= 0 &&
-  reactorLoad !== null && reactorLoad >= 0 &&
-  (
+    const validInputs =
+        c3Consumed !== null && c3Consumed >= 0 &&
+        reactorLoad !== null && reactorLoad >= 0 &&
+    (
     (currentStockAvailable && scheduledReadingsAvailable >= 1) ||
     (!currentStockAvailable && scheduledReadingsAvailable >= 2)
-  );
+    );
 
 if (!validInputs) {
   results.innerHTML = `
@@ -741,9 +741,9 @@ if (!validInputs) {
         .addEventListener("click", calculate);
 
       calculate();
-    }
+}
 
-    function updateSelectedCalculator() {
+function updateSelectedCalculator() {
       if (selector.value === CALCULATOR_KEY) {
         propylenePanel.style.display = "none";
         panel.hidden = false;
