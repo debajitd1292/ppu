@@ -561,9 +561,8 @@ if (!validInputs) {
           `;
         } else if (changeRate !== null && changeRate < 0) {
           const remaining =
-            stockForProjection -
-            c3Consumed -
-            reactorLoad * elapsedHours;
+          stockForProjection -
+          c3Consumed;
 
           const hoursToShutdown = Math.max(
             0,
