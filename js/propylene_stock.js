@@ -41,7 +41,7 @@ function parseCsv(text) {
   }
 
   if (!records.length) {
-    throw new Error("Propylene Stock CSV is empty.");
+    throw new Error("Propylene Stock CSV is empty");
   }
 
   const headers = records.shift().map((h, i) =>
