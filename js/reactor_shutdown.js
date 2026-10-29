@@ -15,7 +15,7 @@
 
   let config = { ...DEFAULTS };
 
-  function parseCSV(text) {
+function parseCSV(text) {
     const lines = text.trim().split(/\r?\n/);
     if (lines.length < 2) return [];
 
@@ -34,9 +34,9 @@
 
       return record;
     });
-  }
+}
 
-  async function loadDefaults() {
+async function loadDefaults() {
     const response = await fetch(
       CSV_URL + "?v=" + Date.now(),
       { cache: "no-store" }
@@ -59,21 +59,21 @@
         config[key] = value;
       }
     });
-  }
+}
 
-  function localDateKey(date) {
+function localDateKey(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
 
     return `${year}-${month}-${day}`;
-  }
+}
 
-  function slotKey(date) {
+function slotKey(date) {
     return `${localDateKey(date)}_${String(date.getHours()).padStart(2, "0")}`;
-  }
+}
 
-  function getLatestReadingTime(now) {
+function getLatestReadingTime(now) {
     const latest = new Date(now);
     latest.setMinutes(0, 0, 0);
 
@@ -91,9 +91,9 @@
     }
 
     return latest;
-  }
+}
 
-  function getReadingTimes(now) {
+function getReadingTimes(now) {
     const latest = getLatestReadingTime(now);
 
     const previous = new Date(latest);
@@ -103,9 +103,9 @@
     earlier.setHours(earlier.getHours() - 16);
 
     return { latest, previous, earlier };
-  }
+}
 
-  function formatReadingTime(date) {
+function formatReadingTime(date) {
     const dateText = date.toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short"
@@ -118,9 +118,9 @@
     }).replace(/am/i, "AM").replace(/pm/i, "PM");
 
     return `${dateText}, ${timeText}`;
-  }
+}
 
-  function readStock(date, defaultValue) {
+function readStock(date, defaultValue) {
     try {
       const saved = localStorage.getItem(
         STORAGE_PREFIX + "stock:" + slotKey(date)
@@ -130,9 +130,9 @@
     } catch (_) {
       return String(defaultValue);
     }
-  }
+}
 
-  function saveStock(date, value) {
+function saveStock(date, value) {
     try {
       localStorage.setItem(
         STORAGE_PREFIX + "stock:" + slotKey(date),
@@ -141,9 +141,9 @@
     } catch (error) {
       console.warn("Could not save stock reading:", error);
     }
-  }
+}
 
-  function readInput(key, defaultValue) {
+function readInput(key, defaultValue) {
     try {
       const saved = localStorage.getItem(
         STORAGE_PREFIX + key
@@ -153,22 +153,22 @@
     } catch (_) {
       return String(defaultValue);
     }
-  }
+}
 
-  function saveInput(key, value) {
+function saveInput(key, value) {
     try {
       localStorage.setItem(STORAGE_PREFIX + key, value);
     } catch (error) {
       console.warn("Could not save reactor input:", error);
     }
-  }
+}
 
-  function numberFrom(input) {
+function numberFrom(input) {
     if (!input || input.value.trim() === "") return null;
 
     const value = Number(input.value);
     return Number.isFinite(value) ? value : null;
-  }
+}
 
   function formatOneDecimal(value) {
     return Math.abs(value).toFixed(1);
@@ -426,46 +426,46 @@ if (!validInputs) {
         let changeRate = null;
 
         if (liveReadingValid) {
-          // Priority 1: Current Stock vs Earlier Stock
-          if (stockEarlier !== null && stockEarlier >= 0) {
-            const hours =
-              (enteredStockTime.getTime() -
-                times.earlier.getTime()) / 3600000;
+  // Priority 1: Current Stock vs Latest Stock
+  if (stockLatest !== null && stockLatest >= 0) {
+    const hours =
+      (enteredStockTime.getTime() -
+        times.latest.getTime()) / 3600000;
 
-            if (hours > 0) {
-              changeRate = (stockCurrent - stockEarlier) / hours;
-            }
-          }
+    if (hours > 0) {
+      changeRate = (stockCurrent - stockLatest) / hours;
+    }
+  }
 
-          // Priority 2: Current Stock vs Previous Stock
-          if (
-            changeRate === null &&
-            stockPrevious !== null &&
-            stockPrevious >= 0
-          ) {
-            const hours =
-              (enteredStockTime.getTime() -
-                times.previous.getTime()) / 3600000;
+  // Priority 2: Current Stock vs Previous Stock
+  if (
+    changeRate === null &&
+    stockPrevious !== null &&
+    stockPrevious >= 0
+  ) {
+    const hours =
+      (enteredStockTime.getTime() -
+        times.previous.getTime()) / 3600000;
 
-            if (hours > 0) {
-              changeRate = (stockCurrent - stockPrevious) / hours;
-            }
-          }
+    if (hours > 0) {
+      changeRate = (stockCurrent - stockPrevious) / hours;
+    }
+  }
 
-          // Priority 3: Current Stock vs Latest Stock
-          if (
-            changeRate === null &&
-            stockLatest !== null &&
-            stockLatest >= 0
-          ) {
-            const hours =
-              (enteredStockTime.getTime() -
-                times.latest.getTime()) / 3600000;
+  // Priority 3: Current Stock vs Earlier Stock
+  if (
+    changeRate === null &&
+    stockEarlier !== null &&
+    stockEarlier >= 0
+  ) {
+    const hours =
+      (enteredStockTime.getTime() -
+        times.earlier.getTime()) / 3600000;
 
-            if (hours > 0) {
-              changeRate = (stockCurrent - stockLatest) / hours;
-            }
-          }
+    if (hours > 0) {
+      changeRate = (stockCurrent - stockEarlier) / hours;
+    }
+  }
         } else {
           // No valid Current Stock: retain scheduled-reading logic.
           if (
