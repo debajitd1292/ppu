@@ -438,6 +438,7 @@ function renderNext7Days(){
     const year = today.getFullYear();
     const month = today.getMonth();
     const todayDate = today.getDate();
+    const todayStart = new Date(year, month, todayDate);
 
     const firstDay = new Date(year, month, 1);
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -485,21 +486,41 @@ function renderNext7Days(){
 
         const isToday = day === todayDate;
 
-        html += `
-            <div class="calendar-day ${isToday ? "calendar-today" : ""}">
-                <div class="calendar-date">${day}</div>
-                <div class="calendar-shift">
-                    <span class="day-shift ${shiftClass}">${displayShift}</span>
-                </div>
-            </div>
-        `;
-    }
+// Find GH / RH from the existing holiday list
+const holiday = typeof holidays !== "undefined"
+    ? holidays.find(h =>
+        h.date === dateStr &&
+        (h.type === "GH" || h.type === "RH")
+    )
+    : null;
 
-    html += `
+const holidayType = holiday ? holiday.type.toLowerCase() : "";
+
+// Past holiday: steady dot
+// Today / upcoming holiday: blinking dot
+const holidayAnimation =
+    holiday && d >= todayStart ? "holiday-dot-blink" : "";
+
+html += `
+    <div class="calendar-day ${isToday ? "calendar-today" : ""}">
+        <div class="calendar-date">
+            ${day}
+            ${holidayType
+                ? `<span class="calendar-holiday-dot ${holidayType} ${holidayAnimation}"></span>`
+                : ""}
         </div>
-    `;
+        <div class="calendar-shift">
+            <span class="day-shift ${shiftClass}">${displayShift}</span>
+        </div>
+    </div>
+`;
+}
 
-    box.innerHTML = html;
+html += `
+    </div>
+`;
+
+box.innerHTML = html;
 }
 
 /* =========================================================
