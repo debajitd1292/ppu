@@ -409,104 +409,110 @@ if (!validInputs) {
   return;
 }
 
-        const currentTime = new Date();
+const currentTime = new Date();
 
-        const enteredStockTime = currentStockTimestamp
-          ? new Date(currentStockTimestamp)
-          : null;
+const enteredStockTime = currentStockTimestamp
+  ? new Date(currentStockTimestamp)
+  : null;
 
-        const liveReadingValid =
-          stockCurrent !== null &&
-          stockCurrent >= 0 &&
-          enteredStockTime &&
-          Number.isFinite(enteredStockTime.getTime()) &&
-          enteredStockTime.getTime() >= times.latest.getTime() &&
-          enteredStockTime.getTime() <= currentTime.getTime();
+const liveReadingValid =
+  stockCurrent !== null &&
+  stockCurrent >= 0 &&
+  enteredStockTime &&
+  Number.isFinite(enteredStockTime.getTime()) &&
+  enteredStockTime.getTime() <= currentTime.getTime();
 
-        let changeRate = null;
+// Collect all available scheduled readings.
+const readingPoints = [
+  { time: times.earlier, stock: stockEarlier },
+  { time: times.previous, stock: stockPrevious },
+  { time: times.latest, stock: stockLatest }
+];
 
-        if (liveReadingValid) {
-  // Priority 1: Current Stock vs Latest Stock
-  if (stockLatest !== null && stockLatest >= 0) {
-    const hours =
-      (enteredStockTime.getTime() -
-        times.latest.getTime()) / 3600000;
+// Include optional current reading.
+if (liveReadingValid) {
+  readingPoints.push({
+    time: enteredStockTime,
+    stock: stockCurrent
+  });
+}
 
-    if (hours > 0) {
-      changeRate = (stockCurrent - stockLatest) / hours;
-    }
+// Keep valid readings from the last 24 hours.
+const validPoints = readingPoints
+  .filter(point =>
+    point.stock !== null &&
+    point.stock >= 0 &&
+    point.time instanceof Date &&
+    Number.isFinite(point.time.getTime()) &&
+    point.time.getTime() <= currentTime.getTime() &&
+    point.time.getTime() >= currentTime.getTime() - 24 * 3600000
+  )
+  .sort((a, b) => a.time - b.time);
+
+// Remove duplicate timestamps.
+const uniquePoints = [];
+
+validPoints.forEach(point => {
+  const index = uniquePoints.findIndex(
+    item => item.time.getTime() === point.time.getTime()
+  );
+
+  if (index === -1) {
+    uniquePoints.push(point);
+  } else if (liveReadingValid && point.time.getTime() === enteredStockTime.getTime()) {
+    uniquePoints[index] = point;
   }
+});
 
-  // Priority 2: Current Stock vs Previous Stock
-  if (
-    changeRate === null &&
-    stockPrevious !== null &&
-    stockPrevious >= 0
-  ) {
-    const hours =
-      (enteredStockTime.getTime() -
-        times.previous.getTime()) / 3600000;
+// Calculate rate using linear regression.
+let changeRate = null;
 
-    if (hours > 0) {
-      changeRate = (stockCurrent - stockPrevious) / hours;
-    }
+if (uniquePoints.length >= 2) {
+  const meanTime =
+    uniquePoints.reduce(
+      (sum, point) => sum + point.time.getTime() / 3600000,
+      0
+    ) / uniquePoints.length;
+
+  const meanStock =
+    uniquePoints.reduce(
+      (sum, point) => sum + point.stock,
+      0
+    ) / uniquePoints.length;
+
+  let numerator = 0;
+  let denominator = 0;
+
+  uniquePoints.forEach(point => {
+    const time = point.time.getTime() / 3600000;
+
+    numerator +=
+      (time - meanTime) * (point.stock - meanStock);
+
+    denominator += Math.pow(time - meanTime, 2);
+  });
+
+  if (denominator > 0) {
+    changeRate = numerator / denominator;
   }
+}
 
-  // Priority 3: Current Stock vs Earlier Stock
-  if (
-    changeRate === null &&
-    stockEarlier !== null &&
-    stockEarlier >= 0
-  ) {
-    const hours =
-      (enteredStockTime.getTime() -
-        times.earlier.getTime()) / 3600000;
+// Estimate current stock from the latest available reading.
+let stockForProjection = null;
 
-    if (hours > 0) {
-      changeRate = (stockCurrent - stockEarlier) / hours;
-    }
-  }
-        } else {
-          // No valid Current Stock: retain scheduled-reading logic.
-          if (
-            stockLatest !== null &&
-            stockLatest >= 0 &&
-            stockEarlier !== null &&
-            stockEarlier >= 0
-          ) {
-            changeRate = (stockLatest - stockEarlier) / 16;
-          } else if (
-            stockLatest !== null &&
-            stockLatest >= 0 &&
-            stockPrevious !== null &&
-            stockPrevious >= 0
-          ) {
-            changeRate = (stockLatest - stockPrevious) / 8;
-          } else if (
-            stockPrevious !== null &&
-            stockPrevious >= 0 &&
-            stockEarlier !== null &&
-            stockEarlier >= 0
-          ) {
-            changeRate = (stockPrevious - stockEarlier) / 8;
-          }
-        }
+if (uniquePoints.length > 0) {
+  const latestPoint = uniquePoints[uniquePoints.length - 1];
 
-        const elapsedHours = liveReadingValid
-          ? 0
-          : Math.max(
-              0,
-              (currentTime.getTime() -
-                times.latest.getTime()) / 3600000
-            );
+  const elapsedHours =
+    (currentTime.getTime() - latestPoint.time.getTime()) /
+    3600000;
 
-        const stockForProjection = liveReadingValid
-            ? stockCurrent
-            : (
-                stockLatest !== null && stockLatest >= 0
-                    ? stockLatest + (changeRate !== null ? changeRate * elapsedHours : 0)
-                    : stockLatest
-            );
+  stockForProjection =
+    latestPoint.stock +
+    (changeRate !== null
+      ? changeRate * elapsedHours
+      : 0);
+}
 
         let stockStatus = "Stock change rate unavailable";
         let stockClass = "neutral";
@@ -563,32 +569,45 @@ if (!validInputs) {
               </strong>
             </div>
           `;
-        } else if (changeRate !== null && changeRate < 0) {
-          const remaining =
-          stockForProjection -
-          c3Consumed;
+        } else if (
+  changeRate !== null &&
+  changeRate < 0 &&
+  stockForProjection !== null
+) {
+  const remaining =
+    stockForProjection - c3Consumed;
 
-          const hoursToShutdown = Math.max(
-            0,
-            remaining / Math.abs(changeRate)
-          );
+  if (remaining <= 0) {
+    countdownHTML = `
+      <div class="reactor-result-row">
+        <span>Shutdown in</span>
+        <strong>Threshold already reached</strong>
+      </div>
+      <div class="reactor-result-row">
+        <span>Expected Shutdown On</span>
+        <strong>Immediate attention required</strong>
+      </div>
+    `;
+  } else {
+    const hoursToShutdown =
+      remaining / Math.abs(changeRate);
 
-          if (Number.isFinite(hoursToShutdown)) {
-            const expectedShutdown = new Date(
-              currentTime.getTime() + hoursToShutdown * 3600000
-            );
+    const expectedShutdown = new Date(
+      currentTime.getTime() +
+      hoursToShutdown * 3600000
+    );
 
-            countdownHTML = `
-              <div class="reactor-result-row">
-                <span>Shutdown in</span>
-                <strong>${formatCountdown(hoursToShutdown)}</strong>
-              </div>
-              <div class="reactor-result-row">
-                <span>Expected Shutdown On</span>
-                <strong>${formatDateTime(expectedShutdown)}</strong>
-              </div>
-            `;
-          }
+    countdownHTML = `
+      <div class="reactor-result-row">
+        <span>Shutdown in</span>
+        <strong>${formatCountdown(hoursToShutdown)}</strong>
+      </div>
+      <div class="reactor-result-row">
+        <span>Expected Shutdown On</span>
+        <strong>${formatDateTime(expectedShutdown)}</strong>
+      </div>
+    `;
+  }
         } else if (changeRate === 0) {
           countdownHTML = `
             <div class="reactor-result-row">
@@ -715,7 +734,7 @@ if (!validInputs) {
                       </div>
 
                       <p class="reactor-instruction">
-                        This estimate assumes production remains steady
+                        Actual results may vary with operating conditions
                       </p>
                     </div>
                   `;
