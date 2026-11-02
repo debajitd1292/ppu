@@ -944,9 +944,9 @@ body.dark .badge {
 }
 
 .production-target.grade4 {
-    background: linear-gradient(135deg, #ecfdf5, #a7f3d0);
-    color: #047857;
-    border: 1px solid #6ee7b7;
+    background: linear-gradient(135deg, #e0f2fe, #7dd3fc);
+    color: #075985;
+    border: 1px solid #38bdf8;
 }
 
 .production-table{
@@ -1060,9 +1060,9 @@ body.dark .production-today td{
 }
 
 .dark-mode .production-target.grade4 {
-    background: linear-gradient(135deg, #123b35, #18594c);
-    color: #a7f3d0;
-    border: 1px solid #2d8a72;
+    background: linear-gradient(135deg, #123047, #164e63);
+    color: #bae6fd;
+    border: 1px solid #0e7490;
 }
 
 .production-table tbody tr:not(.production-today):not(.production-past) td:first-child{
