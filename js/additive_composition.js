@@ -342,7 +342,7 @@
         propylenePanel.style.display = "none";
         panel.innerHTML = `
           <p class="calculator-result error">
-            Unable to load additive data
+            Unable to load
           </p>
         `;
       });
