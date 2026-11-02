@@ -943,6 +943,12 @@ body.dark .badge {
     font-size: 10px;
 }
 
+.production-target.grade4 {
+    background: linear-gradient(135deg, #ecfdf5, #a7f3d0);
+    color: #047857;
+    border: 1px solid #6ee7b7;
+}
+
 .production-table{
     width:100%;
     border-collapse:separate;
@@ -1051,6 +1057,12 @@ body.dark .production-today td{
     background: linear-gradient(135deg, #422b1b, #593820);
     color: #fed7aa;
     border: 1px solid #c17a3c;
+}
+
+.dark-mode .production-target.grade4 {
+    background: linear-gradient(135deg, #123b35, #18594c);
+    color: #a7f3d0;
+    border: 1px solid #2d8a72;
 }
 
 .production-table tbody tr:not(.production-today):not(.production-past) td:first-child{
