@@ -162,7 +162,7 @@ function renderProductionPlan(){
        PRODUCTION TARGETS
        ========================= */
 
-    const targetOrder = ["WH034", "IH120N", "FH110N"];
+    const targetOrder = ["WH034N", "WH040N", "IH120N", "FH110N"];
 
     const targets = productionTargets
         .filter(r => r.month === currentMonthKey)
@@ -180,7 +180,8 @@ function renderProductionPlan(){
             const gradeClass =
                 i === 0 ? "grade1" :
                 i === 1 ? "grade2" :
-                "grade3";
+                i === 2 ? "grade3" :
+                "grade4";
 
             return `
                 <span class="production-target ${gradeClass}">
