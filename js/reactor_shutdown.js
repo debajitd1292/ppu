@@ -501,8 +501,12 @@ if (!validInputs) {
             );
 
         const stockForProjection = liveReadingValid
-          ? stockCurrent
-          : stockLatest;
+            ? stockCurrent
+            : (
+                stockLatest !== null && stockLatest >= 0
+                    ? stockLatest + (changeRate !== null ? changeRate * elapsedHours : 0)
+                    : stockLatest
+            );
 
         let stockStatus = "Stock change rate unavailable";
         let stockClass = "neutral";
