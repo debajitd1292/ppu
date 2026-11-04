@@ -5010,3 +5010,17 @@ body.dark .calendar-holiday-dot.rh {
     color: #b45309;
     font-style: italic;
 }
+
+/* Safety Observation — Dark Mode */
+body.dark #page-counters .safety-observation-banner {
+    background: #243247 !important;
+    border-color: #405875 !important;
+}
+
+body.dark #page-counters .safety-observation-banner .eco-leave-label {
+    color: #e2e8f0 !important;
+}
+
+body.dark #page-counters .safety-observation-banner #safetyObservationCount {
+    color: #fda4af !important;
+}
