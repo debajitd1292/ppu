@@ -83,24 +83,37 @@ function parseCSV(text) {
 function parseDate(value) {
     if (!value) return null;
 
-    // Expected CSV format: YYYY-MM-DD
-    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const input = value.trim();
+    let day, month, year;
 
-    if (!match) return null;
+    // Accept DD-MM-YYYY
+    let match = input.match(/^(\d{2})-(\d{2})-(\d{4})$/);
 
-    const date = new Date(
-      Number(match[1]),
-      Number(match[2]) - 1,
-      Number(match[3])
-    );
+    if (match) {
+        day = Number(match[1]);
+        month = Number(match[2]);
+        year = Number(match[3]);
+    } else {
 
-    // Reject invalid dates such as 2026-02-31
+        // Also accept existing YYYY-MM-DD entries
+        match = input.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+        if (!match) return null;
+
+        year = Number(match[1]);
+        month = Number(match[2]);
+        day = Number(match[3]);
+    }
+
+    const date = new Date(year, month - 1, day);
+
+    // Reject invalid dates
     if (
-      date.getFullYear() !== Number(match[1]) ||
-      date.getMonth() !== Number(match[2]) - 1 ||
-      date.getDate() !== Number(match[3])
+        date.getFullYear() !== year ||
+        date.getMonth() !== month - 1 ||
+        date.getDate() !== day
     ) {
-      return null;
+        return null;
     }
 
     date.setHours(0, 0, 0, 0);
@@ -185,7 +198,7 @@ function shiftText(shift) {
 
     const cleaned = shift.trim().replace(/\s*shift$/i, "");
     return ` (${cleaned} Shift)`;
-  }
+}
 
 
 
@@ -195,9 +208,17 @@ function eventDateText(date, time, shift) {
     const formattedDate = formatDate(date);
     const formattedTime = (time || "").trim();
 
-    const timeText = /^([01]\d|2[0-3]):([0-5]\d)$/.test(formattedTime)
-        ? `, ${formattedTime} hours`
-        : "";
+    let timeText = "";
+
+    const match = formattedTime.match(/^([01]\d|2[0-3]):([0-5]\d)$/);
+
+    if (match) {
+        const hours = Number(match[1]);
+        const minutes = match[2];
+        const suffix = hours >= 12 ? "PM" : "AM";
+
+        timeText = `, ${String(hours % 12 || 12).padStart(2, "0")}:${minutes} ${suffix}`;
+    }
 
     return formattedDate + timeText + shiftText(shift);
 }
@@ -550,12 +571,14 @@ function fpuCard(row, name, pairStatus = null) {
 
 function formatHistoryTime(value) {
     const match = (value || "").trim().match(/^([01]\d|2[0-3]):([0-5]\d)$/);
+
     if (!match) return value || "Time not available";
 
     const hours = Number(match[1]);
+    const minutes = match[2];
     const suffix = hours >= 12 ? "PM" : "AM";
 
-    return `${String(hours % 12 || 12).padStart(2, "0")}:${match[2]} ${suffix}`;
+    return `${String(hours % 12 || 12).padStart(2, "0")}:${minutes} ${suffix}`;
 }
 
 function formatHistoryDate(value) {
