@@ -47,7 +47,8 @@ function renderCurrentProductionGrade(){
 
     if(!gradeBox || !dateBox) return;
 
-    const today = new Date();
+    const now = new Date();
+    const today = new Date(now);
     today.setHours(0, 0, 0, 0);
 
     function parsePlanDate(value){
@@ -65,7 +66,8 @@ function renderCurrentProductionGrade(){
 
 
 function parseOverrideDate(value){
-    const p = String(value || "").trim().split("-").map(Number);
+    const parts = String(value || "").trim().split(/\s+/);
+    const p = parts[0].split("-").map(Number);
 
     if(p.length !== 3) return null;
 
@@ -73,13 +75,30 @@ function parseOverrideDate(value){
     const month = p[1];
     const year = p[2];
 
-    const d = new Date(year, month - 1, day);
-    d.setHours(0, 0, 0, 0);
+    let hours = 0;
+    let minutes = 0;
+
+    if(parts[1]){
+        const time = parts[1].split(":").map(Number);
+
+        if(time.length !== 2 ||
+           !Number.isInteger(time[0]) ||
+           !Number.isInteger(time[1]) ||
+           time[0] < 0 || time[0] > 23 ||
+           time[1] < 0 || time[1] > 59){
+            return null;
+        }
+
+        hours = time[0];
+        minutes = time[1];
+    }
+
+    const d = new Date(year, month - 1, day, hours, minutes);
 
     return d.getFullYear() === year &&
            d.getMonth() === month - 1 &&
            d.getDate() === day ? d : null;
-    }
+}
 
 
 function formatDate(date){
@@ -91,19 +110,22 @@ function formatDate(date){
     }
 
     const overrides = productionPlans
-        .map(r => ({
-            grade: r.grade,
-            date: parseOverrideDate(r.currentGradeSince)
-        }))
-        .filter(r => r.grade && r.date && r.date <= today)
-        .sort((a, b) => b.date - a.date);
+    .map(r => ({
+        grade: r.grade,
+        date: parseOverrideDate(r.currentGradeSince),
+        hasTime: /\s+\d{1,2}:\d{2}$/.test(r.currentGradeSince || "")
+    }))
+    .filter(r => r.grade && r.date && r.date <= now)
+    .sort((a, b) => b.date - a.date);
 
     let grade = "";
     let since = null;
+    let sinceHasTime = false;
 
     if(overrides.length){
         grade = overrides[0].grade;
         since = overrides[0].date;
+        sinceHasTime = overrides[0].hasTime;
     } else {
         const currentPlan = productionPlans.find(r => {
             const from = parsePlanDate(r.from);
@@ -119,11 +141,52 @@ function formatDate(date){
     }
 
     gradeBox.textContent = grade || "Loading...";
-    dateBox.innerHTML = grade && since
-    ? "Since: " + formatDate(since) +
-      "<br>Days in Current Grade: " +
-      Math.floor((today - since) / 86400000)
-    : "";
+
+if(grade && since){
+
+    const dateText = formatDate(since);
+
+    let durationText = "";
+
+    if(sinceHasTime){
+
+        const totalHours = Math.max(
+            0,
+            Math.floor((now - since) / 3600000)
+        );
+
+        const days = Math.floor(totalHours / 24);
+        const hours = totalHours % 24;
+
+        durationText = days > 0
+            ? `${days} ${days === 1 ? "day" : "days"}, ${hours} ${hours === 1 ? "hour" : "hours"}`
+            : `${hours} ${hours === 1 ? "hour" : "hours"}`;
+
+        dateBox.innerHTML =
+            "Since: " + dateText + ", " +
+            String(since.getHours()).padStart(2, "0") + ":" +
+            String(since.getMinutes()).padStart(2, "0") +
+            " hours" +
+            "<br>Days in Current Grade: " + durationText;
+
+    } else {
+
+        const days = Math.max(
+            0,
+            Math.floor((today - since) / 86400000)
+        );
+
+        durationText =
+            `${days} ${days === 1 ? "day" : "days"}`;
+
+        dateBox.innerHTML =
+            "Since: " + dateText +
+            "<br>Days in Current Grade: " + durationText;
+    }
+
+} else {
+    dateBox.innerHTML = "";
+}
 }
 
 
