@@ -1,6 +1,5 @@
 let trainings = [];
 
-
 function loadTrainingData(trainingText){
 
     if(!trainingText){
@@ -17,10 +16,34 @@ function loadTrainingData(trainingText){
                 date: r[0]?.trim(),
                 name: r[1]?.trim(),
                 type: r[2]?.trim(),
-                attendees: r[3]?.trim()
+                attendees: r.slice(3).join(";").split(";").map(name => name.trim()).filter(Boolean).join(", ")
             };
         })
         .filter(r => r.date);
+}
+
+
+function parseTrainingDate(dateText, defaultYear = new Date().getFullYear()) {
+
+    const parts = String(dateText || "").trim().split("-");
+
+    if (parts.length < 2) return null;
+
+    const day = Number(parts[0]);
+    const month = Number(parts[1]);
+    const year = parts[2] ? Number(parts[2]) : defaultYear;
+
+    const date = new Date(year, month - 1, day);
+
+    if (
+        date.getFullYear() !== year ||
+        date.getMonth() !== month - 1 ||
+        date.getDate() !== day
+    ) {
+        return null;
+    }
+
+    return date;
 }
 
 
@@ -62,19 +85,15 @@ function renderTraining(){
 
         if(!t.date) return false;
 
-        let first =
-            t.date.split("to")[0].trim();
+        const first = t.date.split("to")[0].trim();
+        const trainingDate = parseTrainingDate(first);
 
-        if(!first || !first.includes("-"))
-            return false;
+        if (!trainingDate) return false;
 
-        let parts = first.split("-");
-
-        if(parts.length < 2)
-            return false;
-
-        return String(parseInt(parts[1])) ===
-               String(parseInt(month));
+        return (
+            trainingDate.getMonth() === refDate.getMonth() &&
+            trainingDate.getFullYear() === refDate.getFullYear()
+        );
 
     });
 
@@ -90,22 +109,17 @@ function renderTraining(){
     }
 
 
-    filtered.sort((a,b) => {
+    filtered.sort((a, b) => {
 
-        let da =
-            a.date.split("to")[0].trim();
+        const dateA = parseTrainingDate(
+            a.date.split(/\s+to\s+/i)[0].trim()
+        );
 
-        let db =
-            b.date.split("to")[0].trim();
+        const dateB = parseTrainingDate(
+            b.date.split(/\s+to\s+/i)[0].trim()
+        );
 
-        let [d1,m1] = da.split("-");
-        let [d2,m2] = db.split("-");
-
-        let year =
-            new Date().getFullYear();
-
-        return new Date(year, m1-1, d1) -
-               new Date(year, m2-1, d2);
+        return dateA - dateB;
 
     });
 
@@ -117,37 +131,25 @@ function renderTraining(){
 
     filtered.forEach(t => {
 
-        /* --- extract start & end date --- */
+    /* --- extract start & end date --- */
 
-        let parts =
-            t.date.split("to").map(x => x.trim());
+    let parts = t.date.split(/\s+to\s+/i).map(x => x.trim());
 
-        let [sd, sm] =
-            parts[0].split("-");
+    let startDate = parseTrainingDate(parts[0]);
 
-        let startDate =
-            new Date(
-                today.getFullYear(),
-                sm - 1,
-                sd
-            );
+    if (!startDate) return;
 
+    let endDate = startDate;
 
-        let endDate = startDate;
+    if (parts.length > 1) {
 
+        endDate = parseTrainingDate(
+            parts[1],
+            startDate.getFullYear()
+        );
 
-        if(parts.length > 1){
-
-            let [ed, em] =
-                parts[1].split("-");
-
-            endDate =
-                new Date(
-                    today.getFullYear(),
-                    em - 1,
-                    ed
-                );
-        }
+        if (!endDate) return;
+    }
 
 
         /* --- status check --- */
@@ -194,20 +196,18 @@ function renderTraining(){
                 ${isToday ? "🟢 " :
                   isPast ? "⚪ " : "🟡 "}
 
-                ${t.date.split("to").map(d => {
+                ${t.date.split(/\s+to\s+/i).map(d => {
 
-                    const [day, month] =
-                        d.trim().split("-");
+                    const date = parseTrainingDate(d.trim());
 
-                    const monthName =
-                        new Date(
-                            2000,
-                            Number(month) - 1,
-                            1
-                        ).toLocaleString(
-                            "en-US",
-                            { month: "short" }
-                        );
+                    if (!date) return d.trim();
+
+                    const day = String(date.getDate()).padStart(2, "0");
+
+                    const monthName = date.toLocaleString(
+                        "en-US",
+                        { month: "short" }
+                    );
 
                     return `${day} ${monthName}`;
 
@@ -226,7 +226,7 @@ function renderTraining(){
 
             ${t.attendees ? `
                <div class="training-attendees">
-                    Attended by: ${t.attendees}
+                    Attendees: ${t.attendees}
                </div>
            ` : ""}
 
@@ -426,7 +426,7 @@ async function openSOPTrainingPopup() {
 
     document.body.appendChild(overlay);
 
-    function closePopup() {
+function closePopup() {
         overlay.classList.remove("is-open");
         document.body.style.overflow = "";
     }
