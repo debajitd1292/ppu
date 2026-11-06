@@ -1,0 +1,114 @@
+1. additive_composition
+
+(function () { "use strict"
+function parseCSV(text)
+async function loadCSV()
+function readBatch(category, defaultBatch)
+function saveBatch(category, value)
+function formatBags(value)
+function initCalculator()
+
+2. alerts
+
+function parseAlertDateTime(value)
+function getActiveAlerts()
+function loadAlerts()
+function renderAlerts()
+
+
+3. app
+
+function animateDataOnFirstLoad(element, key)
+function loadSeniority(execText, nonExecText)
+function sortBySeniority(list)
+function updatePresentShiftIncharge()
+function init()
+function refresh()
+function render(id,date)
+function autoRefreshData()
+function syncCounterSelectors() 
+function populateCounterNames()
+function renderCounterPageData()
+function onCountersCategoryChange() 
+function onCountersNameChange()
+function navigateToPage(page, addHistory = true) 
+function updateNavArrows() 
+function revealActiveNavItem()
+(function () ideal timer
+function returnHomeIfIdle()
+function resetIdleTimer()
+
+4. config
+
+function updateShiftUrls()
+
+5. data
+
+function parseCSV(text)
+function normalizeShiftMonthHeaders(monthData, monthDate)
+function mergeShiftData(previous, current, next, monthDates = [])
+function fetchCSV(url, optional = false)
+
+6. holiday
+
+function normalizeHolidayDate(dateStr)
+function loadHolidayData(holidayText)
+function formatHolidayDate(dateStr)
+function isSpecialDay()
+function updateTodayReason()
+function calcHoliday()
+
+7. ims
+
+function loadIMSData(csvText)
+function renderIMSTargets()
+function getAchievementPercentage(row, sourceName)
+function addValue(label, value)
+
+8. loader
+
+9. notes
+
+function loadNotesData(notesText)
+function getTodayNote()
+
+10. plant
+
+(function () { "use strict"
+function parseCSV(text)
+function parseDate(value)
+function formatDate(value)
+function parseEventDateTime(dateValue, timeValue)
+function formatDuration(startDate, timeValue = "")
+function shiftText(shift)
+function eventDateText(date, time, shift)
+function escapeHTML(value)
+function getRow(rows, type, name)
+function setNote(message)
+function getMonthlyShutdownData(events)
+function majorCard(name, allEvents)
+function fpuCard(row, name, pairStatus = null)
+function formatHistoryTime(value)
+function formatHistoryDate(value)
+function ensureMajorHistoryPopup()
+function closePopup()
+function openMajorHistoryPopup(equipmentName)
+function setupMajorHistoryClick()
+function render(rows, majorEvents)
+async function refreshPlantStatus()
+function startPlantStatus()
+
+11. production
+
+function loadProductionData(productionPlanText, productionTargetText)
+function renderCurrentProductionGrade()
+function parseOverrideDate(value)
+function formatDate(date)
+function formatTime(date)
+function renderProductionPlan()
+
+
+
+
+
+
