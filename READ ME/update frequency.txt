@@ -1,0 +1,16 @@
+UPDATE FREQUENCY:
+
+When changed
+-----------------------------------------------------
+REACTOR, EXTRUDER, DRYER, TREATER, FILTER: File- main/updates/major_equipment_shutdown & plant_status
+Current production grade: main/production/production_plan.csv
+
+
+Monthly:
+Executive shift schedule : File- main/exec/file name to be done as per month
+Non Executive shift schedule : File- main/nonexec/file name to be done as per month
+Production plan: main/production/production_plan.csv
+Production target: main/production/production_target.csv
+
+ 
+
