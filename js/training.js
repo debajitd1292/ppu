@@ -374,6 +374,24 @@ async function openSOPTrainingPopup() {
                 font-size: .85rem;
             }
 
+            .sop-training-action {
+                display: block;
+                width: 100%;
+                margin-top: 16px;
+                padding: 11px 14px;
+                border: 1px solid var(--border-color, #d1d5db);
+                border-radius: 10px;
+                background: var(--surface-secondary, #f1f5f9);
+                color: var(--text-primary, #111827);
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .sop-training-action:active {
+                opacity: .75;
+            }
+
             @media (min-width: 600px) {
                 #sopTrainingOverlay {
                     align-items: center;
@@ -400,10 +418,10 @@ async function openSOPTrainingPopup() {
 
                 <div>
                     <h2 class="sop-training-title">
-                        SOP Training Schedule
+                        List of SOPs
                     </h2>
 
-                    <div class="sop-training-subtitle">
+                    <div class="sop-training-subtitle" id="sopTrainingSubtitle">
                         ${monthName} ${year}
                     </div>
                 </div>
@@ -417,7 +435,7 @@ async function openSOPTrainingPopup() {
             <div class="sop-training-list"
                  id="sopTrainingList">
                 <div class="sop-training-empty">
-                    Loading SOP training schedule...
+                    Loading List of SOPs...
                 </div>
             </div>
 
@@ -461,52 +479,151 @@ function closePopup() {
         const csvText = await response.text();
         const rows = parseCSV(csvText);
 
-        const sopList = rows.slice(1)
+                const allSopRows = rows.slice(1)
             .map(r => ({
                 month: Number(r[0]),
                 year: Number(r[1]),
                 number: r[2]?.trim(),
                 name: r[3]?.trim()
             }))
+            .filter(r => r.number && r.name);
+
+        // Monthly SOP list
+        const sopList = allSopRows
             .filter(r =>
                 r.month === month &&
-                r.year === year &&
-                r.number &&
-                r.name
+                r.year === year
             )
             .sort((a, b) =>
                 Number(a.number) - Number(b.number)
             );
 
+        // All unique SOP number/name combinations
+        const allSopList = [
+            ...new Map(
+                allSopRows.map(sop => [
+                    `${sop.number}||${sop.name}`,
+                    sop
+                ])
+            ).values()
+        ].sort((a, b) =>
+            Number(a.number) - Number(b.number)
+        );
+
         const list = document.getElementById("sopTrainingList");
+        const subtitle = document.getElementById("sopTrainingSubtitle");
 
         if (!list) return;
 
-        if (!sopList.length) {
+        // Render monthly schedule
+        function renderMonthlySOPs() {
 
-            list.innerHTML = `
-                <div class="sop-training-empty">
-                    No SOP training details available for
-                    ${monthName} ${year}.
-                </div>
+            if (subtitle) {
+                subtitle.innerText = `${monthName} ${year}`;
+            }
+
+            let html = "";
+
+            if (!sopList.length) {
+
+                html += `
+                    <div class="sop-training-empty">
+                        No SOP training details available for
+                        ${monthName} ${year}.
+                    </div>
+                `;
+
+            } else {
+
+                html += sopList.map(sop => `
+                    <div class="sop-training-row">
+
+                        <div class="sop-training-number">
+                            ${escapeHTML(sop.number)}
+                        </div>
+
+                        <div class="sop-training-name">
+                            ${escapeHTML(sop.name)}
+                        </div>
+
+                    </div>
+                `).join("");
+            }
+
+            html += `
+                <button type="button"
+                        class="sop-training-action"
+                        data-sop-action="all">
+                    View All SOPs
+                </button>
             `;
 
-            return;
+            list.innerHTML = html;
         }
 
-        list.innerHTML = sopList.map(sop => `
-            <div class="sop-training-row">
+        // Render complete SOP list
+        function renderAllSOPs() {
 
-                <div class="sop-training-number">
-                    ${sop.number}
-                </div>
+            if (subtitle) {
+                subtitle.innerText = "All SOPs";
+            }
 
-                <div class="sop-training-name">
-                    ${escapeHTML(sop.name)}
-                </div>
+            let html = "";
 
-            </div>
-        `).join("");
+            if (!allSopList.length) {
+
+                html = `
+                    <div class="sop-training-empty">
+                        No SOP details available.
+                    </div>
+                `;
+
+            } else {
+
+                html = allSopList.map(sop => `
+                    <div class="sop-training-row">
+
+                        <div class="sop-training-number">
+                            ${escapeHTML(sop.number)}
+                        </div>
+
+                        <div class="sop-training-name">
+                            ${escapeHTML(sop.name)}
+                        </div>
+
+                    </div>
+                `).join("");
+            }
+
+            html += `
+                <button type="button"
+                        class="sop-training-action"
+                        data-sop-action="monthly">
+                    ← Back to Schedule
+                </button>
+            `;
+
+            list.innerHTML = html;
+        }
+
+        // Handle button clicks
+        list.addEventListener("click", event => {
+
+            const button = event.target.closest("[data-sop-action]");
+
+            if (!button) return;
+
+            if (button.dataset.sopAction === "all") {
+                renderAllSOPs();
+            }
+
+            if (button.dataset.sopAction === "monthly") {
+                renderMonthlySOPs();
+            }
+        });
+
+        // Show monthly schedule initially
+        renderMonthlySOPs();
 
     } catch (error) {
 
