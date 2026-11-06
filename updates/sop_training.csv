@@ -1,23 +1,23 @@
 ﻿Month,Year,SOP No.,SOP Name
 4,2026,1,Line up of Propylene to FPU
-4,2026,2,Propylene Dryer Changeover (CC-110A ↔ CC-110B) 
-4,2026,3,Propylene Treater Changeover (CC-111A ↔ CC-111B) 
-4,2026,4,Propylene Filter Changeover (GN-110A ↔ GN-110B)
-4,2026,5,Propylene Dryer Regeneration (CC-110 A/B) 
-4,2026,5.1,Propylene Dryer Regeneration sheet (CC-110 A/B) 
-4,2026,6,Propylene Treater Regeneration (CC-111 A/B) 
-4,2026,6.1,Propylene Treater Regeneration Sheet (CC-111 A/B) 
-4,2026,7,Hydrogen line up to Reactor
+4,2026,2,Propylene Dryer Changeover
+4,2026,3,Propylene Treater Changeover
+4,2026,4,Propylene Filter Changeover
+4,2026,5,Propylene Dryer Regeneration
+4,2026,5.1,Propylene Dryer Regeneration Sheet
+4,2026,6,Propylene Treater Regeneration
+4,2026,6.1,Propylene Treater Regeneration Sheet
+4,2026,7,Hydrogen line up to the Reactor
 5,2026,8,Displacement of Air with Nitrogen in Reactor and Leak Test
 5,2026,9,Powder filling to the Reactor
 5,2026,10,Displacement of Air with Nitrogen in Cool-loop and Leak Test
-5,2026,11,Propylene Filling to RG Condenser Cool Loop and Start-up of Pump PA-310A/B
+5,2026,11,Propylene Filling to RG Condenser Cool Loop and Start-up of Recycle Pump
 5,2026,12,Reactor Start-up Procedure
 5,2026,13,Reactor Shutdown with CO2
 5,2026,14,Reactor Shutdown without CO2
 6,2026,15,Reactor Vessel Entry
 6,2026,16,Blockage Removal from Reactor Discharge Line
-6,2026,17,Leak Test and Purging of Discharge and Purge Vessel.
+6,2026,17,Leak Test and Purging of Discharge and Purge Vessel
 6,2026,18,Start-up of Powder Discharge and Purge Vessel
 6,2026,19,Leak Test and Purging of Powder Conveying System
 6,2026,20,Start-up of Powder Conveying System
@@ -44,12 +44,12 @@
 9,2026,40,TEAl Container Connection with Loading arm
 9,2026,41,TEAl Container Unloading to Holding Tank
 9,2026,42,TEAL Container Unloading arm Disconnection
-10,2026,43,Start-up of TEAl Pump (PA-170 A/B)
+10,2026,43,Start-up of TEAl Pump
 10,2026,44,Teal Pump Change Over to Standby Pump
 10,2026,45,Flushing TEAL System
 10,2026,46,VV–171 Draining and Filling with White Oil
-10,2026,47,Filling of Silane Holding Tank (VV–190)
-10,2026,48,Operation of Silane Pumps (PA-190 A/B)
+10,2026,47,Filling of Silane Holding Tank
+10,2026,48,Operation of Silane Pumps
 10,2026,49,Leak Test and Purging of White Oil Preparation System
 11,2026,50,Leak Test and Purging of White Oil Atmer Mixture Preparation System
 11,2026,51,Leak Test and Purging of Waste White Oil System
@@ -61,7 +61,7 @@
 12,2026,57,Preparation for Start Up of Membrane Unit
 12,2026,58,Start Up of Membrane Unit
 12,2026,59,Shutdown of Membrane Unit
-12,2026,60,Inlet Filter Change Over (GN–651A ↔ GN–651A)
+12,2026,60, Membrane Unit Inlet Filter Change Over
 12,2026,61,Preparation for Start-up of HP N2 Howden Compressor
 1,2027,62,Start-up of HP N2 Howden Compressor
 1,2027,63,Shutdown of HP N2 Howden Compressor
@@ -80,5 +80,5 @@
 3,2027,76,Start-up of Peroxide Circulation around the Feeding Tank and Feeding to Extruder
 3,2027,77,Month end job for the specific purpose of MIS
 3,2027,78,Process Mock Drill in PPU
-3,2027,79,CG Compressor LO Cooler Changeover (EE-604A ↔ EE-604B)
-3,2027,80,Recycle Gas Filter Changeover (GN-310A ↔ GN-310B)
+3,2027,79,CG Compressor L.O. Cooler Changeover
+3,2027,80,Recycle Gas Filter Changeover
