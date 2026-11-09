@@ -350,6 +350,11 @@ function openHolidayList(type) {
                 white-space: nowrap;
             }
 
+            .holiday-list-date.upcoming {
+               background: #dcfce7;
+               color: #166534;
+            }
+
             .holiday-list-name {
                 flex: 1;
                 padding-top: 7px;
@@ -409,7 +414,17 @@ function openHolidayList(type) {
                     ? holidayList.map(h => `
                         <div class="holiday-list-row">
 
-                            <div class="holiday-list-date">
+                            <div class="holiday-list-date ${
+                                (() => {
+                                    const [d, m, y] = h.date.split("-").map(Number);
+                                    const holidayDate = new Date(y, m - 1, d);
+
+                                    const today = new Date();
+                                    today.setHours(0, 0, 0, 0);
+
+                                    return holidayDate > today ? "upcoming" : "";
+                                })()
+                            }">
                                 ${formatHolidayDate(h.date)}
                             </div>
 
