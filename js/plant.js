@@ -805,6 +805,7 @@ function ensureMajorHistoryPopup() {
     });
 }
 
+
 function openMajorHistoryPopup(equipmentName) {
     ensureMajorHistoryPopup();
 
@@ -812,6 +813,9 @@ function openMajorHistoryPopup(equipmentName) {
     const monthName = now.toLocaleString("en-IN", { month: "long" });
     const year = now.getFullYear();
 
+    const monthStart = new Date(year, now.getMonth(), 1, 0, 0, 0, 0);
+
+    // Get actual Start/Stop events of the current month.
     const events = lastGoodMajorEvents
         .filter((row) =>
             (row.equipment_name || "").trim().toLowerCase() ===
@@ -825,15 +829,56 @@ function openMajorHistoryPopup(equipmentName) {
         }))
         .filter((row) =>
             row.dateTime &&
+            row.dateTime >= monthStart &&
             row.dateTime.getFullYear() === year &&
             row.dateTime.getMonth() === now.getMonth() &&
+            (row.event === "startup" || row.event === "shutdown")
+        );
+
+    // Find the latest valid event before the current month.
+    const previousEvents = lastGoodMajorEvents
+        .filter((row) =>
+            (row.equipment_name || "").trim().toLowerCase() ===
+            equipmentName.toLowerCase()
+        )
+        .map((row) => ({
+            event: (row.event || "").trim().toLowerCase(),
+            dateTime: parseEventDateTime(row.date, row.time)
+        }))
+        .filter((row) =>
+            row.dateTime &&
+            row.dateTime < monthStart &&
             (row.event === "startup" || row.event === "shutdown")
         )
         .sort((a, b) => b.dateTime - a.dateTime);
 
+    // Add a generated month-opening status only when previous history exists.
+    if (previousEvents.length > 0) {
+        const previousEvent = previousEvents[0];
+        const isRunning = previousEvent.event === "startup";
+
+        const day = String(monthStart.getDate()).padStart(2, "0");
+        const month = String(monthStart.getMonth() + 1).padStart(2, "0");
+        const dateString = `${day}-${month}-${year}`;
+
+        events.push({
+            event: isRunning ? "startup" : "shutdown",
+            date: dateString,
+            time: "00:00",
+            dateTime: monthStart,
+            note: isRunning
+                ? "Running from Previous Month"
+                : "Shutdown from Previous Month",
+            isPreviousMonthStatus: true
+        });
+    }
+
+    // Retain the existing newest-first history order.
+    events.sort((a, b) => b.dateTime - a.dateTime);
+
     const overlay = document.getElementById("majorHistoryOverlay");
 
-        document.getElementById("majorHistorySubtitle").textContent =
+    document.getElementById("majorHistorySubtitle").textContent =
         `${equipmentName} • ${monthName} ${year}`;
 
     const monthlyData = getMonthlyShutdownData(
@@ -844,11 +889,11 @@ function openMajorHistoryPopup(equipmentName) {
     );
 
     document.getElementById("majorHistoryDowntime").textContent =
-    `Total Downtime: ${
-        monthlyData.days > 0
-            ? `${monthlyData.days} days & ${monthlyData.hours} hours`
-            : `${monthlyData.hours} hours`
-    }`;
+        `Total Downtime: ${
+            monthlyData.days > 0
+                ? `${monthlyData.days} days & ${monthlyData.hours} hours`
+                : `${monthlyData.hours} hours`
+        }`;
 
     const list = document.getElementById("majorHistoryList");
 
@@ -868,15 +913,25 @@ function openMajorHistoryPopup(equipmentName) {
                         ${isStart ? "START" : "STOP"}
                     </span>
 
-                    <div>
-                        <div class="major-history-date">
-                            ${escapeHTML(formatHistoryDate(item.date))}
+                    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">
+                        <div style="display:flex;align-items:baseline;gap:8px;">
+                            <span class="major-history-date">
+                                ${escapeHTML(formatHistoryDate(item.date))}
+                            </span>
+
+                            <span class="major-history-time">
+                                ${escapeHTML(formatHistoryTime(item.time))}
+                            </span>
                         </div>
 
-                        <div class="major-history-time">
-                            ${escapeHTML(formatHistoryTime(item.time))}
-                        </div>
-                    </div>
+                        ${
+                            item.note
+                                ? `<div style="font-size:.76rem;color:var(--text-secondary,#64748b);font-weight:600;">
+                                    ${escapeHTML(item.note)}
+                                    </div>`
+                                : ""
+                        }
+                   </div>
                 </div>
             `;
         }).join("");
@@ -888,6 +943,7 @@ function openMajorHistoryPopup(equipmentName) {
         overlay.classList.add("is-open");
     });
 }
+
 
 function setupMajorHistoryClick() {
     const container = $("plantMajorCards");
