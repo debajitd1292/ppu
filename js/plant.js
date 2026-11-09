@@ -250,7 +250,12 @@ function getRow(rows, type, name) {
   
 function getMonthlyShutdownData(events) {
   const now = new Date();
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthStart = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1,
+    6, 0, 0, 0
+  );
   const elapsedMonthMs = Math.max(0, now.getTime() - monthStart.getTime());
 
   const ordered = events
@@ -813,7 +818,7 @@ function openMajorHistoryPopup(equipmentName) {
     const monthName = now.toLocaleString("en-IN", { month: "long" });
     const year = now.getFullYear();
 
-    const monthStart = new Date(year, now.getMonth(), 1, 0, 0, 0, 0);
+    const monthStart = new Date(year, now.getMonth(), 1, 6, 0, 0, 0);
 
     // Get actual Start/Stop events of the current month.
     const events = lastGoodMajorEvents
@@ -864,7 +869,7 @@ function openMajorHistoryPopup(equipmentName) {
         events.push({
             event: isRunning ? "startup" : "shutdown",
             date: dateString,
-            time: "00:00",
+            time: "06:00",
             dateTime: monthStart,
             note: isRunning
                 ? "Running from Previous Month"
