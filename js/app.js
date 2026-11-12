@@ -626,6 +626,7 @@ function navigateToPage(page, addHistory = true) {
         "more",
         "ims",
         "calculator",
+        "intercoms",
         "others"
     ];
 
@@ -768,6 +769,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "training",
         "ims",
         "calculator",
+        "intercoms",
         "others"
     ];
 
