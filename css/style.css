@@ -5029,3 +5029,651 @@ body.dark #page-counters .safety-observation-banner #safetyObservationCount {
     color: var(--text-secondary);
     margin-top: 3px;
 }
+
+
+/* =========================================================
+   INTERCOM DIRECTORY — scoped styles
+   ========================================================= */
+
+#page-intercoms .intercom-page-card {
+    padding: 16px;
+}
+
+/* Page heading — consistent with dashboard headings */
+#page-intercoms .intercom-page-title {
+    margin: 8px 0 16px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #1f4e79, #2563a6);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+body.dark #page-intercoms .intercom-page-title {
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1e3a5f, #263b59);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+#page-intercoms .intercom-page-subtitle {
+    margin: 0 0 15px;
+    color: var(--secondary-text, #64748b);
+    font-size: 12px;
+}
+
+/* Search */
+#page-intercoms .intercom-search-wrap {
+    position: relative;
+    margin-bottom: 14px;
+}
+
+#page-intercoms .intercom-search-wrap input {
+    width: 100%;
+    height: 42px;
+    margin: 0;
+    padding: 8px 12px 8px 38px;
+    border: 1px solid #cbd5e1;
+    border-radius: 11px;
+    background: #f8fafc;
+    color: #1f2937;
+    box-sizing: border-box;
+    font-size: 13px;
+}
+
+#page-intercoms .intercom-search-icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: 17px;
+    pointer-events: none;
+}
+
+/* Category grid */
+#page-intercoms .intercom-category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+#page-intercoms .intercom-category-card {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    min-height: 78px;
+    padding: 11px 9px;
+    border: 1px solid color-mix(in srgb, var(--intercom-accent) 24%, transparent);
+    border-radius: 13px;
+    background: var(--intercom-tint);
+    color: #1f2937;
+    text-align: left;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+#page-intercoms .intercom-category-card:active {
+    transform: scale(.98);
+}
+
+#page-intercoms .intercom-category-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(255,255,255,.72);
+    font-size: 18px;
+}
+
+#page-intercoms .intercom-category-copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+#page-intercoms .intercom-category-copy strong {
+    color: #1e293b;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+#page-intercoms .intercom-category-copy small {
+    color: #475569;
+    font-size: 10px;
+}
+
+#page-intercoms .intercom-category-chevron {
+    color: var(--intercom-accent);
+    font-size: 23px;
+    line-height: 1;
+}
+
+#page-intercoms .intercom-empty-state {
+    padding: 24px 10px;
+    color: #64748b;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* Dark mode — page */
+body.dark #page-intercoms .intercom-page-heading {
+    color: #93c5fd;
+}
+
+body.dark #page-intercoms .intercom-page-subtitle {
+    color: #a8b8cc;
+}
+
+body.dark #page-intercoms .intercom-search-wrap input {
+    border-color: #405875;
+    background: #202f43;
+    color: #e2e8f0;
+}
+
+body.dark #page-intercoms .intercom-category-card {
+    border-color: color-mix(in srgb, var(--intercom-accent) 48%, #334155);
+    background: #263c57;
+    color: #e2e8f0;
+}
+
+body.dark #page-intercoms .intercom-category-icon {
+    background: #1b2c42;
+}
+
+body.dark #page-intercoms .intercom-category-copy strong {
+    color: #f1f5f9;
+}
+
+body.dark #page-intercoms .intercom-category-copy small,
+body.dark #page-intercoms .intercom-empty-state {
+    color: #bdcadd;
+}
+
+/* =========================================================
+   iPhone-style bottom sheet
+   ========================================================= */
+
+#intercomPopupOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 12px;
+    background: rgba(15,23,42,.52);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .22s ease, visibility .22s ease;
+}
+
+#intercomPopupOverlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+#intercomPopupSheet {
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 540px);
+    max-height: min(78vh, 720px);
+    overflow: hidden;
+    border-radius: 25px 25px 18px 18px;
+    background: #ffffff;
+    color: #1f2937;
+    box-shadow: 0 18px 60px rgba(0,0,0,.28);
+    transform: translateY(25px);
+    transition: transform .22s ease;
+}
+
+#intercomPopupOverlay.is-open #intercomPopupSheet {
+    transform: translateY(0);
+}
+
+.intercom-popup-grabber {
+    width: 38px;
+    height: 4px;
+    margin: 10px auto 3px;
+    border-radius: 99px;
+    background: #a3a3a3;
+}
+
+.intercom-popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 17px 14px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.intercom-popup-title {
+    margin: 0;
+    color: #1f4e79;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.intercom-popup-close {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 50%;
+    background: #eef2f7;
+    color: #334155;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.intercom-popup-list {
+    overflow-y: auto;
+    padding: 3px 17px 20px;
+}
+
+/* Contact row — name and numbers on the same line */
+.intercom-contact-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 13px 0;
+    border-bottom: 1px solid #e5eaf0;
+}
+
+.intercom-contact-name {
+    flex: 1 1 30%;
+    min-width: 75px;
+    margin: 0;
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.intercom-contact-numbers {
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.intercom-number {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    min-width: 48px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #1e3a5f;
+    font-size: 11px;
+}
+
+.intercom-number span {
+    color: #64748b;
+    font-size: 10px;
+}
+
+.intercom-number strong {
+    color: #1d4ed8;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.intercom-number-missing,
+.intercom-popup-empty {
+    padding: 12px 0;
+    color: #64748b;
+    font-size: 12px;
+}
+
+/* Dark mode — popup */
+body.dark #intercomPopupSheet {
+    background: #1d2d42;
+    color: #e2e8f0;
+}
+
+body.dark .intercom-popup-header,
+body.dark .intercom-contact-row {
+    border-color: #3a506b;
+}
+
+body.dark .intercom-popup-title,
+body.dark .intercom-contact-name {
+    color: #bfdbfe;
+}
+
+body.dark .intercom-popup-close {
+    background: #30445d;
+    color: #e2e8f0;
+}
+
+body.dark .intercom-number {
+    background: #263f60;
+    color: #dbeafe;
+}
+
+body.dark .intercom-number span,
+body.dark .intercom-number-missing,
+body.dark .intercom-popup-empty {
+    color: #aebed1;
+}
+
+body.dark .intercom-number strong {
+    color: #93c5fd;
+}
+
+/* Desktop popup alignment */
+@media (min-width: 600px) {
+    #intercomPopupOverlay {
+        align-items: center;
+    }
+}
+
+/* Small mobile screens */
+@media (max-width: 380px) {
+    #page-intercoms .intercom-category-grid {
+        gap: 7px;
+    }
+
+    #page-intercoms .intercom-category-card {
+        gap: 6px;
+        padding: 9px 6px;
+    }
+
+    #page-intercoms .intercom-category-icon {
+        flex-basis: 30px;
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+
+    #page-intercoms .intercom-category-copy strong {
+        font-size: 13px;
+    }
+
+    .intercom-contact-row {
+        gap: 6px;
+    }
+
+    .intercom-contact-name {
+        min-width: 65px;
+        font-size: 12px;
+    }
+
+    .intercom-contact-numbers {
+        gap: 5px;
+    }
+
+    .intercom-number {
+        min-width: 40px;
+        padding: 5px 6px;
+    }
+
+    .intercom-number span {
+        font-size: 9px;
+    }
+
+    .intercom-number strong {
+        font-size: 12px;
+    }
+}
+
+
+
+/* =========================================================
+   GRADE SPECIFICATIONS
+   ========================================================= */
+
+#page-production .grade-spec-card {
+    margin: 18px 10px;
+    padding: 16px 14px;
+    border-radius: 14px;
+    background: #ffffff;
+    box-sizing: border-box;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* Heading — same as Intercoms */
+#page-production .grade-spec-heading {
+    margin: 8px 0 16px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #1f4e79, #2563a6);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}
+
+/* Dark heading */
+body.dark #page-production .grade-spec-heading {
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1e3a5f, #263b59);
+    color: #e2e8f0;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+/* Dropdown label and select */
+#page-production .grade-spec-card > label {
+    display: block;
+    margin: 0 0 8px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#page-production #gradeSpecificationSelect {
+    width: 100%;
+    min-height: 44px;
+    margin: 0 0 16px;
+    padding: 9px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #1f2937;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* Dark mode card and dropdown */
+body.dark #page-production .grade-spec-card {
+    background: linear-gradient(135deg, #263f60, #1e3350);
+    color: #e2eaf5;
+    border: 1px solid #496789;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+body.dark #page-production .grade-spec-card > label {
+    color: #cbd5e1;
+}
+
+body.dark #page-production #gradeSpecificationSelect {
+    border-color: #496789;
+    background: #1f2937;
+    color: #e2e8f0;
+}
+
+/* Grade information */
+.grade-spec-info {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.grade-spec-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid #dbe4ee;
+    border-radius: 9px;
+    background: #f8fafc;
+}
+
+
+.grade-spec-info-item span {
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.grade-spec-info-item strong {
+    color: #1e3a5f;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+/* Dark mode grade information */
+body.dark .grade-spec-info-item {
+    background: #1b2c42;
+    border-color: #405875;
+}
+
+body.dark .grade-spec-info-item span {
+    color: #a8b8cc;
+}
+
+body.dark .grade-spec-info-item strong {
+    color: #e2e8f0;
+}
+
+/* A/B comparison headings */
+.grade-spec-column-headings,
+.grade-spec-values {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.grade-spec-column-headings {
+    margin-bottom: 10px;
+}
+
+.grade-spec-a-heading,
+.grade-spec-b-heading {
+    padding: 10px 5px;
+    border-radius: 9px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    box-sizing: border-box;
+}
+
+/* A GRADE — same colour in both modes */
+.grade-spec-a-heading,
+.grade-spec-a {
+    background: #bbf7d0;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+/* B GRADE — same colour in both modes */
+.grade-spec-b-heading,
+.grade-spec-b {
+    background: #fecaca;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+/* Specification rows */
+.grade-spec-row {
+    margin-bottom: 11px;
+}
+
+.grade-spec-label {
+    margin-bottom: 5px;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.grade-spec-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 39px;
+    padding: 7px 4px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+}
+
+.grade-spec-blank {
+    opacity: 0.45;
+}
+
+/* Messages */
+.grade-spec-message {
+    padding: 18px 8px;
+    color: #64748b;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* Dark mode specification labels and messages */
+body.dark .grade-spec-label {
+    color: #dbeafe;
+}
+
+body.dark .grade-spec-message {
+    color: #aebed1;
+}
+
+/* Keep A/B columns side by side on all mobile sizes */
+@media (max-width: 380px) {
+    #page-production .grade-spec-card {
+        padding: 13px 10px;
+    }
+
+    .grade-spec-info {
+        gap: 6px;
+    }
+
+    .grade-spec-info-item {
+        padding: 8px;
+    }
+
+    .grade-spec-column-headings,
+    .grade-spec-values {
+        gap: 6px;
+    }
+
+    .grade-spec-value {
+        font-size: 12px;
+    }
+}
