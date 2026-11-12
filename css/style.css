@@ -5442,6 +5442,22 @@ body.dark .intercom-number strong {
     }
 }
 
+.intercom-call-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #15803d;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.intercom-call-link:active {
+    opacity: 0.7;
+}
+
+body.dark .intercom-call-link {
+    color: #86efac;
+}
 
 
 /* =========================================================
