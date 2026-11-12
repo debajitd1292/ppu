@@ -238,6 +238,29 @@
 
 </div>
 
+<!-- GRADE SPECIFICATIONS -->
+<div class="card grade-spec-card">
+
+    <h3 class="grade-spec-heading">Grade Specifications</h3>
+
+    <label for="gradeSpecificationSelect">
+        Select Grade
+    </label>
+
+    <select id="gradeSpecificationSelect">
+        <option value="">Select Grade</option>
+        <option value="WH034N">WH034N</option>
+        <option value="WH040N">WH040N</option>
+        <option value="IH120N">IH120N</option>
+        <option value="FH110N">FH110N</option>
+    </select>
+
+    <div id="gradeSpecificationContent" class="production-empty grade-spec-content" aria-live="polite">
+        Select a grade to view its specifications
+    </div>
+
+</div>
+
 </div>
 
 <div class="app-page" id="page-training">
@@ -345,6 +368,34 @@
   </div>
 </div>
 
+<div class="app-page" id="page-intercoms">
+  <div class="card intercom-page-card">
+
+    <div class="intercom-page-title">
+        Important Intercom Contacts
+    </div>
+
+    <div class="intercom-search-wrap">
+      <span class="intercom-search-icon">⌕</span>
+      <input
+        type="search"
+        id="intercomSearch"
+        placeholder="Search category or contact..."
+        autocomplete="off"
+      >
+    </div>
+
+    <div id="intercomCategoryGrid"
+         class="intercom-category-grid"></div>
+
+    <div id="intercomEmptyState"
+         class="intercom-empty-state" hidden>
+      Loading intercom directory...
+    </div>
+
+  </div>
+</div>
+
 
 <div class="app-page" id="page-others">
   <div class="card settings-card">
@@ -364,6 +415,29 @@
       <p><span>Copyright</span><span>© 2026</span></p>
     </div>
   </div>
+</div>
+
+<div id="intercomPopupOverlay">
+  <section id="intercomPopupSheet"
+           role="dialog"
+           aria-modal="true"
+           aria-labelledby="intercomPopupTitle">
+
+    <div class="intercom-popup-grabber"></div>
+
+    <header class="intercom-popup-header">
+      <h2 class="intercom-popup-title"
+          id="intercomPopupTitle"></h2>
+
+      <button type="button"
+              class="intercom-popup-close"
+              aria-label="Close">×</button>
+    </header>
+
+    <div id="intercomPopupList"
+         class="intercom-popup-list"></div>
+
+  </section>
 </div>
 
 <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation">
@@ -457,6 +531,28 @@
 </button>
 
 
+<button type="button" class="nav-item"
+        data-page="intercoms"
+        onclick="navigateToPage('intercoms')">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2
+    19.79 19.79 0 0 1-8.63-3.07
+    19.5 19.5 0 0 1-6-6
+    19.79 19.79 0 0 1-3.07-8.67
+    A2 2 0 0 1 4.11 2h3
+    a2 2 0 0 1 2 1.72
+    c.12.96.36 1.9.72 2.79
+    a2 2 0 0 1-.45 2.11L8.1 9.9
+    a16 16 0 0 0 6 6l1.27-1.27
+    a2 2 0 0 1 2.11-.45
+    c.89.36 1.83.6 2.79.72
+    A2 2 0 0 1 22 16.92Z"></path>
+  </svg>
+
+  <span>Intercoms</span>
+</button>
+
 <button type="button" class="nav-item" data-page="others"
         onclick="navigateToPage('others')">
   <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -483,6 +579,7 @@
 <script src="js/data.js"></script>
 <script src="js/alerts.js"></script>
 <script src="js/production.js"></script>
+<script src="js/grade_specifications.js"></script>
 <script src="js/ims.js"></script>
 <script src="js/holiday.js"></script>
 <script src="js/notes.js"></script>
@@ -501,6 +598,7 @@
 <script src="js/additive_composition.js"></script>
 <script src="js/reactor_shutdown.js"></script>
 <script src="js/reactor_startup.js"></script>
+<script src="js/intercoms.js"></script>
 
 </body>
 </html>
