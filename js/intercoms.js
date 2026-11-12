@@ -18,7 +18,7 @@
         color: "#dc2626",
         tint: "#fee2e2"
     },
-    "Seniors": {
+    "Key Officials": {
         icon: "👔",
         color: "#2563eb",
         tint: "#dbeafe"
