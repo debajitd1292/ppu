@@ -48,6 +48,16 @@
         color: "#4f46e5",
         tint: "#e0e7ff"
     },
+    "IS Mobile": {
+        icon: "📱",
+        color: "#16a34a",
+        tint: "#dcfce7"
+    },
+    "Control Rooms": {
+        icon: "🖱️",
+        color: "#ea580c",
+        tint: "#ffedd5"
+    },
     "Other Units": {
         icon: "🏗️",
         color: "#059669",
@@ -301,7 +311,10 @@ function getCategoryStyle(category, index) {
     list.innerHTML = contacts.length
         ? contacts.map(item => {
             const details = [
-                { label: "Office", value: item.office },
+                {
+                    label: activeCategory === "IS Mobile" ? "Mobile" : "Office",
+                    value: item.office
+                },
                 { label: "Residence", value: item.residence },
                 { label: "PS", value: item.ps }
             ].filter(field => field.value);
@@ -319,7 +332,14 @@ function getCategoryStyle(category, index) {
                                 ? details.map(field => `
                                     <div class="intercom-number">
                                         <span>${field.label}</span>
-                                        <strong>${escapeHTML(field.value)}</strong>
+                                        ${
+                                            activeCategory === "IS Mobile" && field.label === "Mobile"
+                                                ? `<a class="intercom-call-link"
+                                                    href="tel:${escapeHTML(field.value.replace(/[^\d+]/g, ""))}">
+                                                    📞 ${escapeHTML(field.value)}
+                                                 </a>`
+                                            : `<strong>${escapeHTML(field.value)}</strong>`
+                                        }
                                     </div>
                                 `).join("")
                                 : `
