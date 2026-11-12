@@ -1037,8 +1037,9 @@ body.dark .production-table td{
     border-color:rgba(255,255,255,.06);
 }
 
-body.dark .production-today td{
-    background:linear-gradient(135deg,#064e3b,#022c22);
+body.dark .production-today td {
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    color: #166534;
 }
 
 .dark-mode .production-target.grade1 {
@@ -2783,7 +2784,8 @@ body.dark .production-table td:last-child {
 
 /* Preserve today's green production highlight */
 body.dark .production-today td {
-    background: linear-gradient(135deg, #064e3b, #022c22);
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    color: #166534;
 }
 
 body.dark .production-today td:first-child {
@@ -2976,7 +2978,7 @@ body.dark .production-table tbody tr.production-past td:first-child {
 }
 
 body.dark .production-today .production-duration {
-    color: #86efac;
+    color: #166534;
 }
 
 body.dark .production-table tbody tr:not(.production-today):not(.production-past) .production-duration {
