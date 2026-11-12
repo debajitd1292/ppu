@@ -6,20 +6,20 @@ Emergency,Emergency Control Room Admin,1100 / 3101,,
 Emergency,Emergency Control RoomCCR,3100,,
 Emergency,First Aid Center,3201,,
 Emergency,First Aid Center Doctor,3200,,
-Seniors,MD,1500,,1501
-Seniors,DF,1600,,1601
-Seniors,COO,1510,,1512
-Seniors,CGM,1530,,1532
-Seniors,Ikramul Haque (MD Office),1502,,
-Seniors,Bibhu Deb (DF Office),1376,,
-Seniors,Jagannath Charoh (COO Office),1511,,
-Seniors,Parag Pran Gogoi (CGM Office),1531,,
-Seniors,Pradeep Rawat,3409,2060,
-Seniors,Anay Burde,1520,2570,
-Seniors,Abhijit Nath,1310,2503,
-Seniors,Surya Pratim Pal,1270,2945,
-Seniors,Manoj Kumar Haloi,3706,2950,
-Seniors,Saiprasad Sahoo,3710,2929,
+Key Officials,MD,1500,,1501
+Key Officials,DF,1600,,1601
+Key Officials,COO,1510,,1512
+Key Officials,CGM,1530,,1532
+Key Officials,Ikramul Haque (MD Office),1502,,
+Key Officials,Bibhu Deb (DF Office),1376,,
+Key Officials,Jagannath Charoh (COO Office),1511,,
+Key Officials,Parag Pran Gogoi (CGM Office),1531,,
+Key Officials,Pradeep Rawat,3409,2060,
+Key Officials,Anay Burde,1520,2570,
+Key Officials,Abhijit Nath,1310,2503,
+Key Officials,Surya Pratim Pal,1270,2945,
+Key Officials,Manoj Kumar Haloi,3706,2950,
+Key Officials,Saiprasad Sahoo,3710,2929,
 PPU,CCR,3441 / 3456,,
 PPU,ECR,3306,,
 PPU,Block-1,3363,,
