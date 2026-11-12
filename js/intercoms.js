@@ -397,7 +397,7 @@ function getCategoryStyle(category, index) {
                 empty.hidden = false;
 
                 empty.textContent =
-                    "Unable to load intercom directory. Please check the CSV file.";
+                    "Unable to load intercom directory";
             }
         }
     }
