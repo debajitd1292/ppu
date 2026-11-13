@@ -5350,40 +5350,40 @@ body.dark #page-intercoms .intercom-empty-state {
     font-size: 12px;
 }
 
-/* Dark mode — popup */
+/* Dark mode — keep popup light, matching light mode */
 body.dark #intercomPopupSheet {
-    background: #1d2d42;
-    color: #e2e8f0;
+    background: #ffffff;
+    color: #1f2937;
 }
 
 body.dark .intercom-popup-header,
 body.dark .intercom-contact-row {
-    border-color: #3a506b;
+    border-color: #e2e8f0;
 }
 
 body.dark .intercom-popup-title,
 body.dark .intercom-contact-name {
-    color: #bfdbfe;
+    color: #1e293b;
 }
 
 body.dark .intercom-popup-close {
-    background: #30445d;
-    color: #e2e8f0;
+    background: #eef2f7;
+    color: #334155;
 }
 
 body.dark .intercom-number {
-    background: #263f60;
-    color: #dbeafe;
+    background: #eff6ff;
+    color: #1e3a5f;
 }
 
 body.dark .intercom-number span,
 body.dark .intercom-number-missing,
 body.dark .intercom-popup-empty {
-    color: #aebed1;
+    color: #64748b;
 }
 
 body.dark .intercom-number strong {
-    color: #93c5fd;
+    color: #1d4ed8;
 }
 
 /* Desktop popup alignment */
