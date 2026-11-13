@@ -1,18 +1,12 @@
-/* =========================================================
-   PPU OPERATIONS DASHBOARD — INTERCOM DIRECTORY
-   CSV: ./updates/intercoms.csv
-   Columns: Category,Name,Office Intercom,Residence Intercom
-   ========================================================= */
-
 (function () {
     "use strict";
 
-  const CSV_URL = "./updates/intercoms.csv";
+const CSV_URL = "./updates/intercoms.csv";
     let intercomContacts = [];
     let activeCategory = "";
     let searchText = "";
 
-  const categoryStyles = {
+const categoryStyles = {
     "Emergency": {
         icon: "🚨",
         color: "#dc2626",
@@ -95,8 +89,7 @@
     }
 };
 
-    // Parse CSV while supporting quoted values and commas.
-    function parseIntercomCSV(text) {
+function parseIntercomCSV(text) {
         const rows = [];
         let row = [];
         let cell = "";
@@ -178,8 +171,7 @@
         })).filter(item => item.category && item.name);
     }
 
-    // Prevent HTML injection from CSV content.
-    function escapeHTML(value) {
+function escapeHTML(value) {
         return String(value ?? "").replace(/[&<>"']/g, char => ({
             "&": "&amp;",
             "<": "&lt;",
@@ -189,8 +181,7 @@
         })[char]);
     }
 
-    // Return unique category names.
-    function getCategories() {
+function getCategories() {
         return [
             ...new Set(intercomContacts.map(item => item.category))
         ];
@@ -204,8 +195,7 @@ function getCategoryStyle(category, index) {
     };
 }
 
-    // Display category cards.
-    function renderCategoryCards() {
+function renderCategoryCards() {
         const grid = document.getElementById("intercomCategoryGrid");
         const empty = document.getElementById("intercomEmptyState");
 
@@ -271,8 +261,8 @@ function getCategoryStyle(category, index) {
         }
     }
 
-    // Open the bottom-sheet popup for a selected category.
-    function openCategory(category) {
+
+function openCategory(category) {
         activeCategory = category;
 
         const overlay = document.getElementById(
@@ -292,8 +282,7 @@ function getCategoryStyle(category, index) {
         document.body.style.overflow = "hidden";
     }
 
-    // Display contacts inside the selected category.
-    function renderPopupContacts() {
+function renderPopupContacts() {
     const list = document.getElementById("intercomPopupList");
     const query = searchText.toLowerCase();
 
@@ -335,7 +324,14 @@ function getCategoryStyle(category, index) {
                                         ${
                                             activeCategory === "IS Mobile" && field.label === "Mobile"
                                                 ? `<a class="intercom-call-link"
-                                                    href="tel:${escapeHTML(field.value.replace(/[^\d+]/g, ""))}">
+                                                    href="tel:${(() => {
+                                                        const raw = String(field.value).trim();
+    							const digits = raw.replace(/\D/g, "");
+
+    							return digits.length === 10
+        							? "+91" + digits
+        							: (raw.startsWith("+") ? "+" : "") + digits;
+						    })()}">
                                                     📞 ${escapeHTML(field.value)}
                                                  </a>`
                                             : `<strong>${escapeHTML(field.value)}</strong>`
@@ -360,8 +356,7 @@ function getCategoryStyle(category, index) {
         `;
 }
 
-    // Close the popup.
-    function closePopup() {
+function closePopup() {
         const overlay = document.getElementById(
             "intercomPopupOverlay"
         );
@@ -373,10 +368,9 @@ function getCategoryStyle(category, index) {
         document.body.style.overflow = "";
 
         activeCategory = "";
-    }
+}
 
-    // Fetch and load the CSV data.
-    async function loadIntercoms() {
+async function loadIntercoms() {
         const grid = document.getElementById(
             "intercomCategoryGrid"
         );
@@ -401,6 +395,10 @@ function getCategoryStyle(category, index) {
 
             renderCategoryCards();
 
+            if (activeCategory) {
+                renderPopupContacts();
+            }
+
         } catch (error) {
             console.error(
                 "Intercom directory loading failed:",
@@ -419,11 +417,10 @@ function getCategoryStyle(category, index) {
                 empty.textContent =
                     "Unable to load intercom directory";
             }
-        }
-    }
+      }
+}
 
-    // Initialise the Intercoms page.
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
         const search = document.getElementById(
             "intercomSearch"
@@ -471,7 +468,6 @@ function getCategoryStyle(category, index) {
             }
         });
 
-        // Close popup using Escape key.
         document.addEventListener("keydown", function (event) {
             if (event.key === "Escape") {
                 closePopup();
@@ -479,6 +475,9 @@ function getCategoryStyle(category, index) {
         });
 
         loadIntercoms();
+
+        // Auto-refresh CSV data every 5 minutes
+        window.setInterval(loadIntercoms, 5 * 60 * 1000);
     });
 
 })();
