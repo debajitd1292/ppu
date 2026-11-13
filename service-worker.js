@@ -1,4 +1,3 @@
-
 const CACHE_NAME = "ppu-dashboard-v60";
 
 const urlsToCache = [
