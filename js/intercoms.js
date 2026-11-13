@@ -351,7 +351,7 @@ function renderPopupContacts() {
         }).join("")
         : `
             <div class="intercom-popup-empty">
-                No matching contacts found.
+                No matching contacts found
             </div>
         `;
 }
@@ -436,7 +436,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!search || !grid || !overlay) return;
 
-        // Search categories and contact names.
         search.addEventListener("input", function () {
             searchText = this.value.trim();
 
@@ -447,7 +446,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Open category popup.
         grid.addEventListener("click", function (event) {
             const card = event.target.closest(
                 ".intercom-category-card"
@@ -458,7 +456,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Close popup by clicking outside or close button.
         overlay.addEventListener("click", function (event) {
             if (
                 event.target === overlay ||
@@ -476,7 +473,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         loadIntercoms();
 
-        // Auto-refresh CSV data every 5 minutes
         window.setInterval(loadIntercoms, 5 * 60 * 1000);
     });
 
