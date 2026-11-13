@@ -186,7 +186,9 @@ function getDensity(
 }
 
 // Convert level in mm to cm for the Excel lookup table
+
 function liquidVolume(data, tableName, levelMM) {
+
   const levelCM = levelMM / 10;
 
   const table = getRows(
@@ -195,6 +197,33 @@ function liquidVolume(data, tableName, levelMM) {
     tableName
   );
 
+  const calibratedLevels = table
+    .map(row => Number(row.level_cm))
+    .filter(Number.isFinite);
+
+  if (!calibratedLevels.length) {
+    throw new Error(
+      "Missing calibration data for " + tableName
+    );
+  }
+
+  const minLevel = Math.min(...calibratedLevels);
+  const maxLevel = Math.max(...calibratedLevels);
+
+  if (levelCM < minLevel || levelCM > maxLevel) {
+
+    throw new Error(
+      tableName.replace("_", " ")
+         .replace(/\b\w/g, c => c.toUpperCase()) +
+      " level must be between " +
+      (minLevel * 10).toFixed(0) +
+      " mm and " +
+      (maxLevel * 10).toFixed(0) +
+      " mm."
+    );
+
+  }
+
   return approximateLookup(
     table,
     levelCM,
@@ -202,7 +231,9 @@ function liquidVolume(data, tableName, levelMM) {
     "volume_litres",
     tableName
   );
+
 }
+
 
 // Main calculation
 async function calculatePropyleneStock(
