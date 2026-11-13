@@ -53,12 +53,12 @@ const categoryStyles = {
         tint: "#ffedd5"
     },
     "Other Units": {
-        icon: "🏗️",
+        icon: "👥",
         color: "#059669",
         tint: "#d1fae5"
     },
     "Projects": {
-        icon: "📋",
+        icon: "🏗️",
         color: "#9333ea",
         tint: "#f3e8ff"
     },
@@ -68,7 +68,7 @@ const categoryStyles = {
         tint: "#e2e8f0"
     },
     "HR": {
-        icon: "👥",
+        icon: "💼",
         color: "#db2777",
         tint: "#fce7f3"
     },
