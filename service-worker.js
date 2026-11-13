@@ -1,42 +1,72 @@
-const CACHE_NAME = "ppu-dashboard-v60";
 
-const urlsToCache = [
+const CACHE_NAME = "ppu-dashboard-v61";
+
+// Application shell: required for offline startup
+const APP_SHELL = [
     "./",
-    "./index.html?v=60",
+    "./index.html",
     "./manifest.json",
-    "./service-worker.js",
-    "https://raw.githubusercontent.com/debajitd1292/ppu/main/images/logo.png"
+    "./css/style.css",
+
+    "./images/logo.png",
+    "./images/banner.jpg",
+
+    "./js/config.js",
+    "./js/data.js",
+    "./js/alerts.js",
+    "./js/production.js",
+    "./js/grade_specifications.js",
+    "./js/ims.js",
+    "./js/holiday.js",
+    "./js/notes.js",
+    "./js/training.js",
+    "./js/theme.js",
+    "./js/utils.js",
+    "./js/status.js",
+    "./js/selection.js",
+    "./js/shift-data.js",
+    "./js/views.js",
+    "./js/loader.js",
+    "./js/pwa.js",
+    "./js/app.js",
+    "./js/plant.js",
+    "./js/propylene_stock.js",
+    "./js/additive_composition.js",
+    "./js/reactor_shutdown.js",
+    "./js/reactor_startup.js",
+    "./js/intercoms.js"
 ];
+
 
 // INSTALL
 self.addEventListener("install", event => {
 
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(urlsToCache))
+            .then(cache => cache.addAll(APP_SHELL))
             .then(() => self.skipWaiting())
     );
 
 });
+
 
 // ACTIVATE
 self.addEventListener("activate", event => {
 
     event.waitUntil(
         caches.keys()
-            .then(cacheNames => {
-                return Promise.all(
-                    cacheNames.map(cache => {
-                        if (cache !== CACHE_NAME) {
-                            return caches.delete(cache);
-                        }
-                    })
-                );
-            })
+            .then(names => Promise.all(
+                names.map(name => {
+                    if (name !== CACHE_NAME) {
+                        return caches.delete(name);
+                    }
+                })
+            ))
             .then(() => self.clients.claim())
     );
 
 });
+
 
 // FETCH
 self.addEventListener("fetch", event => {
@@ -47,19 +77,16 @@ self.addEventListener("fetch", event => {
 
     const url = new URL(request.url);
 
-    // CSV: Network first, cache fallback
+    // CSV FILES: NETWORK FIRST, CACHE FALLBACK
     if (url.pathname.toLowerCase().endsWith(".csv")) {
 
         event.respondWith((async () => {
 
-            const cacheKey = new Request(
-                (() => {
-                    const cleanURL = new URL(request.url);
-                    cleanURL.search = "";
-                    cleanURL.hash = "";
-                    return cleanURL.toString();
-                })()
-            );
+            const cacheURL = new URL(request.url);
+            cacheURL.search = "";
+            cacheURL.hash = "";
+
+            const cacheKey = new Request(cacheURL.href);
 
             try {
 
@@ -67,7 +94,7 @@ self.addEventListener("fetch", event => {
                     cache: "no-store"
                 });
 
-                if (response.ok) {
+                if (response.ok && response.type !== "opaque") {
 
                     const cache = await caches.open(CACHE_NAME);
 
@@ -87,7 +114,7 @@ self.addEventListener("fetch", event => {
                 if (cached) return cached;
 
                 return new Response(
-                    "Offline: No cached CSV data available",
+                    "Offline: No saved data available",
                     {
                         status: 503,
                         headers: {
@@ -103,38 +130,105 @@ self.addEventListener("fetch", event => {
         return;
     }
 
-    // Other resources: Network first, cache fallback
-    event.respondWith((async () => {
 
-        try {
+    // HTML PAGE: NETWORK FIRST, CACHED PAGE FALLBACK
+    if (request.mode === "navigate") {
 
-            const response = await fetch(request);
+        event.respondWith((async () => {
 
-            if (response.ok) {
+            try {
 
-                const cache = await caches.open(CACHE_NAME);
+                const response = await fetch(request);
 
-                await cache.put(
-                    request,
-                    response.clone()
+                if (response.ok) {
+
+                    const cache = await caches.open(CACHE_NAME);
+
+                    await cache.put(
+                        "./index.html",
+                        response.clone()
+                    );
+
+                }
+
+                return response;
+
+            } catch (error) {
+
+                const cached = await caches.match(
+                    "./index.html",
+                    { ignoreSearch: true }
+                );
+
+                if (cached) return cached;
+
+                return new Response(
+                    "Dashboard unavailable. Please open the app online once.",
+                    {
+                        status: 503,
+                        headers: {
+                            "Content-Type": "text/plain"
+                        }
+                    }
                 );
 
             }
 
-            return response;
+        })());
 
-        } catch (error) {
+        return;
+    }
+
+
+    // OTHER RESOURCES: CACHE FIRST, NETWORK UPDATE
+    if (url.origin === self.location.origin) {
+
+        event.respondWith((async () => {
 
             const cached = await caches.match(request);
 
-            if (cached) return cached;
+            const networkFetch = fetch(request).then(async response => {
 
-            return new Response("Offline", {
-                status: 503
+                if (response.ok) {
+
+                    const cache = await caches.open(CACHE_NAME);
+
+                    await cache.put(
+                        request,
+                        response.clone()
+                    );
+
+                }
+
+                return response;
+
             });
 
-        }
+            if (cached) {
 
-    })());
+                event.waitUntil(
+                    networkFetch.catch(() => {})
+                );
+
+                return cached;
+
+            }
+
+            try {
+
+                return await networkFetch;
+
+            } catch (error) {
+
+                return new Response("Resource unavailable", {
+                    status: 503
+                });
+
+            }
+
+        })());
+
+        return;
+    }
 
 });
