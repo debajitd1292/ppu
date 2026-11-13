@@ -1,5 +1,4 @@
-
-const CACHE_NAME = "ppu-dashboard-v61";
+const CACHE_NAME = "ppu-dashboard-v62";
 
 // Application shell: required for offline startup
 const APP_SHELL = [
@@ -68,6 +67,23 @@ self.addEventListener("activate", event => {
 });
 
 
+
+// Identify whether CSV data came from network or cache
+async function addDataSourceHeader(response, source) {
+
+    const headers = new Headers(response.headers);
+
+    headers.set("X-PPU-Data-Source", source);
+
+    return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: headers
+    });
+
+}
+
+
 // FETCH
 self.addEventListener("fetch", event => {
 
@@ -77,61 +93,79 @@ self.addEventListener("fetch", event => {
 
     const url = new URL(request.url);
 
-    // CSV FILES: NETWORK FIRST, CACHE FALLBACK
-    if (url.pathname.toLowerCase().endsWith(".csv")) {
+    
+// CSV FILES: NETWORK FIRST, CACHE FALLBACK
+if (url.pathname.toLowerCase().endsWith(".csv")) {
 
-        event.respondWith((async () => {
+    event.respondWith((async () => {
 
-            const cacheURL = new URL(request.url);
-            cacheURL.search = "";
-            cacheURL.hash = "";
+        const cacheURL = new URL(event.request.url);
 
-            const cacheKey = new Request(cacheURL.href);
+        cacheURL.search = "";
+        cacheURL.hash = "";
 
-            try {
+        const cacheKey = new Request(cacheURL.href);
 
-                const response = await fetch(request, {
-                    cache: "no-store"
-                });
+        try {
 
-                if (response.ok && response.type !== "opaque") {
+            // Try to download fresh CSV
+            const response = await fetch(event.request, {
+                cache: "no-store"
+            });
 
-                    const cache = await caches.open(CACHE_NAME);
+            if (response.ok) {
 
-                    await cache.put(
-                        cacheKey,
-                        response.clone()
-                    );
+                const cache = await caches.open(CACHE_NAME);
 
-                }
-
-                return response;
-
-            } catch (error) {
-
-                const cached = await caches.match(cacheKey);
-
-                if (cached) return cached;
-
-                return new Response(
-                    "Offline: No saved data available",
-                    {
-                        status: 503,
-                        headers: {
-                            "Content-Type": "text/plain"
-                        }
-                    }
+                // Save original response in cache
+                await cache.put(
+                    cacheKey,
+                    response.clone()
                 );
 
             }
 
-        })());
+            // Tell app this is fresh network data
+            return await addDataSourceHeader(
+                response,
+                "network"
+            );
 
-        return;
-    }
+        } catch (error) {
+
+            // Retrieve previously cached CSV
+            const cached = await caches.match(cacheKey);
+
+            if (cached) {
+
+                // Tell app this is cached data
+                return await addDataSourceHeader(
+                    cached,
+                    "cache"
+                );
+
+            }
+
+            return new Response(
+                "Offline: No saved data available",
+                {
+                    status: 503,
+                    headers: {
+                        "Content-Type": "text/plain"
+                    }
+                }
+            );
+
+        }
+
+    })());
+
+    return;
+}
 
 
-    // HTML PAGE: NETWORK FIRST, CACHED PAGE FALLBACK
+
+// HTML PAGE: NETWORK FIRST, CACHED PAGE FALLBACK
     if (request.mode === "navigate") {
 
         event.respondWith((async () => {
