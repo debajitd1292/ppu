@@ -1,73 +1,141 @@
-const CACHE_NAME = "ppu-dashboard-v59";   // 🔁 change version on every update
+
+const CACHE_NAME = "ppu-dashboard-v60";
 
 const urlsToCache = [
     "./",
-    "./index.html?v=59",
+    "./index.html?v=60",
     "./manifest.json",
     "./service-worker.js",
     "https://raw.githubusercontent.com/debajitd1292/ppu/main/images/logo.png"
 ];
 
-
-// 🔽 INSTALL
+// INSTALL
 self.addEventListener("install", event => {
-    console.log("Service Worker Installing...");
-
-    self.skipWaiting();   // activate immediately
 
     event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => {
-            return cache.addAll(urlsToCache);
-        })
+        caches.open(CACHE_NAME)
+            .then(cache => cache.addAll(urlsToCache))
+            .then(() => self.skipWaiting())
     );
+
 });
 
-
-// 🔽 ACTIVATE
+// ACTIVATE
 self.addEventListener("activate", event => {
-    console.log("Service Worker Activating...");
 
     event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cache => {
-                    if (cache !== CACHE_NAME) {
-                        console.log("Deleting old cache:", cache);
-                        return caches.delete(cache);
-                    }
-                })
-            );
-        }).then(() => self.clients.claim())
+        caches.keys()
+            .then(cacheNames => {
+                return Promise.all(
+                    cacheNames.map(cache => {
+                        if (cache !== CACHE_NAME) {
+                            return caches.delete(cache);
+                        }
+                    })
+                );
+            })
+            .then(() => self.clients.claim())
     );
+
 });
 
-
-// 🔽 FETCH
+// FETCH
 self.addEventListener("fetch", event => {
 
-    let url = event.request.url;
+    const request = event.request;
 
-    // ✅ 1. ALWAYS get fresh CSV (CRITICAL FIX)
-    if (url.includes(".csv")) {
-        event.respondWith(
-            fetch(event.request, { cache: "no-store" })
-                .catch(() => caches.match(event.request))
-        );
+    if (request.method !== "GET") return;
+
+    const url = new URL(request.url);
+
+    // CSV: Network first, cache fallback
+    if (url.pathname.toLowerCase().endsWith(".csv")) {
+
+        event.respondWith((async () => {
+
+            const cacheKey = new Request(
+                (() => {
+                    const cleanURL = new URL(request.url);
+                    cleanURL.search = "";
+                    cleanURL.hash = "";
+                    return cleanURL.toString();
+                })()
+            );
+
+            try {
+
+                const response = await fetch(request, {
+                    cache: "no-store"
+                });
+
+                if (response.ok) {
+
+                    const cache = await caches.open(CACHE_NAME);
+
+                    await cache.put(
+                        cacheKey,
+                        response.clone()
+                    );
+
+                }
+
+                return response;
+
+            } catch (error) {
+
+                const cached = await caches.match(cacheKey);
+
+                if (cached) return cached;
+
+                return new Response(
+                    "Offline: No cached CSV data available",
+                    {
+                        status: 503,
+                        headers: {
+                            "Content-Type": "text/plain"
+                        }
+                    }
+                );
+
+            }
+
+        })());
+
         return;
     }
 
-    // ✅ 2. Normal files → Network first, then cache
-    event.respondWith(
-        fetch(event.request)
-            .then(response => {
-                return caches.open(CACHE_NAME).then(cache => {
-                    cache.put(event.request, response.clone());
-                    return response;
-                });
-            })
-            .catch(() => {
-                return caches.match(event.request);
-            })
-    );
+    // Other resources: Network first, cache fallback
+    event.respondWith((async () => {
+
+        try {
+
+            const response = await fetch(request);
+
+            if (response.ok) {
+
+                const cache = await caches.open(CACHE_NAME);
+
+                await cache.put(
+                    request,
+                    response.clone()
+                );
+
+            }
+
+            return response;
+
+        } catch (error) {
+
+            const cached = await caches.match(request);
+
+            if (cached) return cached;
+
+            return new Response("Offline", {
+                status: 503
+            });
+
+        }
+
+    })());
 
 });
