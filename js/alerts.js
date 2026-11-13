@@ -296,30 +296,43 @@ function loadAlerts(){
         });
 }
 
-function renderAlerts(){
 
-    let alertBox = document.getElementById("alertSection");
+function renderAlerts() {
 
-    if(!alertBox) return;
+    const alertBox = document.getElementById("alertSection");
 
-    let alerts = getActiveAlerts();
+    if (!alertBox) return;
 
-    if(alerts.length > 0){
+    const alerts = getActiveAlerts();
 
-        alertBox.innerHTML = `
-            <div class="notice-alert">
-                ${alerts.map(a => `
-                    <div class="alert-item">${a.text}</div>
-                `).join("")}
-            </div>
-        `;
+    alertBox.replaceChildren();
+
+    if (alerts.length > 0) {
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "notice-alert";
+
+        alerts.forEach(a => {
+
+            const item = document.createElement("div");
+
+            item.className = "alert-item";
+
+            // Safe text insertion
+            item.textContent = a.text;
+
+            wrapper.appendChild(item);
+
+        });
+
+        alertBox.appendChild(wrapper);
 
         alertBox.style.display = "block";
 
     } else {
 
-        alertBox.innerHTML = "";
-
         alertBox.style.display = "none";
+
     }
+
 }
