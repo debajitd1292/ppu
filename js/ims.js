@@ -1,4 +1,3 @@
-
 let imsRows = [];
 let imsHeaders = [];
 
@@ -283,12 +282,14 @@ function addValue(label, value) {
         }
 
         addValue("Target", targetIndex >= 0 ? row[targetIndex] : "");
+
         addValue(
-            "Last month",
+            monthMap[latestMonth.month].slice(0, 3) + " " + latestMonth.year,
             latestMonth ? row[latestMonth.index] : ""
         );
+
         addValue(
-            "Till date",
+            "Till " + monthMap[latestMonth.month].slice(0, 3) + " " + latestMonth.year,
             tillDateIndex >= 0 ? row[tillDateIndex] : ""
         );
 
