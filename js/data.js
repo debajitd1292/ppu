@@ -134,25 +134,99 @@ function mergeShiftData(previous, current, next, monthDates = []) {
 }
 
 
-function fetchCSV(url, optional = false){
+function fetchCSV(url, optional = false) {
 
     return fetch(url, { cache: "no-store" })
+
         .then(response => {
 
-            if(!response.ok){
+            if (!response.ok) {
                 throw new Error("CSV not found: " + url);
             }
 
-            return response.text();
-        })
-        .catch(err => {
-
-            console.warn("CSV load failed:", url, err);
-
-            if(optional){
-                return "";
+            if (
+                response.headers.get("X-PPU-Data-Source")
+                === "cache"
+            ) {
+                markCachedDataUsed();
             }
 
-            throw err;
-        });
+            return response.text();
+
+        })
+
+        .catch(err => {
+
+    		console.warn("CSV load failed:", url, err);
+
+    		if (optional) {
+       			return "";
+    		}
+
+    		markCachedDataUsed();
+    		throw err;
+
+	});
+
+}
+
+
+function updateLastSyncDisplay() {
+
+    const lastUpdatedEl =
+        document.getElementById("lastUpdated");
+
+    if (!lastUpdatedEl) return;
+
+    const savedSync = getLastOnlineSync();
+
+    if (!savedSync) {
+        lastUpdatedEl.innerText = "Last Sync: Not available";
+        return;
+    }
+
+    const date = new Date(savedSync);
+
+    const time = date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+    });
+
+    const day = date.toLocaleDateString([], {
+        day: "2-digit",
+        month: "short"
+    });
+
+    lastUpdatedEl.innerText =
+        "Last Sync: " + day + " • " + time;
+
+}
+
+
+let ppuAllDataFromNetwork = true;
+
+function startSyncTracking() {
+    ppuAllDataFromNetwork = true;
+}
+
+function markCachedDataUsed() {
+    ppuAllDataFromNetwork = false;
+}
+
+function saveLastOnlineSync() {
+
+    if (!ppuAllDataFromNetwork) return;
+
+    localStorage.setItem(
+        "ppuLastOnlineSync",
+        new Date().toISOString()
+    );
+
+}
+
+function getLastOnlineSync() {
+
+    return localStorage.getItem("ppuLastOnlineSync");
+
 }

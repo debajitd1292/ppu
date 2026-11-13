@@ -363,6 +363,8 @@ function autoRefreshData(){
 
     updateShiftUrls();
 
+    startSyncTracking();
+
     Promise.all([
         fetchCSV(shiftUrlPrev, true),
         fetchCSV(shiftUrl),
@@ -513,24 +515,8 @@ if(alertsText !== undefined){
 
         console.log("✅ Data refreshed successfully");
 
-        const lastUpdatedEl = document.getElementById("lastUpdated");
-
-        if (lastUpdatedEl) {
-            const now = new Date();
-
-            const time = now.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit"
-            });
-
-            const date = now.toLocaleDateString([], {
-                day: "2-digit",
-                month: "short"
-            });
-
-            lastUpdatedEl.innerText =
-                "Last Sync: " + date + " • " + time;
-        }
+        saveLastOnlineSync();
+        updateLastSyncDisplay();
 
     })
 
@@ -547,6 +533,20 @@ if(alertsText !== undefined){
     });
 }
 
+
+/* ===== AUTOMATIC DATA SYNC ===== */
+
+// Refresh dashboard data every 2 minutes
+setInterval(() => {
+    if (navigator.onLine) {
+        autoRefreshData();
+    }
+}, 2 * 60 * 1000);
+
+// Refresh when internet connectivity is restored
+window.addEventListener("online", () => {
+    autoRefreshData();
+});
 
 
 /* ===== INDEPENDENT COUNTERS PAGE SELECTORS ===== */
