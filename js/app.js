@@ -364,6 +364,7 @@ function autoRefreshData(){
     updateShiftUrls();
 
     Promise.all([
+        fetchCSV(shiftUrlPrev, true),
         fetchCSV(shiftUrl),
         fetchCSV(shiftUrlNext, true),
         fetchCSV(holidayUrl, true),
@@ -371,6 +372,7 @@ function autoRefreshData(){
         fetchCSV(trainingUrl, true),
         fetchCSV(productionPlanUrl, true),
         fetchCSV(productionTargetUrl, true),
+        fetchCSV(nonExecUrlPrev, true),
         fetchCSV(nonExecUrl),
         fetchCSV(nonExecUrlNext, true),
         fetchCSV(seniorityExecUrl, true),
@@ -380,6 +382,7 @@ function autoRefreshData(){
     ])
 
     .then(([
+        shiftTextPrev,
         shiftTextCurrent,
         shiftTextNext,
         holidayText,
@@ -387,6 +390,7 @@ function autoRefreshData(){
         trainingText,
         productionPlanText,
         productionTargetText,
+        nonExecTextPrev,
         nonExecTextCurrent,
         nonExecTextNext,
         seniorityExecText,
@@ -427,63 +431,70 @@ if(alertsText !== undefined){
     }
 
 
-        const dataCurrent = parseCSV(shiftTextCurrent);
-        const dataNext = parseCSV(shiftTextNext);
+        
+	const dataPrev = parseCSV(shiftTextPrev);
+	const dataCurrent = parseCSV(shiftTextCurrent);
+	const dataNext = parseCSV(shiftTextNext);
 
-        const currentMonthDate = new Date();
-        currentMonthDate.setDate(1);
-        currentMonthDate.setHours(0, 0, 0, 0);
+	const currentMonthDate = new Date();
+	currentMonthDate.setDate(1);
+	currentMonthDate.setHours(0, 0, 0, 0);
 
-        const nextMonthDate = new Date(
-            currentMonthDate.getFullYear(),
-            currentMonthDate.getMonth() + 1,
-            1
-        );
+	const prevMonthDate = new Date(
+    		currentMonthDate.getFullYear(),
+    		currentMonthDate.getMonth() - 1,
+    		1
+	);
 
-        data = mergeShiftData(
-            dataCurrent,
-            dataNext,
-            null,
-            [currentMonthDate, nextMonthDate]
-        );
+	const nextMonthDate = new Date(
+    		currentMonthDate.getFullYear(),
+    		currentMonthDate.getMonth() + 1,
+    		1
+	);
 
-        header = data[0]?.map(x => x.trim()) || [];
+	// Executive shift data
+	data = mergeShiftData(
+   		dataPrev,
+    		dataCurrent,
+    		dataNext,
+    		[prevMonthDate, currentMonthDate, nextMonthDate]
+	);
 
+	header = data[0]?.map(x => x.trim()) || [];
 
+	loadHolidayData(holidayText);
 
-        loadHolidayData(holidayText);
+	loadTrainingData(trainingText);
 
-        loadTrainingData(trainingText);
+	loadProductionData(
+   		productionPlanText,
+    		productionTargetText
+	);
 
+	loadNotesData(notesText);
 
-        loadProductionData(
-        productionPlanText,
-        productionTargetText
-        );
+	if (imsText !== undefined && imsText !== null) {
+    		loadIMSData(imsText);
+	}
 
+	// Non-executive shift data
+	const nonExecPrev = parseCSV(nonExecTextPrev);
+	const nonExecCurrent = parseCSV(nonExecTextCurrent);
+	const nonExecNext = parseCSV(nonExecTextNext);
 
-        loadNotesData(notesText);
+		nonExecData = mergeShiftData(
+    		nonExecPrev,
+    		nonExecCurrent,
+    		nonExecNext,
+    		[prevMonthDate, currentMonthDate, nextMonthDate]
+	);
 
-        if (imsText !== undefined && imsText !== null) {
-            loadIMSData(imsText);
-        }
+	nonExecHeader =
+    		nonExecData[0]?.map(x => x.trim()) || [];
 
-        const nonExecCurrent = parseCSV(nonExecTextCurrent);
-        const nonExecNext = parseCSV(nonExecTextNext);
+	document.getElementById("todayNote").innerHTML =
+    		getTodayNote();
 
-        nonExecData = mergeShiftData(
-            nonExecCurrent,
-            nonExecNext,
-            null,
-            [currentMonthDate, nextMonthDate]
-        );
-
-        nonExecHeader =
-            nonExecData[0]?.map(x => x.trim()) || [];
-
-
-        document.getElementById("todayNote").innerHTML =
-            getTodayNote();
 
 
         renderAlerts();
