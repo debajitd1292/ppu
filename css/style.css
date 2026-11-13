@@ -5446,7 +5446,7 @@ body.dark .intercom-number strong {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    color: #15803d;
+    color: #1d4ed8;
     font-weight: 700;
     text-decoration: none;
 }
@@ -5456,7 +5456,7 @@ body.dark .intercom-number strong {
 }
 
 body.dark .intercom-call-link {
-    color: #86efac;
+    color: #1d4ed8;
 }
 
 
