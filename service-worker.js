@@ -1,4 +1,4 @@
-const CACHE_NAME = "ppu-dashboard-v63";
+const CACHE_NAME = "ppu-dashboard-v64";
 
 // Application shell: required for offline startup
 const APP_SHELL = [
