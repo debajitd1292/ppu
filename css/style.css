@@ -5714,3 +5714,69 @@ body option {
 #page-intercoms .intercom-search-wrap input {
     font-family: 'Inter', sans-serif;
 }
+
+/* =========================================================
+   DOUBLE AND TRIPLE SHIFT — DIAGONAL COLOURS
+   Single shift colours remain unchanged
+   ========================================================= */
+
+/* DOUBLE SHIFT */
+
+.badge.SHIFT-AB,
+.day-shift.SHIFT-AB {
+    background: linear-gradient(
+        135deg,
+        #9333ea 0%,
+        #9333ea 49.5%,
+        #f59e0b 50%,
+        #f59e0b 100%
+    );
+}
+
+.badge.SHIFT-AC,
+.day-shift.SHIFT-AC {
+    background: linear-gradient(
+        135deg,
+        #9333ea 0%,
+        #9333ea 49.5%,
+        #2563eb 50%,
+        #2563eb 100%
+    );
+}
+
+.badge.SHIFT-BC,
+.day-shift.SHIFT-BC {
+    background: linear-gradient(
+        135deg,
+        #f59e0b 0%,
+        #f59e0b 49.5%,
+        #2563eb 50%,
+        #2563eb 100%
+    );
+}
+
+/* TRIPLE SHIFT */
+
+.badge.SHIFT-ABC,
+.day-shift.SHIFT-ABC {
+    background: linear-gradient(
+        135deg,
+        #9333ea 0%,
+        #9333ea 33.33%,
+        #f59e0b 33.33%,
+        #f59e0b 66.66%,
+        #2563eb 66.66%,
+        #2563eb 100%
+    );
+}
+/* Metallic border for double and triple shifts */
+
+.badge.SHIFT-AB,
+.badge.SHIFT-AC,
+.badge.SHIFT-BC,
+.badge.SHIFT-ABC {
+    border: 1px solid #D4AF37 !important;
+    box-shadow:
+        0 0 5px rgba(212, 175, 55, 0.45),
+        inset 0 0 2px rgba(255, 255, 255, 0.25);
+}
