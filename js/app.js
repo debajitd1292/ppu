@@ -10,7 +10,6 @@ let seniorityOrder = [];
 let nonExecSeniorityOrder = [];
 
 
-/* Animate loaded values only once per employee and value */
 const animatedDataKeys = new Set();
 
 function animateDataOnFirstLoad(element, key) {
@@ -201,16 +200,27 @@ function refresh(){
 
     if (headerShift && headerShift !== "-" && headerShift !== "Select Name") {
 
-    let primary;
+        const shiftLetters = (headerShift.match(/[ABC]/g) || [])
+            .filter((v, i, a) => a.indexOf(v) === i)
+            .sort()
+            .join("");
 
-        if (headerShift.includes("C")) primary = "C";
-        else if (headerShift.includes("B")) primary = "B";
-        else if (headerShift.includes("A")) primary = "A";
-        else primary = headerShift;
+        if (shiftLetters.length === 2) {
+            badge.classList.add("SHIFT-" + shiftLetters);
+        } else if (shiftLetters.length === 3) {
+            badge.classList.add("SHIFT-" + shiftLetters);
+        } else {
+            let primary;
 
-        if (primary === "O") primary = "OFF";
+            if (headerShift.includes("C")) primary = "C";
+            else if (headerShift.includes("B")) primary = "B";
+            else if (headerShift.includes("A")) primary = "A";
+            else primary = headerShift;
 
-        badge.classList.add(primary);
+            if (primary === "O") primary = "OFF";
+
+            badge.classList.add(primary);
+        }
     }
 
 

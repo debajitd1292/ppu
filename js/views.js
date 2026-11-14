@@ -17,12 +17,6 @@ async function renderSelected(){
     document.getElementById("selectedTitle").innerText =
         "Selected Date Shift (" + formatted + ")";
 
-
-    /* =========================================
-       CHECK WHETHER SELECTED DATE IS ALREADY
-       LOADED
-       ========================================= */
-
     if(header.indexOf(renderDate) === -1){
 
         const month =
@@ -34,10 +28,6 @@ async function renderSelected(){
         const monthKey =
             month + year;
 
-
-        /* =========================================
-           LOAD SELECTED MONTH
-           ========================================= */
 
         const selectedExecUrl =
             baseUrl +
@@ -73,11 +63,6 @@ async function renderSelected(){
 
             ]);
 
-
-            /* =====================================
-               MERGE SELECTED MONTH WITH
-               ALREADY LOADED DATA
-               ===================================== */
 
             const selectedExecData =
                 parseCSV(selectedExecText);
@@ -135,11 +120,6 @@ async function renderSelected(){
         }
 
     }
-
-
-    /* =========================================
-       RENDER SELECTED DATE
-       ========================================= */
 
     render("selected", renderDate);
 }
@@ -638,7 +618,16 @@ function renderNext7Days(){
         }else if(rawShift === "OFF"){
             shiftClass = "OFF";
         }else{
-            shiftClass = displayShift.match(/[A-Z]/)?.[0] || "";
+            const shiftLetters = (displayShift.match(/[ABC]/g) || [])
+                .filter((v, i, a) => a.indexOf(v) === i)
+                .sort()
+                .join("");
+
+            if (shiftLetters.length === 2 || shiftLetters.length === 3) {
+                shiftClass = "SHIFT-" + shiftLetters;
+            } else {
+                shiftClass = displayShift.match(/[A-Z]/)?.[0] || "";
+            }
         }
 
         const isToday = day === todayDate;
