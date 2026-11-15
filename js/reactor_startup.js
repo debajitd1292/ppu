@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  const CSV_URL = "./calculators/reactor_startup.csv";
+  const CSV_URL = "./updates/calculators/reactor_startup.csv";
   const STORAGE_PREFIX = "ppuReactorStartup:";
   const CALCULATOR_KEY = "reactor-startup";
 

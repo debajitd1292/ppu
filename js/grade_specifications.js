@@ -1,13 +1,13 @@
 
 /* =========================================================
    PPU DASHBOARD — GRADE SPECIFICATIONS
-   CSV: ./updates/grade_specifications.csv
+   CSV: ./updates/production/grade_specifications.csv
    ========================================================= */
 
 (function () {
     "use strict";
 
-    const CSV_URL = "./updates/grade_specifications.csv";
+    const CSV_URL = "./updates/production/grade_specifications.csv";
 
     let gradeSpecifications = [];
 

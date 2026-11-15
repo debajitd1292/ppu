@@ -469,7 +469,7 @@ function closePopup() {
     try {
 
         const response = await fetch(
-            "./updates/sop_training.csv?v=" + Date.now()
+            "./updates/training/sop_training.csv?v=" + Date.now()
         );
 
         if (!response.ok) {

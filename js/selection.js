@@ -14,7 +14,7 @@ function populateNames(){
     }else{
 
         names = nonExecSeniorityOrder
-            .filter(n => n && !/\bDMBI$/i.test(n));
+            .filter(n => n && !/\bDMBI\b/i.test(n));
     }
 
     sel.innerHTML = "";

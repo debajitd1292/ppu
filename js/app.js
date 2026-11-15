@@ -596,7 +596,7 @@ function populateCounterNames() {
         names = [...seniorityOrder];
     } else {
         names = nonExecSeniorityOrder
-            .filter(n => n && !/\bDMBI$/i.test(n));
+            .filter(n => n && !/\bDMBI\b/i.test(n));
     }
 
     names.forEach(name =>

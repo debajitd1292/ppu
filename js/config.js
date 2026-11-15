@@ -12,22 +12,22 @@ const alertsUrl =
     baseUrl + "updates/alerts.csv?v=" + DATA_VERSION;
 
 const trainingUrl =
-    baseUrl + "updates/training.csv?v=" + DATA_VERSION;
+    baseUrl + "updates/training/training.csv?v=" + DATA_VERSION;
 
 const imsUrl =
     baseUrl + "updates/ims.csv?v=" + DATA_VERSION;
 
 const productionPlanUrl =
-    baseUrl + "production/production_plan.csv?v=" + DATA_VERSION;
+    baseUrl + "updates/production/production_plan.csv?v=" + DATA_VERSION;
 
 const productionTargetUrl =
-    baseUrl + "production/production_target.csv?v=" + DATA_VERSION;
+    baseUrl + "updates/production/production_target.csv?v=" + DATA_VERSION;
 
 const seniorityExecUrl =
-    baseUrl + "seniority/seniority_exec.csv?v=" + DATA_VERSION;
+    baseUrl + "updates/seniority/seniority_exec.csv?v=" + DATA_VERSION;
 
 const seniorityNonExecUrl =
-    baseUrl + "seniority/seniority_nonexec.csv?v=" + DATA_VERSION;
+    baseUrl + "updates/seniority/seniority_nonexec.csv?v=" + DATA_VERSION;
 
 /* =========================================
    DYNAMIC SHIFT MONTH URLS
@@ -98,14 +98,14 @@ function updateShiftUrls(){
 
     shiftUrlPrev =
         baseUrl +
-        "exec/shift_exec_" +
+        "updates/shift/exec/shift_exec_" +
         prevMonthKey +
         ".csv?v=" +
         DATA_VERSION;
 
     nonExecUrlPrev =
         baseUrl +
-        "nonexec/shift_nonexec_" +
+        "updates/shift/nonexec/shift_nonexec_" +
         prevMonthKey +
         ".csv?v=" +
         DATA_VERSION;
@@ -115,28 +115,28 @@ function updateShiftUrls(){
 
     shiftUrl =
         baseUrl +
-        "exec/shift_exec_" +
+        "updates/shift/exec/shift_exec_" +
         monthKey +
         ".csv?v=" +
         DATA_VERSION;
 
     nonExecUrl =
         baseUrl +
-        "nonexec/shift_nonexec_" +
+        "updates/shift/nonexec/shift_nonexec_" +
         monthKey +
         ".csv?v=" +
         DATA_VERSION;
 
     shiftUrlNext =
         baseUrl +
-        "exec/shift_exec_" +
+        "updates/shift/exec/shift_exec_" +
         nextMonthKey +
         ".csv?v=" +
         DATA_VERSION;
 
     nonExecUrlNext =
         baseUrl +
-        "nonexec/shift_nonexec_" +
+        "updates/shift/nonexec/shift_nonexec_" +
         nextMonthKey +
         ".csv?v=" +
         DATA_VERSION;

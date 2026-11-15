@@ -1,4 +1,4 @@
-const DEFAULT_CSV_URL = "./calculators/propylene_stock_lookup.csv";
+const DEFAULT_CSV_URL = "./updates/calculators/propylene_stock_lookup.csv";
 const MILLION = 1000000;
 
 // Parse CSV data

@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const CSV_URL = "./calculators/reactor_shutdown.csv";
+  const CSV_URL = "./updates/calculators/reactor_shutdown.csv";
   const STORAGE_PREFIX = "ppuReactorShutdown:";
   const CALCULATOR_KEY = "reactor-shutdown";
 

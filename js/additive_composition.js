@@ -1,8 +1,7 @@
-
 (function () {
   "use strict";
 
-  const CSV_URL = "./calculators/additive.csv";
+  const CSV_URL = "./updates/calculators/additive.csv";
   const STORAGE_PREFIX = "ppuCalculator:additive:";
 
   const CATEGORY_KEYS = {

@@ -31,14 +31,14 @@ async function renderSelected(){
 
         const selectedExecUrl =
             baseUrl +
-            "exec/shift_exec_" +
+            "updates/shift/exec/shift_exec_" +
             monthKey +
             ".csv?v=" +
             Date.now();
 
         const selectedNonExecUrl =
             baseUrl +
-            "nonexec/shift_nonexec_" +
+            "updates/shift/nonexec/shift_nonexec_" +
             monthKey +
             ".csv?v=" +
             Date.now();
@@ -691,7 +691,9 @@ function getOffDayMonthSchedule(category, year, month) {
         String(month).padStart(2, "0") +
         String(year).slice(-2);
 
-    const folder = category === "nonexec" ? "nonexec" : "exec";
+    const folder = category === "nonexec"
+        ? "updates/shift/nonexec"
+        : "updates/shift/exec";
     const prefix = category === "nonexec" ? "shift_nonexec_" : "shift_exec_";
     const version = (typeof DATA_VERSION !== "undefined") ? DATA_VERSION : Date.now();
     const url = `${baseUrl}${folder}/${prefix}${monthKey}.csv?v=${version}`;
