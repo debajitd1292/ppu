@@ -1,9 +1,3 @@
-
-/* =========================================================
-   PPU DASHBOARD — GRADE SPECIFICATIONS
-   CSV: ./updates/production/grade_specifications.csv
-   ========================================================= */
-
 (function () {
     "use strict";
 
@@ -261,12 +255,34 @@
 
             container.innerHTML = `
                 <div class="grade-spec-message">
-                    Unable to load grade specifications.
-                    Please check the CSV file.
+                    Unable to load grade specifications
                 </div>
             `;
         }
     }
+
+        window.syncGradeSpecificationWithCurrentGrade = function () {
+        const selector = document.getElementById(
+            "gradeSpecificationSelect"
+        );
+
+        const gradeBox = document.getElementById(
+            "currentProductionGrade"
+        );
+
+        if (!selector || !gradeBox || !gradeSpecifications.length) return;
+
+        const currentGrade = gradeBox.textContent.trim();
+
+        const matchingOption = Array.from(selector.options).find(
+            option => option.value.toUpperCase() === currentGrade.toUpperCase()
+        );
+
+        if (matchingOption) {
+            selector.value = matchingOption.value;
+            renderGradeSpecification(matchingOption.value);
+        }
+    };
 
     document.addEventListener("DOMContentLoaded", function () {
         const selector = document.getElementById(

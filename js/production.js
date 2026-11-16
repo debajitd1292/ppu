@@ -142,6 +142,10 @@ function formatDate(date){
 
     gradeBox.textContent = grade || "Loading...";
 
+    if (typeof window.syncGradeSpecificationWithCurrentGrade === "function") {
+        window.syncGradeSpecificationWithCurrentGrade();
+    }
+
     if(grade && since){
 
     const dateText = formatDate(since);
