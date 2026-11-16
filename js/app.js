@@ -336,8 +336,8 @@ function render(id,date){
         if(list.length === 0) return;
 
         list = list.sort((a,b)=>{
-            let ia = nonExecSeniorityOrder.indexOf(a.name);
-            let ib = nonExecSeniorityOrder.indexOf(b.name);
+            let ia = nonExecSeniorityOrder.indexOf(a.name.trim());
+	    let ib = nonExecSeniorityOrder.indexOf(b.name.trim());
             if(ia === -1) ia = 999;
             if(ib === -1) ib = 999;
             return ia - ib;
@@ -609,6 +609,7 @@ function renderCounterPageData() {
     renderOffDayCounter();
     renderEcoLeaveCounter();
     renderDoubleShiftAndTrainingCounter();
+    updateCounterSectionVisibility();
 }
 
 function onCountersCategoryChange() {

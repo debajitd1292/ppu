@@ -1,8 +1,38 @@
+async function waitForServiceWorker() {
+
+    if (!("serviceWorker" in navigator)) return;
+
+    try {
+        await Promise.race([
+            navigator.serviceWorker.ready,
+            new Promise(resolve => setTimeout(resolve, 3000))
+        ]);
+
+        if (!navigator.serviceWorker.controller) {
+            await Promise.race([
+                new Promise(resolve => {
+                    navigator.serviceWorker.addEventListener(
+                        "controllerchange",
+                        resolve,
+                        { once: true }
+                    );
+                }),
+                new Promise(resolve => setTimeout(resolve, 2000))
+            ]);
+        }
+
+    } catch (error) {
+        console.warn("Service Worker readiness check:", error);
+    }
+}
+
+waitForServiceWorker().then(() => {
+
 updateShiftUrls();
 
 startSyncTracking();
 
-Promise.all([
+return Promise.all([
 
     fetchCSV(shiftUrlPrev, true),
     fetchCSV(shiftUrl),
@@ -154,6 +184,8 @@ Promise.all([
         err
     );
 
-    document.getElementById("today").innerHTML =
+        document.getElementById("today").innerHTML =
         "<div style='color:red;font-weight:bold;'>Data load failed (Offline)</div>";
+});
+
 });

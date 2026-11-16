@@ -151,7 +151,7 @@ function renderEcoLeaveCounterMarkup() {
                 </div>
             </div>
 
-            <hr style="border:0;border-top:1px solid #d1d5db;margin:18px 0;">
+            <hr class="live-counter-divider">
 
             <h3 class="combined-counter-heading">Training / Tour &amp; Leave Counter</h3>
 
@@ -168,6 +168,8 @@ function renderEcoLeaveCounterMarkup() {
             </div>
 
         </div>
+
+        <hr class="live-counter-divider">
 
         <div class="combined-counter-section">
 
@@ -491,18 +493,21 @@ function updateCounterSectionVisibility() {
     const emptyMessage = document.getElementById("counterEmptyMessage");
 
     const counterCards = [
-        offCounter?.closest(".card"),
-        ecoCounter?.closest(".card"),
-        document.querySelector("#page-counters .double-training-counter")
-    ].filter(Boolean);
+        ...new Set([
+            offCounter?.closest(".card"),
+            ecoCounter?.closest(".card"),
+            document.querySelector("#page-counters .double-training-counter")
+        ].filter(Boolean))
+    ];
 
-    const hasName = Boolean(
-        String(
-            (typeof countersSelectedName !== "undefined" && countersSelectedName) ||
-            (typeof selectedName !== "undefined" && selectedName) ||
-            ""
-        ).trim()
-    );
+    const countersPage = document.getElementById("page-counters");
+    const isCountersPageActive =
+        countersPage?.classList.contains("active");
+
+    // Use the selection belonging to the currently active page.
+    const hasName = isCountersPageActive
+        ? Boolean(String(countersSelectedName || "").trim())
+        : Boolean(String(selectedName || "").trim());
 
     counterCards.forEach(card => {
         card.hidden = !hasName;
@@ -510,9 +515,12 @@ function updateCounterSectionVisibility() {
 
     if (emptyMessage) {
         emptyMessage.hidden = hasName;
+
+        emptyMessage.textContent = isCountersPageActive
+            ? "Select Name above to view Counter data"
+            : "Select Name in Home page to view Counter data";
     }
 }
-
 
 
 function renderNext7Days(){
