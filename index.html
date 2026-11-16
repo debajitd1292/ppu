@@ -170,18 +170,23 @@
     </div>
   </div>
 
-  <div id="counterEmptyMessage" class="counter-empty-message" hidden>
+    <div id="counterEmptyMessage" class="counter-empty-message" hidden>
     Select Name in Home page to view Counter data
   </div>
 
-  <div class="card">
-    <h3>Rest / OFF Counter</h3>
-    <div id="offDayCounter" class="off-day-counter" aria-live="polite"></div>
-  </div>
+  <div class="card live-counters-card">
 
-  
-  <div class="card combined-counter-card">
+    <h3 class="live-counter-main-heading">Counter Summary</h3>
+
+    <div class="live-counter-section">
+      <h4 class="off-day-counter-heading">Rest / OFF Counter</h4>
+      <div id="offDayCounter" class="off-day-counter" aria-live="polite"></div>
+    </div>
+
+    <hr class="live-counter-divider">
+
     <div id="ecoLeaveCounter" class="eco-leave-counter" aria-live="polite"></div>
+
   </div>
 
 
