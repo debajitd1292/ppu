@@ -3727,11 +3727,15 @@ body.dark #page-counters .combined-counter-section + .combined-counter-section {
 /* Empty-state message for Counters */
 #page-counters .counter-empty-message {
     padding: 12px 16px;
-    text-align: center;
-    color: #777;
+    text-align: left;
+    color: #64748b;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.4;
+}
+
+body.dark #page-counters .counter-empty-message {
+    color: #cbd5e1;
 }
 
 #page-counters .counter-empty-message[hidden] {
@@ -5787,4 +5791,77 @@ body option {
     box-shadow:
         0 0 5px rgba(212, 175, 55, 0.45),
         inset 0 0 2px rgba(255, 255, 255, 0.25);
+}
+
+/* =========================================================
+   LIVE COUNTERS — SINGLE CONTINUOUS CARD
+   ========================================================= */
+
+#page-counters .live-counters-card {
+    padding: 16px;
+}
+
+/* Main heading */
+#page-counters .live-counter-main-heading {
+    margin: 8px 0 16px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #1f4e79, #2563a6);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}
+
+body.dark #page-counters .live-counter-main-heading {
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1e3a5f, #263b59);
+    color: #e2e8f0;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+/* Rest / OFF heading */
+#page-counters .off-day-counter-heading {
+    margin: 0 0 10px;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+/* Simple horizontal divider */
+#page-counters .live-counter-divider {
+    border: 0;
+    border-top: 1px solid #d1d5db;
+    margin: 18px 0;
+    width: 100%;
+}
+
+/* Remove separate card styling from the combined counter */
+#page-counters .combined-counter-card {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+/* LIVE COUNTERS — CONSISTENT SECTION DIVIDERS */
+
+#page-counters .live-counter-divider {
+    display: block;
+    width: 100%;
+    height: 0;
+    border: 0;
+    border-top: 1px solid #d1d5db;
+    margin: 18px 0;
+}
+
+body.dark #page-counters .live-counter-divider {
+    border-top-color: rgba(226, 232, 240, 0.75);
 }
