@@ -1,17 +1,21 @@
-const CACHE_NAME = "ppu-dashboard-v70";
+const CACHE_NAME = "ppu-dashboard-v71";
 
 // Application shell: required for offline startup
 const APP_SHELL = [
     "./",
-    "./index.html",
+    "./index.html", 
     "./manifest.json",
     "./css/style.css",
+    "./fonts/Inter-Variable.ttf",
 
     "./images/logo.png",
     "./images/app-icon-192.png",
     "./images/app-icon-512.png",
     "./images/apple-touch-icon.png",
     "./images/banner.jpg",
+    "./images/favicon.ico",
+    "./images/favicon-32x32.png",
+    "./images/favicon-16x16.png",
 
     "./js/config.js",
     "./js/data.js",
@@ -109,6 +113,7 @@ if (url.pathname.toLowerCase().endsWith(".csv")) {
 
         const cacheKey = new Request(cacheURL.href);
 
+        
         try {
 
             // Try to download fresh CSV
@@ -116,37 +121,56 @@ if (url.pathname.toLowerCase().endsWith(".csv")) {
                 cache: "no-store"
             });
 
+            // Save successful response
             if (response.ok) {
 
                 const cache = await caches.open(CACHE_NAME);
 
-                // Save original response in cache
                 await cache.put(
                     cacheKey,
                     response.clone()
                 );
 
+                return await addDataSourceHeader(
+                    response,
+                    "network"
+                );
             }
 
-            // Tell app this is fresh network data
-            return await addDataSourceHeader(
-                response,
-                "network"
-            );
-
-        } catch (error) {
-
-            // Retrieve previously cached CSV
+            // If server returns 404 / 500,
+            // try previously cached CSV
             const cached = await caches.match(cacheKey);
 
             if (cached) {
 
-                // Tell app this is cached data
                 return await addDataSourceHeader(
                     cached,
                     "cache"
                 );
+            }
 
+            // No cached data available
+            return new Response(
+                "CSV unavailable: No saved data available",
+                {
+                    status: 503,
+                    headers: {
+                        "Content-Type": "text/plain"
+                    }
+                }
+            );
+
+        } catch (error) {
+
+            // Network failure: retrieve cached CSV
+            const cached = await caches.match(cacheKey);
+
+            if (cached) {
+
+                return await addDataSourceHeader(
+                    cached,
+                    "cache"
+                );
             }
 
             return new Response(
