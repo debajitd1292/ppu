@@ -219,7 +219,7 @@ function liquidVolume(data, tableName, levelMM) {
       (minLevel * 10).toFixed(0) +
       " mm and " +
       (maxLevel * 10).toFixed(0) +
-      " mm."
+      " mm"
     );
 
   }
@@ -237,7 +237,10 @@ function liquidVolume(data, tableName, levelMM) {
 
 // Main calculation
 async function calculatePropyleneStock(
-  { sphereA, sphereB, sphereC },
+  {
+    sphereA, sphereB, sphereC,
+    pressureA, pressureB, pressureC
+  },
   csvUrl = DEFAULT_CSV_URL
 ) {
   const levels = {
@@ -246,11 +249,31 @@ async function calculatePropyleneStock(
     sphere_c: numeric(sphereC, "Sphere C level")
   };
 
+  const pressures = {
+    sphere_a: numeric(pressureA, "Sphere A pressure"),
+    sphere_b: numeric(pressureB, "Sphere B pressure"),
+    sphere_c: numeric(pressureC, "Sphere C pressure")
+  };
+
   for (const [name, level] of Object.entries(levels)) {
     if (level < 0) {
       throw new Error(
         name.replace("_", " ") +
         " level cannot be negative."
+      );
+    }
+  }
+
+  for (const [name, pressure] of Object.entries(pressures)) {
+    if (pressure < 10 || pressure > 14) {
+      const sphereName = name
+  	.replace("sphere_a", "Sphere A")
+  	.replace("sphere_b", "Sphere B")
+  	.replace("sphere_c", "Sphere C");
+
+      throw new Error(
+  	sphereName +
+  	" Pressure must be between 10 and 14 kg/cm²"
       );
     }
   }
@@ -268,18 +291,11 @@ async function calculatePropyleneStock(
 
   const data = parseCsv(await response.text());
 
-  // Round operating pressures as in the workbook
-  const pressureA = Math.round(
-    getPressure(data, "sphere_a")
-  );
-
-  const pressureB = Math.round(
-    getPressure(data, "sphere_b")
-  );
-
-  const pressureC = Math.round(
-    getPressure(data, "sphere_c")
-  );
+  // Round individually entered operating pressures
+  // as per the existing workbook method
+  const pressureAValue = Math.round(pressures.sphere_a);
+  const pressureBValue = Math.round(pressures.sphere_b);
+  const pressureCValue = Math.round(pressures.sphere_c);
 
   // Liquid volumes
   const liquidA = liquidVolume(
@@ -294,20 +310,19 @@ async function calculatePropyleneStock(
     data, "sphere_c", levels.sphere_c
   );
 
-    // Liquid densities only
+  // Automatically obtain liquid density from CSV
+  // using the pressure entered for each sphere
+
   const liquidDensityA = getDensity(
-    data, pressureA, "liquid_density_kg_m3"
+    data, pressureAValue, "liquid_density_kg_m3"
   );
 
   const liquidDensityB = getDensity(
-    data, pressureB, "liquid_density_kg_m3"
+    data, pressureBValue, "liquid_density_kg_m3"
   );
 
   const liquidDensityC = getDensity(
-    data,
-    pressureC,
-    "liquid_density_kg_m3",
-    11
+    data, pressureCValue, "liquid_density_kg_m3"
   );
 
   // Liquid mass only, in metric tonnes
@@ -345,7 +360,11 @@ function initPropyleneStockCalculator() {
   const fields = {
     sphereA: document.getElementById("sphereALevel"),
     sphereB: document.getElementById("sphereBLevel"),
-    sphereC: document.getElementById("sphereCLevel")
+    sphereC: document.getElementById("sphereCLevel"),
+
+    pressureA: document.getElementById("sphereAPressure"),
+    pressureB: document.getElementById("sphereBPressure"),
+    pressureC: document.getElementById("sphereCPressure")
   };
 
   if (
@@ -381,17 +400,24 @@ function initPropyleneStockCalculator() {
     }
   }
 
-  // Restore previously entered levels when the page is reopened.
+  // Restore previously entered levels and pressures
   const saved = readSavedInputs();
 
   Object.entries(fields).forEach(([key, field]) => {
+
     if (saved[key] !== undefined) {
       field.value = saved[key];
+    } else if (key.startsWith("pressure")) {
+      field.value = "11";
     }
 
     field.addEventListener("input", saveInputs);
     field.addEventListener("change", saveInputs);
+
   });
+
+  // Save default pressure values on first load
+  saveInputs();
 
   function setResultStyle(stockMT) {
     resultBox.classList.remove(
@@ -436,6 +462,10 @@ updateSphereLevelWarning();
     const sphereB = fields.sphereB.value;
     const sphereC = fields.sphereC.value;
 
+    const pressureA = fields.pressureA.value;
+    const pressureB = fields.pressureB.value;
+    const pressureC = fields.pressureC.value;
+
     resultBox.hidden = false;
     resultBox.style.display = "block";
 
@@ -446,9 +476,14 @@ updateSphereLevelWarning();
       "status-high"
     );
 
-    if ([sphereA, sphereB, sphereC].some(value => value.trim() === "")) {
+        if (
+      [
+        sphereA, sphereB, sphereC,
+        pressureA, pressureB, pressureC
+      ].some(value => value.trim() === "")
+    ) {
       resultBox.textContent =
-        "Please enter the levels for Sphere A, Sphere B and Sphere C.";
+        "Please enter all 3 Sphere Levels and Pressures";
       resultBox.classList.add("error");
       return;
     }
@@ -461,7 +496,10 @@ updateSphereLevelWarning();
       const result = await calculatePropyleneStock({
         sphereA,
         sphereB,
-        sphereC
+        sphereC,
+        pressureA,
+        pressureB,
+        pressureC
       });
 
       const stock = result.approxPumpableStockMT;
