@@ -3,7 +3,7 @@
 // ===============================
 
 if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js?v=71")
+    navigator.serviceWorker.register("./service-worker.js?v=72")
         .then(() => {
             console.log("Service Worker registered");
         })
