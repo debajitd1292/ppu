@@ -39,8 +39,15 @@
    Their order has been preserved to protect the current appearance.
    ========================================================= */
 
-
 /* 01. GLOBAL & BASE */
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/Inter-Variable.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 body { 
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
