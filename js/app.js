@@ -948,3 +948,298 @@ document.addEventListener("DOMContentLoaded", function () {
     // Start using the previously recorded activity time.
     returnHomeIfIdle();
 })();
+
+
+/* =========================================================
+   CSV UPDATE NOTIFICATIONS
+   ========================================================= */
+
+(function () {
+
+    const NOTIFICATION_URL = "./updates/notifications.csv";
+
+    // Read status is based on message text, not CSV ID.
+    const STORAGE_KEY = "ppuReadNotificationIdsV3";
+
+    let notifications = [];
+
+    function normalizeMessage(message) {
+        return String(message || "")
+            .trim()
+            .replace(/\s+/g, " ")
+            .toLowerCase();
+    }
+
+    function getReadNotifications() {
+        try {
+            const saved = JSON.parse(
+                localStorage.getItem(STORAGE_KEY) || "[]"
+            );
+            return Array.isArray(saved) ? saved : [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveReadNotifications(keys) {
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify([...new Set(keys)])
+        );
+    }
+
+    // Convert DD-MM-YYYY into a comparable date.
+    function notificationDateValue(dateText) {
+        const match = String(dateText || "").match(
+            /^(\d{2})-(\d{2})-(\d{4})$/
+        );
+
+        if (!match) return 0;
+
+        return new Date(
+            Number(match[3]),
+            Number(match[2]) - 1,
+            Number(match[1])
+        ).getTime();
+    }
+
+    // Keep only the latest ID for identical messages on the same date.
+function removeDuplicateNotifications(items) {
+
+    const latest = new Map();
+
+    items.forEach((item, index) => {
+
+        const key =
+            String(item.date || "").trim() +
+            "|" +
+            normalizeMessage(item.message);
+
+        // Latest CSV entry replaces the previous matching entry.
+        latest.set(key, {
+            ...item,
+            originalIndex: index
+        });
+
+    });
+
+    // Newest date first; latest CSV entry first on the same date.
+    return [...latest.values()]
+        .sort((a, b) => {
+            const dateDifference =
+                notificationDateValue(b.date) -
+                notificationDateValue(a.date);
+
+            if (dateDifference !== 0) return dateDifference;
+
+            return b.originalIndex - a.originalIndex;
+        });
+}
+
+function getUnreadNotifications() {
+
+    const readIds = getReadNotifications();
+
+    return notifications.filter(item =>
+        !readIds.includes(item.id)
+    );
+}
+
+function renderNotificationBell() {
+
+    const bell = document.getElementById("updateBell");
+    const count = document.getElementById("updateBellCount");
+
+    if (!bell || !count) return;
+
+    const unread = getUnreadNotifications();
+
+    bell.hidden = unread.length === 0;
+
+    bell.classList.toggle("has-unread", unread.length > 0);
+
+    count.textContent = unread.length > 99
+        ? "99+"
+        : unread.length;
+
+}
+
+function renderNotificationPopup() {
+
+        const list = document.getElementById("updatePopupList");
+
+        if (!list) return;
+
+        const unread = getUnreadNotifications();
+
+        if (!unread.length) {
+            list.innerHTML = `
+                <div class="update-popup-empty">
+                    No new notifications
+                </div>
+            `;
+            return;
+        }
+
+        list.innerHTML = unread.map(item => `
+            <div class="update-popup-item">
+
+                <span class="notification-check">✓</span>
+
+                <div class="notification-content">
+                    ${escapeNotificationText(item.message)}
+
+                    <span class="update-popup-date">
+                        ${escapeNotificationText(item.date)}
+                    </span>
+                </div>
+
+            </div>
+        `).join("");
+
+}
+
+function escapeNotificationText(value) {
+        return String(value || "").replace(/[&<>"']/g, char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[char]);
+}
+
+function markNotificationsAsRead() {
+
+    const readIds = getReadNotifications();
+
+    const unreadIds = getUnreadNotifications()
+        .map(item => item.id);
+
+    saveReadNotifications([
+        ...readIds,
+        ...unreadIds
+    ]);
+
+}
+
+function showNotificationPopup() {
+
+        const overlay = document.getElementById(
+            "updatePopupOverlay"
+        );
+
+        if (!overlay) return;
+
+        renderNotificationPopup();
+
+        overlay.hidden = false;
+
+        markNotificationsAsRead();
+
+        renderNotificationBell();
+
+}
+
+function closeNotificationPopup() {
+
+        const overlay = document.getElementById(
+            "updatePopupOverlay"
+        );
+
+        if (overlay) overlay.hidden = true;
+
+}
+
+async function loadNotifications() {
+
+        try {
+
+            const response = await fetch(
+                NOTIFICATION_URL + "?v=" + Date.now(),
+                { cache: "no-store" }
+            );
+
+            if (!response.ok) {
+                throw new Error("Notification CSV unavailable");
+            }
+
+            const csvText = await response.text();
+            const rows = parseCSV(csvText);
+
+            const loaded = rows.slice(1)
+                .filter(row => row[0] && row[3])
+                .map(row => ({
+                    id: row[0].trim(),
+                    date: row[1]?.trim() || "",
+                    message: row[3]?.trim() || ""
+                }));
+
+            notifications = removeDuplicateNotifications(loaded);
+
+            renderNotificationBell();
+
+            // If popup is already open, refresh its contents too.
+            const overlay = document.getElementById(
+                "updatePopupOverlay"
+            );
+
+            if (overlay && !overlay.hidden) {
+                renderNotificationPopup();
+                markNotificationsAsRead();
+                renderNotificationBell();
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Notification loading failed:",
+                error
+            );
+
+        }
+
+}
+
+function initNotificationSystem() {
+
+        document.getElementById("updateBell")
+            ?.addEventListener("click", showNotificationPopup);
+
+        document.getElementById("closeUpdatePopup")
+            ?.addEventListener("click", closeNotificationPopup);
+
+        document.getElementById("updatePopupOverlay")
+            ?.addEventListener("click", function (event) {
+                if (event.target === this) {
+                    closeNotificationPopup();
+                }
+            });
+
+        loadNotifications();
+
+        // Refresh notifications every 2 minutes.
+        setInterval(loadNotifications, 2 * 60 * 1000);
+
+        // Refresh when internet connectivity returns.
+        window.addEventListener("online", loadNotifications);
+
+        // Refresh when the user returns to the dashboard.
+        document.addEventListener("visibilitychange", function () {
+            if (!document.hidden) {
+                loadNotifications();
+            }
+        });
+
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initNotificationSystem
+        );
+    } else {
+        initNotificationSystem();
+    }
+
+})();
