@@ -41,6 +41,21 @@
                 <h3>OPERATIONS DASHBOARD</h3>
                 <div class="header-subtitle">Polypropylene Unit • BCPL</div>
             </div>
+
+    <button type="button" id="updateBell"
+        class="update-bell"
+        aria-label="New notifications"
+        hidden>
+
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+        <path d="M10 21h4"></path>
+    </svg>
+
+    <span id="updateBellCount" class="update-bell-count"></span>
+
+    </button>
+
         </div>
     </div>
 </div>
@@ -606,6 +621,28 @@
 <script src="js/reactor_shutdown.js"></script>
 <script src="js/reactor_startup.js"></script>
 <script src="js/intercoms.js"></script>
+
+
+<div id="updatePopupOverlay" class="update-popup-overlay" hidden>
+
+    <section class="update-popup-sheet"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="updatePopupTitle">
+
+        <div class="update-popup-header">
+            <h3 id="updatePopupTitle">Active Notification</h3>
+
+            <button type="button"
+                    id="closeUpdatePopup"
+                    aria-label="Close">×</button>
+        </div>
+
+        <div id="updatePopupList" class="update-popup-list"></div>
+
+    </section>
+
+</div>
 
 </body>
 </html>
