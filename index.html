@@ -331,43 +331,59 @@
 
     <div id="propyleneStockCalculator" class="calculator-form">
 
+    
+    <!-- SPHERE LEVEL INPUTS -->
       <div class="calculator-input-grid">
+
         <div class="calculator-input-group">
           <label for="sphereALevel">Sphere A Level (mm)</label>
-          <input
-            id="sphereALevel"
-            type="number"
-            inputmode="decimal"
-            min="0"
-            step="any"
-            placeholder="Enter level in mm"
-          >
+          <input id="sphereALevel" type="number"
+                 inputmode="decimal" min="0" step="any"
+                 placeholder="Enter level in mm">
         </div>
 
         <div class="calculator-input-group">
           <label for="sphereBLevel">Sphere B Level (mm)</label>
-          <input
-            id="sphereBLevel"
-            type="number"
-            inputmode="decimal"
-            min="0"
-            step="any"
-            placeholder="Enter level in mm"
-          >
+          <input id="sphereBLevel" type="number"
+                 inputmode="decimal" min="0" step="any"
+                 placeholder="Enter level in mm">
         </div>
 
         <div class="calculator-input-group">
           <label for="sphereCLevel">Sphere C Level (mm)</label>
-          <input
-            id="sphereCLevel"
-            type="number"
-            inputmode="decimal"
-            min="0"
-            step="any"
-            placeholder="Enter level in mm"
-          >
+          <input id="sphereCLevel" type="number"
+                 inputmode="decimal" min="0" step="any"
+                 placeholder="Enter level in mm">
         </div>
+
       </div>
+
+    <!-- SPHERE OPERATING PRESSURE INPUTS -->
+      <div class="calculator-input-grid">
+
+        <div class="calculator-input-group">
+          <label for="sphereAPressure">Sphere A Pressure (kg/cm²)</label>
+          <input id="sphereAPressure" type="number"
+                 inputmode="decimal" min="10" max="14"
+                 step="any" value="11">
+        </div>
+
+        <div class="calculator-input-group">
+          <label for="sphereBPressure">Sphere B Pressure (kg/cm²)</label>
+          <input id="sphereBPressure" type="number"
+                 inputmode="decimal" min="10" max="14"
+                 step="any" value="11">
+        </div>
+
+        <div class="calculator-input-group">
+          <label for="sphereCPressure">Sphere C Pressure (kg/cm²)</label>
+          <input id="sphereCPressure" type="number"
+                 inputmode="decimal" min="10" max="14"
+                 step="any" value="11">
+        </div>
+
+      </div>
+
 
       <button
         type="button"
