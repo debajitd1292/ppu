@@ -185,7 +185,7 @@ return Promise.all([
     );
 
         document.getElementById("today").innerHTML =
-        "<div style='color:red;font-weight:bold;'>Data load failed (Offline)</div>";
+        "<div style='color:red;font-weight:bold;'>Data Load Failed. Please Refresh.</div>";
 });
 
 });
