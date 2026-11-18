@@ -6153,3 +6153,93 @@ body.dark .update-popup-date {
         animation: none;
     }
 }
+
+
+/* ===== PROPYLENE STOCK — SPHERE INPUT LAYOUT ===== */
+
+#page-calculator .propylene-sphere-row {
+    margin-top: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #dce3eb;
+}
+
+#page-calculator .propylene-sphere-heading {
+    color: #82BFFF;
+    font-size: 15px;
+    font-weight: 750;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+#page-calculator .propylene-sphere-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: start;
+}
+
+#page-calculator .propylene-sphere-fields .calculator-input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+    min-width: 0;
+}
+
+#page-calculator .propylene-sphere-fields .calculator-input-group > label {
+    color: #82BFFF;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0;
+}
+
+#page-calculator .propylene-sphere-fields input {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    min-height: 44px;
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#page-calculator .pressure-range-warning {
+    display: none;
+    margin: 0;
+    color: #dc2626;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+body.dark #page-calculator .propylene-sphere-row {
+    border-bottom-color: #374151;
+}
+
+body.dark #page-calculator .pressure-range-warning {
+    color: #ff7777;
+}
+
+/* Keep two input columns on every device */
+@media (max-width: 380px) {
+    #page-calculator .propylene-sphere-fields {
+        gap: 8px;
+    }
+
+    #page-calculator .propylene-sphere-fields .calculator-input-group > label {
+        font-size: 12px;
+    }
+
+    #page-calculator .propylene-sphere-fields input {
+        padding: 8px;
+        font-size: 13px;
+    }
+}
+
+#page-calculator .propylene-sphere-fields .calculator-input-group > label {
+    text-align: left !important;
+    align-self: flex-start;
+    width: 100%;
+}
