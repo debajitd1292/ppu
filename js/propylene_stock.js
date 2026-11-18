@@ -264,19 +264,8 @@ async function calculatePropyleneStock(
     }
   }
 
-  for (const [name, pressure] of Object.entries(pressures)) {
-    if (pressure < 10 || pressure > 14) {
-      const sphereName = name
-  	.replace("sphere_a", "Sphere A")
-  	.replace("sphere_b", "Sphere B")
-  	.replace("sphere_c", "Sphere C");
-
-      throw new Error(
-  	sphereName +
-  	" Pressure must be between 10 and 14 kg/cm²"
-      );
-    }
-  }
+  // Pressure values outside the lookup range
+  // will be limited to 10–14 during calculation.
 
   const response = await fetch(csvUrl, {
     cache: "no-store"
@@ -291,11 +280,20 @@ async function calculatePropyleneStock(
 
   const data = parseCsv(await response.text());
 
-  // Round individually entered operating pressures
-  // as per the existing workbook method
-  const pressureAValue = Math.round(pressures.sphere_a);
-  const pressureBValue = Math.round(pressures.sphere_b);
-  const pressureCValue = Math.round(pressures.sphere_c);
+  // Limit pressure to the available lookup range (10–14)
+  // and then apply the existing rounding method.
+
+  const pressureAValue = Math.round(
+    Math.min(14, Math.max(10, pressures.sphere_a))
+  );
+
+  const pressureBValue = Math.round(
+    Math.min(14, Math.max(10, pressures.sphere_b))
+  );
+
+  const pressureCValue = Math.round(
+    Math.min(14, Math.max(10, pressures.sphere_c))
+  );
 
   // Liquid volumes
   const liquidA = liquidVolume(
@@ -418,6 +416,63 @@ function initPropyleneStockCalculator() {
 
   // Save default pressure values on first load
   saveInputs();
+
+    // Show pressure range information dynamically
+
+  function updatePressureWarning(field, warning) {
+
+    if (!field || !warning) return;
+
+    const value = field.value.trim();
+
+    warning.textContent = "";
+    warning.style.display = "none";
+
+    if (value === "" || !Number.isFinite(Number(value))) {
+      return;
+    }
+
+    const pressure = Number(value);
+
+    if (pressure < 10) {
+      warning.textContent =
+        "Lower value considered: 10 kg/cm²";
+
+    } else if (pressure > 14) {
+      warning.textContent =
+        "Upper value considered: 14 kg/cm²";
+
+    } else {
+      return;
+    }
+
+    warning.style.display = "block";
+  }
+
+  const pressureWarningFields = [
+    {
+      field: fields.pressureA,
+      warning: document.getElementById("sphereAPressureWarning")
+    },
+    {
+      field: fields.pressureB,
+      warning: document.getElementById("sphereBPressureWarning")
+    },
+    {
+      field: fields.pressureC,
+      warning: document.getElementById("sphereCPressureWarning")
+    }
+  ];
+
+  pressureWarningFields.forEach(({ field, warning }) => {
+
+    field.addEventListener("input", () => {
+      updatePressureWarning(field, warning);
+    });
+
+    updatePressureWarning(field, warning);
+  });
+
 
   function setResultStyle(stockMT) {
     resultBox.classList.remove(
