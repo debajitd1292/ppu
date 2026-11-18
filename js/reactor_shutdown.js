@@ -248,7 +248,7 @@ function init() {
             <input id="reactorLoad" type="number"
               min="0" step="any"
               value="${readInput("reactorLoad", "")}"
-              placeholder="Enter current load in MT/hr">
+              placeholder="Enter in MT/hr">
           </label>
 
           <label class="reactor-field">
@@ -256,7 +256,7 @@ function init() {
             <input id="reactorWhatIfLoad" type="number"
               min="0" step="any"
               value="${readInput("reactorWhatIfLoad", "")}"
-              placeholder="Enter proposed load in MT/hr">
+              placeholder="Enter in MT/hr">
           </label>
         </div>
 
@@ -270,7 +270,7 @@ function init() {
             <input id="reactorStockLatest" type="number"
               min="0" step="any"
               value="${readStock(times.latest, "")}"
-              placeholder="Enter stock in MT">
+              placeholder="Enter in MT">
           </label>
 
           <label class="reactor-field">
@@ -280,7 +280,7 @@ function init() {
             <input id="reactorStockPrevious" type="number"
               min="0" step="any"
               value="${readStock(times.previous, "")}"
-              placeholder="Enter stock in MT">
+              placeholder="Enter in MT">
           </label>
 
           <label class="reactor-field">
@@ -290,7 +290,7 @@ function init() {
             <input id="reactorStockEarlier" type="number"
               min="0" step="any"
               value="${readStock(times.earlier, "")}"
-              placeholder="Enter stock in MT">
+              placeholder="Enter in MT">
           </label>
 
           <label class="reactor-field">
@@ -300,7 +300,7 @@ function init() {
             <input id="reactorStockCurrent" type="number"
               min="0" step="any"
               value="${readInput("reactorStockCurrent", "")}"
-              placeholder="Enter current stock in MT">
+              placeholder="Enter in MT">
           </label>
         </div>
 
@@ -403,7 +403,7 @@ function calculate() {
 if (!validInputs) {
   results.innerHTML = `
     <p class="reactor-error">
-      Please enter Reactor load and latest three C3 stock readings
+      Enter Reactor load and latest three C3 stock readings
     </p>
   `;
   return;
